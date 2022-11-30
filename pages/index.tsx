@@ -20,9 +20,9 @@ export default function Home() {
         <p className={styles.description}>
           Revisit us soon, for more updates.
         </p>
-        <p>
+        <p className={styles.subscribeText}>
           You can even
-          <a href="/subscribe"> submit suggestions.</a>
+          <a href="/subscribe"> subscribe for updates.</a>
         </p>
       </main>
 
