@@ -66,8 +66,12 @@ const EmailForm: React.FC = () => {
 //     //   });
 //   };
 
+  const sendEmailToDb = (emailAddress: string) :void => {
+    
+  }
+
   useEffect(() => {
-    email != "" && console.log(email);
+    email != "" && sendEmailToDb(email);
   }, [email]);
 
   return (
