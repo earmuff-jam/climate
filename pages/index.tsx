@@ -24,6 +24,10 @@ export default function Home() {
           You can even
           <a href="/subscribe"> subscribe for updates.</a>
         </p>
+        <p className={styles.subscribeText}>
+          Not satisfied yet !? You can also
+          <a href="/requestFeatures"> request features ... </a>
+        </p>
       </main>
 
       <footer className={styles.footer}>
