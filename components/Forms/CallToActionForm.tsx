@@ -79,14 +79,16 @@ const EmailForm: React.FC = () => {
           </FormHelperText>
         </FormControl>
       </Box>
-      <Button variant="contained" onClick={(e) => handleSubmit(e)}>
-        {" "}
-        Submit{" "}
-      </Button>
-      <Button variant="text" onClick={() => router.push("/")}>
-        {" "}
-        Cancel{" "}
-      </Button>
+      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '20vh' }}>
+        <Button variant="contained" onClick={(e) => handleSubmit(e)}>
+          {" "}
+          Submit{" "}
+        </Button>
+        <Button variant="text" onClick={() => router.push("/")}>
+          {" "}
+          Cancel{" "}
+        </Button>
+      </Box>
     </Box>
   );
 };

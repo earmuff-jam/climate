@@ -51,7 +51,7 @@ export const useAddFeatureForm = (): [
   (subjectValue: string) => void,
   (e: React.MouseEvent) => void,
   (e: React.MouseEvent) => void,
-  (e: React.MouseEvent) => void,
+  () => void,
 ] => {
   const router = useRouter();
 
