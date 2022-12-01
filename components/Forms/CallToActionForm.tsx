@@ -49,10 +49,12 @@ const EmailForm: React.FC = () => {
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
-      minHeight="100vh"
+      minHeight="32vh"
     >
-      <Typography variant="h4"> Stay in the loop </Typography>
-      <Typography variant="body1">Tune in for roll out date</Typography>
+      <Typography variant="h4"> Subscription and Billing </Typography>
+      <Typography variant="body1">
+        Learn more about how to start, stop or update a subscription.
+      </Typography>
       <Box component="form" minWidth={mediumSizeOrHigher ? '100vh' : '50vh'}>
         <FormControl fullWidth error={error} variant="standard">
           <InputLabel htmlFor="component-helper">{emailLabel}</InputLabel>
@@ -80,7 +82,7 @@ const EmailForm: React.FC = () => {
         </FormControl>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '20vh' }}>
-        <Button variant="contained" onClick={(e) => handleSubmit(e)}>
+        <Button variant="text" onClick={(e) => handleSubmit(e)}>
           {" "}
           Submit{" "}
         </Button>
