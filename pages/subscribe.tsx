@@ -1,6 +1,6 @@
 import React from "react";
-import EmailAddressForm from "../components/Forms/CallToActionForm";
 import { TitleComponent } from "../components/Home/TitleComponent";
+import SubscribeBody from "../components/Subscribe/SubscribeBody";
 import SubscribeHeader from "../components/Subscribe/SubscribeHeader";
 
 const subscribe = () => {
@@ -10,7 +10,7 @@ const subscribe = () => {
     <>
       <TitleComponent title={SubscribeTitleText} />
       <SubscribeHeader />
-      <EmailAddressForm />
+      <SubscribeBody />
     </>
   );
 };

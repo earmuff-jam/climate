@@ -1,13 +1,12 @@
-import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, FormLabel, Input, InputLabel, Radio, RadioGroup, Snackbar, useMediaQuery } from "@mui/material";
+import { Button, FormControl, FormControlLabel, FormHelperText, FormLabel, Input, InputLabel, Radio, RadioGroup, Snackbar, useMediaQuery } from "@mui/material";
 import { Box } from "@mui/system";
-import { useState } from "react";
 import BodyHeaderContent from "../Home/BodyHeaderContent";
-import { useAddFeatureForm } from "./CallToActionHook";
+import { useAddFeatureForm, useEmailForm } from "./CallToActionHook";
 
 const AddFeatureForm: React.FC = () => {
     const mediumSizeOrHigher = useMediaQuery("(min-width:768px)");
     const [subject, data, error, opensnackbar, handleSubject, handleSubmit, handleCancel, closesnackbar] = useAddFeatureForm();
-
+    const [email, emailValue, handleEmail, emailLabel, handleEmailSubmit] = useEmailForm();
     return (
         <>
             <Box
@@ -49,6 +48,31 @@ const AddFeatureForm: React.FC = () => {
                                 error ? 'Please add more details' : 'All submitted comments will remain anonymous.'
                             }
                         </FormHelperText>
+
+                        <FormControl fullWidth error={error} variant="standard">
+                            <InputLabel htmlFor="component-helper">{emailLabel}</InputLabel>
+                            <Input
+                                id="component-helper"
+                                value={emailValue}
+                                onKeyDown={(ev) => {
+                                    if (ev.key === "Enter") {
+                                        ev.preventDefault();
+                                    }
+                                    // ev.target.value -> results an error atm
+                                    // although i could ev.target.value in dev console
+                                    // this prevents onKeyDown to submit. accessibility issue ?
+                                }}
+                                onChange={(e) => {
+                                    if (e.target.value != " ") {
+                                        handleEmail(e.target.value);
+                                    }
+                                }}
+                                aria-describedby="component-helper-text"
+                            />
+                            <FormHelperText id="component-helper-text">
+                                Participation is 100 % free and voluntary.
+                            </FormHelperText>
+                        </FormControl>
                         <br />
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <FormLabel id="row-radio-group">Please rate us</FormLabel>
@@ -67,13 +91,17 @@ const AddFeatureForm: React.FC = () => {
                         </Box>
                     </FormControl>
                 </Box>
-
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '20vh' }}>
-                    <Button variant="text" onClick={(e) => handleSubmit(e)}>
+                    <Button variant="text" onClick={(e) => {
+                        handleSubmit(e);
+                        handleEmailSubmit(e);
+                    }}>
                         {" "}
                         Submit{" "}
                     </Button>
-                    <Button variant="text" onClick={handleCancel}>
+                    <Button variant="text" onClick={(e) => {
+                        handleCancel(e);
+                    }}>
                         {" "}
                         Cancel{" "}
                     </Button>

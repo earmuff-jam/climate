@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import Input from "@mui/material/Input";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -44,17 +43,7 @@ const EmailForm: React.FC = () => {
   }, [email]);
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="32vh"
-    >
-      <Typography variant="h4"> Subscription and Billing </Typography>
-      <Typography variant="body1">
-        Learn more about how to start, stop or update a subscription.
-      </Typography>
+    <>
       <Box component="form" minWidth={mediumSizeOrHigher ? '100vh' : '50vh'}>
         <FormControl fullWidth error={error} variant="standard">
           <InputLabel htmlFor="component-helper">{emailLabel}</InputLabel>
@@ -91,7 +80,7 @@ const EmailForm: React.FC = () => {
           Cancel{" "}
         </Button>
       </Box>
-    </Box>
+    </>
   );
 };
 export default EmailForm;
