@@ -15,27 +15,16 @@ const EmailForm: React.FC = () => {
   const [email, data, handleEmail, emailLabel, handleSubmit, error] =
     useEmailForm();
 
-  //   const sendEmailToDb = (email: string) => {
-  //     const collectionReference = collection(db, "emails");
-  //     addDoc(collectionReference, {
-  //       emailAddress: email,
-  //       unsubscribe: false,
-  //     });
-  //     // getDocs(collectionReference) // retrieve all the docs
-  //     //   .then((snapshot) => {
-  //     //     let emails = [];
-  //     //     snapshot.docs.forEach((doc) => {
-  //     //       emails.push({ ...doc.data(), id: doc.id });
-  //     //     });
-  //     //     console.log(emails);
-  //     //   })
-  //     //   .catch(() => {
-  //     //     console.error(" Failed .");
-  //     //   });
-  //   };
-
-  const sendEmailToDb = (emailAddress: string): void => {
-
+  const sendEmailToDb = async (emailAddress: string) => {
+    console.log(emailAddress);
+    const data = await fetch('api/subscribe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ emailAddress })
+    });
+    return data;
   }
 
   useEffect(() => {

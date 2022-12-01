@@ -11,8 +11,14 @@ datasource db {
 }
 
 model BaseUser {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+}
+
+model SubscribeEmailList {
   id          Int     @id @default(autoincrement())
-  email       String  @unique
-  name        String?
+  email       String?
   unsubscribe Boolean @default(false)
+  date_sub DateTime @default(now())
 }

@@ -3,9 +3,8 @@ import { TitleComponent } from "../components/Home/TitleComponent";
 import SubscribeBody from "../components/Subscribe/SubscribeBody";
 import SubscribeHeader from "../components/Subscribe/SubscribeHeader";
 
-const subscribe = () => {
+const Subscribe = () => {
   const SubscribeTitleText = "Subscribe";
-
   return (
     <>
       <TitleComponent title={SubscribeTitleText} />
@@ -15,4 +14,4 @@ const subscribe = () => {
   );
 };
 
-export default subscribe;
+export default Subscribe;
