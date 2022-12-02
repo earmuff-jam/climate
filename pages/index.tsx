@@ -12,13 +12,21 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Currently, under active deployment.
+          Currently, under active development.
         </h1>
         <h2>
           Climate is designed to aide you with your item management.
         </h2>
         <p className={styles.description}>
           Revisit us soon, for more updates.
+        </p>
+        <p className={styles.subscribeText}>
+          You can even
+          <a href="/subscribe"> subscribe for updates.</a>
+        </p>
+        <p className={styles.subscribeText}>
+          Not satisfied yet !? You can also
+          <a href="/requestFeatures"> request features ... </a>
         </p>
       </main>
 
