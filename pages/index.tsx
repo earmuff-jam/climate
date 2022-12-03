@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
@@ -22,11 +23,11 @@ export default function Home() {
         </p>
         <p className={styles.subscribeText}>
           You can even
-          <a href="/subscribe"> subscribe for updates.</a>
+          <Link href="/subscribe"> subscribe for updates.</Link>
         </p>
         <p className={styles.subscribeText}>
           Not satisfied yet !? You can also
-          <a href="/requestFeatures"> request features ... </a>
+          <Link href="/requestFeatures"> request features ... </Link>
         </p>
       </main>
 
