@@ -22,3 +22,10 @@ model SubscribeEmailList {
   unsubscribe Boolean  @default(false)
   date_sub    DateTime @default(now())
 }
+
+model RequestFeatures {
+  id         Int     @id @default(autoincrement())
+  app_review String
+  email      String?
+  rating     String  @default("5")
+}
