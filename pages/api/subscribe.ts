@@ -16,10 +16,16 @@ export default async function handler(
 
   if (req.method === 'POST') {
     const { emailAddress } = req.body;
-    const emailAddressResp = await prisma.subscribeEmailList.create({
-      data: {
+    const emailAddressResp = await prisma.subscribeEmailList.upsert({
+      where: {
         email: emailAddress,
       },
+      update: {
+        email: emailAddress,
+      },
+      create: {
+        email: emailAddress,
+      }
     });
     res.status(200).json(emailAddressResp);
   }

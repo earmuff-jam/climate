@@ -18,7 +18,7 @@ model BaseUser {
 
 model SubscribeEmailList {
   id          Int     @id @default(autoincrement())
-  email       String?
+  email       String  @unique
   unsubscribe Boolean @default(false)
   date_sub DateTime @default(now())
 }
