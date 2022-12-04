@@ -1,20 +1,16 @@
+import Link from "next/link";
 import styles from "../../styles/Header.module.css";
 
 const Header: React.FC = () => {
   return (
     <div>
-      <a
-        href=""
+      <Link
+        href="#aboutus"
         className={styles.skipNav}
-        onClick={() =>
-          document.getElementById("footer")?.scrollIntoView({
-            block: "start",
-            behavior: "smooth",
-          })
-        }
+        aria-label="Skip to footer"
       >
         Skip to Footer
-      </a>
+      </Link>
       Hi
     </div>
   );
