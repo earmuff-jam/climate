@@ -17,8 +17,15 @@ model BaseUser {
 }
 
 model SubscribeEmailList {
-  id          Int     @id @default(autoincrement())
-  email       String?
-  unsubscribe Boolean @default(false)
-  date_sub DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  unsubscribe Boolean  @default(false)
+  date_sub    DateTime @default(now())
+}
+
+model RequestFeatures {
+  id         Int     @id @default(autoincrement())
+  app_review String
+  email      String?
+  rating     String  @default("5")
 }

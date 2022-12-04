@@ -1,12 +1,69 @@
-import { Button, FormControl, FormControlLabel, FormHelperText, FormLabel, Input, InputLabel, Radio, RadioGroup, Snackbar, useMediaQuery } from "@mui/material";
+import {
+    Button,
+    FormControl,
+    FormHelperText,
+    Input,
+    InputLabel,
+    Snackbar,
+    useMediaQuery,
+} from "@mui/material";
+
 import { Box } from "@mui/system";
+import React from "react";
+import RatingButtons from "./RatingButtons";
 import BodyHeaderContent from "../Home/BodyHeaderContent";
-import { useAddFeatureForm, useEmailForm } from "./CallToActionHook";
+import { useRouter } from "next/router";
+import { useRequestFeatureForm } from "./CallToActionHook";
 
 const AddFeatureForm: React.FC = () => {
+    const router = useRouter();
     const mediumSizeOrHigher = useMediaQuery("(min-width:768px)");
-    const [subject, data, error, opensnackbar, handleSubject, handleSubmit, handleCancel, closesnackbar] = useAddFeatureForm();
-    const [email, emailValue, handleEmail, emailLabel, handleEmailSubmit] = useEmailForm();
+    const [
+        featureDesc,
+        setFeatureDesc,
+        emailDesc,
+        setEmailDesc,
+        rating,
+        setRating,
+        error,
+        handleError,
+        openSnackbar,
+        handleSnackbar,
+    ] = useRequestFeatureForm();
+
+    const sendRequestFeatureToDb = async (featureDesc: string, email: string, ratingVal: string) => {
+        const data = await fetch('api/request_features', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ featureDesc, email, ratingVal })
+        });
+        return data;
+    };
+
+    const handleSubmit = (e: React.MouseEvent) => {
+        if (featureDesc.length > 10) {
+            sendRequestFeatureToDb(featureDesc, emailDesc, rating);
+            setFeatureDesc("");
+            setEmailDesc("");
+            setRating("5");
+            handleError(false);
+            handleSnackbar(true);
+            router.push("/");
+        }
+        handleError(true);
+        return;
+    }
+
+    const handleCancel = () => {
+        setFeatureDesc("");
+        setEmailDesc("");
+        setRating("5");
+        handleError(false);
+        router.push("/");
+    }
+
     return (
         <>
             <Box
@@ -27,7 +84,7 @@ const AddFeatureForm: React.FC = () => {
                             multiline
                             rows={4}
                             maxRows={4}
-                            value={data}
+                            value={featureDesc}
                             onKeyDown={(ev) => {
                                 if (ev.key === "Enter") {
                                     ev.preventDefault();
@@ -38,7 +95,8 @@ const AddFeatureForm: React.FC = () => {
                             }}
                             onChange={(e) => {
                                 if (e.target.value != " ") {
-                                    handleSubject(e.target.value);
+                                    setFeatureDesc(e.target.value);
+                                    handleError(false);
                                 }
                             }}
                             aria-describedby="component-helper-text"
@@ -49,11 +107,11 @@ const AddFeatureForm: React.FC = () => {
                             }
                         </FormHelperText>
 
-                        <FormControl fullWidth error={error} variant="standard">
-                            <InputLabel htmlFor="component-helper">{emailLabel}</InputLabel>
+                        <FormControl fullWidth variant="standard">
+                            <InputLabel htmlFor="component-helper">Email Address</InputLabel>
                             <Input
                                 id="component-helper"
-                                value={emailValue}
+                                value={emailDesc}
                                 onKeyDown={(ev) => {
                                     if (ev.key === "Enter") {
                                         ev.preventDefault();
@@ -64,7 +122,7 @@ const AddFeatureForm: React.FC = () => {
                                 }}
                                 onChange={(e) => {
                                     if (e.target.value != " ") {
-                                        handleEmail(e.target.value);
+                                        setEmailDesc(e.target.value);
                                     }
                                 }}
                                 aria-describedby="component-helper-text"
@@ -74,42 +132,25 @@ const AddFeatureForm: React.FC = () => {
                             </FormHelperText>
                         </FormControl>
                         <br />
-                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <FormLabel id="row-radio-group">Please rate us</FormLabel>
-                            <RadioGroup
-                                aria-labelledby="radio-buttons-group-label"
-                                defaultValue={5}
-                                row={true}
-                                name="radio-buttons-group"
-                            >
-                                <FormControlLabel value="1" control={<Radio />} label="1" />
-                                <FormControlLabel value="2" control={<Radio />} label="2" />
-                                <FormControlLabel value="3" control={<Radio />} label="3" />
-                                <FormControlLabel value="4" control={<Radio />} label="4" />
-                                <FormControlLabel value="5" control={<Radio />} label="5" />
-                            </RadioGroup>
-                        </Box>
+                        <RatingButtons value={rating} handleChange={setRating} />
                     </FormControl>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '20vh' }}>
                     <Button variant="text" onClick={(e) => {
                         handleSubmit(e);
-                        handleEmailSubmit(e);
                     }}>
                         {" "}
                         Submit{" "}
                     </Button>
-                    <Button variant="text" onClick={(e) => {
-                        handleCancel(e);
-                    }}>
+                    <Button variant="text" onClick={() => handleCancel()}>
                         {" "}
                         Cancel{" "}
                     </Button>
                 </Box>
                 <Snackbar
-                    open={opensnackbar}
+                    open={openSnackbar}
                     autoHideDuration={3000}
-                    onClose={closesnackbar}
+                    onClose={() => handleSnackbar(false)}
                     message={'Thank you for submitting your response.'}
                 />
             </Box>

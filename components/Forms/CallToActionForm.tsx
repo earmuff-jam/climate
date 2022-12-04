@@ -16,9 +16,8 @@ const EmailForm: React.FC = () => {
     useEmailForm();
 
   const sendEmailToDb = async (emailAddress: string) => {
-    console.log(emailAddress);
     const data = await fetch('api/subscribe', {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },

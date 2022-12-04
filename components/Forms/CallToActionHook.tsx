@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useRouter } from "next/router";
 
 /**
  * handles emailSubscriptionform only
@@ -40,53 +39,58 @@ export const useEmailForm = (): [
 };
 
 /**
- * handles ability to add suggestions
- * @returns [email, data, handleEmail, emailLabel, handleSubmit, error]
+ * handles radio button form for request features
+ * the top level rating here is 5
+ * @returns [ratingValue, handleChange]
  */
-export const useAddFeatureForm = (): [
+export const useRatingButtonsForm = (): [
   string,
-  string,
-  boolean,
-  boolean,
-  (subjectValue: string) => void,
-  (e: React.MouseEvent) => void,
-  (e: React.MouseEvent) => void,
-  () => void,
+  (rating: string) => void,
 ] => {
-  const router = useRouter();
+  const [ratingValue, setRatingValue] = useState("5"); // default
+  const handleChange = (rating: string) => {
+    setRatingValue(rating);
+  };
 
-  const [data, setData] = useState<string>("");
-  const [opensnackbar, setopensnackbar] = useState<boolean>(false);
+  return [ratingValue, handleChange];
+}
+
+/**
+ *  handles the request feature form 
+ * @returns [featureDesc, setFeatureDesc, emailDesc, setEmailDesc, rating, setRating, error, handleError, openSnackbar, handleSnackbar]
+ */
+export const useRequestFeatureForm = (): [
+  string,
+  (val: string) => void,
+  string,
+  (val: string) => void,
+  string,
+  (val: string) => void,
+  boolean,
+  (val: boolean) => void,
+  boolean,
+  (val: boolean) => void,
+] => {
+  const [featureDesc, setFeatureDesc] = useState<string>("");
+  const [emailDesc, setEmailDesc] = useState<string>("");
+  const [rating, setRating] = useState<string>("5");
   const [error, setError] = useState<boolean>(false);
-  const [subject, setSubject] = useState<string>("");
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
-  const handleSubject = (subjectValue: string) => {
-    setError(false);
-    setData(subjectValue);
-  };
+  const handleError = (val: boolean) => setError(val);
+  const handleSnackbar = (val: boolean) => setOpenSnackbar(val);
 
-  const handleSubmit = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (data.length > 10) {
-      setSubject(data);
-      setData('');
-      setError(false);
-      setopensnackbar(true);
-      return;
-    }
-    setError(true);
-    setSubject('');
-  };
+  return [
+    featureDesc,
+    setFeatureDesc,
+    emailDesc,
+    setEmailDesc,
+    rating,
+    setRating,
+    error,
+    handleError,
+    openSnackbar,
+    handleSnackbar
+  ];
 
-  const handleCancel = () => {
-    setSubject("");
-    setError(false);
-    router.push("/");
-  }
-
-  const closesnackbar = () => {
-    setopensnackbar(false);
-  }
-
-  return [subject, data, error, opensnackbar, handleSubject, handleSubmit, handleCancel, closesnackbar];
 };
