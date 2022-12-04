@@ -1,15 +1,17 @@
 import React from "react";
+import Body from "../components/Subscribe/Body";
 import { TitleComponent } from "../components/Home/TitleComponent";
-import SubscribeBody from "../components/Subscribe/SubscribeBody";
-import SubscribeHeader from "../components/Subscribe/SubscribeHeader";
+
+const titleText = "Subscribe";
+const title = 'Subscribe and billing';
+const desc = 'Learn more about how to start, stop or update a subscription';
 
 const Subscribe = () => {
-  const SubscribeTitleText = "Subscribe";
+
   return (
     <>
-      <TitleComponent title={SubscribeTitleText} />
-      <SubscribeHeader />
-      <SubscribeBody />
+      <TitleComponent title={titleText} />
+      <Body title={title} desc={desc} display="flex" />
     </>
   );
 };

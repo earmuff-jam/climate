@@ -1,18 +1,18 @@
 import {
-    Button,
-    FormControl,
-    FormHelperText,
     Input,
-    InputLabel,
     Snackbar,
+    InputLabel,
+    FormControl,
     useMediaQuery,
+    FormHelperText,
 } from "@mui/material";
 
-import { Box } from "@mui/system";
 import React from "react";
+import Btn from "../Button/Btn";
+import { Box } from "@mui/system";
+import { useRouter } from "next/router";
 import RatingButtons from "./RatingButtons";
 import BodyHeaderContent from "../Home/BodyHeaderContent";
-import { useRouter } from "next/router";
 import { useRequestFeatureForm } from "./CallToActionHook";
 
 const AddFeatureForm: React.FC = () => {
@@ -136,16 +136,8 @@ const AddFeatureForm: React.FC = () => {
                     </FormControl>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '20vh' }}>
-                    <Button variant="text" onClick={(e) => {
-                        handleSubmit(e);
-                    }}>
-                        {" "}
-                        Submit{" "}
-                    </Button>
-                    <Button variant="text" onClick={() => handleCancel()}>
-                        {" "}
-                        Cancel{" "}
-                    </Button>
+                    <Btn onClick={handleSubmit}>Submit</Btn>
+                    <Btn onClick={handleCancel}>Cancel</Btn>
                 </Box>
                 <Snackbar
                     open={openSnackbar}
