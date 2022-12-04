@@ -11,9 +11,10 @@ import React from "react";
 import Btn from "../Button/Btn";
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
-import RatingButtons from "./RatingButtons";
+import RatingButtons from "../Button/RatingButtons";
 import BodyHeaderContent from "../Home/BodyHeaderContent";
 import { useRequestFeatureForm } from "./CallToActionHook";
+import ButtonGroup from "../Button/ButtonGroup";
 
 interface Iprops {
     requestFeatureInputLabel: string;
@@ -89,8 +90,9 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
                 display="flex"
                 flexDirection="column"
                 justifyContent="center"
-                alignItems="center"
+                alignItems="left"
                 minHeight="100vh"
+            // minWidth={"100vh"}
             >
                 <BodyHeaderContent />
                 <Box component="form" minWidth={mediumSizeOrHigher ? '100vh' : '50vh'}>
@@ -151,13 +153,26 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
                             </FormHelperText>
                         </FormControl>
                         <br />
-                        <RatingButtons value={rating} handleChange={setRating} />
+                        <RatingButtons
+                            value={rating}
+                            label={"Give us some stars !! "}
+                            row={true}
+                            display={"flex"}
+                            flexDirection={"column"}
+                            handleChange={setRating}
+                        />
                     </FormControl>
                 </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '20vh' }}>
-                    <Btn onClick={handleSubmit}>Submit</Btn>
-                    <Btn onClick={handleCancel}>Cancel</Btn>
-                </Box>
+                <ButtonGroup
+                    display="flex"
+                    flexDirection="row"
+                    justifyContent="space-between"
+                    gap="20vh"
+                    submitLabel="submit"
+                    handleSubmit={handleSubmit}
+                    cancelLabel="cancel"
+                    handleCancel={handleCancel}
+                />
                 <Snackbar
                     open={openSnackbar}
                     autoHideDuration={3000}
