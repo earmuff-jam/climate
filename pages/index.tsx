@@ -30,9 +30,6 @@ export default function Home() {
           <Link href="/requestFeatures"> request features ... </Link>
         </p>
       </main>
-
-      <footer className={styles.footer}>
-      </footer>
     </div>
   )
 }
