@@ -10,10 +10,17 @@ import {
 import React from "react";
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
+<<<<<<< HEAD
 import ButtonGroup from "../Button/ButtonGroup";
 import RatingButtons from "../Button/RatingButtons";
 import { useRequestFeatureForm } from "./CallToActionHook";
 import Text from "../Typography/Text";
+=======
+import RatingButtons from "../Button/RatingButtons";
+import BodyHeaderContent from "../Home/BodyHeaderContent";
+import { useRequestFeatureForm } from "./CallToActionHook";
+import ButtonGroup from "../Button/ButtonGroup";
+>>>>>>> d4fe944 (add sb for button group for request features)
 
 interface Iprops {
   requestFeatureInputLabel: string;
@@ -123,6 +130,7 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
               {error ? requestFeatureInputNoErrMsg : requestFeatureInputErrMsg}
             </FormHelperText>
 
+<<<<<<< HEAD
             <FormControl fullWidth variant="standard">
               <InputLabel htmlFor="component-helper">
                 {requestFeatureEmailInputLabel}
@@ -183,6 +191,106 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
       </Box>
     </>
   );
+=======
+    return (
+        <>
+            <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="left"
+                minHeight="100vh"
+            // minWidth={"100vh"}
+            >
+                <BodyHeaderContent />
+                <Box component="form" minWidth={mediumSizeOrHigher ? '100vh' : '50vh'}>
+                    <FormControl fullWidth error={error} variant="standard">
+                        <InputLabel htmlFor="component-helper">
+                            {requestFeatureInputLabel}
+                        </InputLabel>
+                        <Input
+                            id="component-helper"
+                            multiline
+                            rows={defaultInputRowsAllowed}
+                            maxRows={defaultInputRowsAllowed}
+                            value={featureDesc}
+                            onKeyDown={(ev) => {
+                                if (ev.key === "Enter") {
+                                    ev.preventDefault();
+                                }
+                                // ev.target.value -> results an error atm
+                                // although i could ev.target.value in dev console
+                                // this prevents onKeyDown to submit. accessibility issue ?
+                            }}
+                            onChange={(e) => {
+                                if (e.target.value != " ") {
+                                    setFeatureDesc(e.target.value);
+                                    handleError(false);
+                                }
+                            }}
+                            aria-describedby="component-helper-text"
+                        />
+                        <FormHelperText id="component-helper-text">
+                            {
+                                error ? requestFeatureInputNoErrMsg : requestFeatureInputErrMsg
+                            }
+                        </FormHelperText>
+
+                        <FormControl fullWidth variant="standard">
+                            <InputLabel htmlFor="component-helper">{requestFeatureEmailInputLabel}</InputLabel>
+                            <Input
+                                id="component-helper"
+                                value={emailDesc}
+                                onKeyDown={(ev) => {
+                                    if (ev.key === "Enter") {
+                                        ev.preventDefault();
+                                    }
+                                    // ev.target.value -> results an error atm
+                                    // although i could ev.target.value in dev console
+                                    // this prevents onKeyDown to submit. accessibility issue ?
+                                }}
+                                onChange={(e) => {
+                                    if (e.target.value != " ") {
+                                        setEmailDesc(e.target.value);
+                                    }
+                                }}
+                                aria-describedby="component-helper-text"
+                            />
+                            <FormHelperText id="component-helper-text">
+                                {requestFeatureEmailInputHelper}
+                            </FormHelperText>
+                        </FormControl>
+                        <br />
+                        <RatingButtons
+                            value={rating}
+                            label={"Give us some stars !! "}
+                            row={true}
+                            display={"flex"}
+                            flexDirection={"column"}
+                            handleChange={setRating}
+                        />
+                    </FormControl>
+                </Box>
+                <ButtonGroup
+                    display="flex"
+                    flexDirection="row"
+                    justifyContent="space-between"
+                    gap="20vh"
+                    submitLabel="submit"
+                    handleSubmit={handleSubmit}
+                    cancelLabel="cancel"
+                    handleCancel={handleCancel}
+                />
+                <Snackbar
+                    open={openSnackbar}
+                    autoHideDuration={3000}
+                    onClose={() => handleSnackbar(false)}
+                    message={'Thank you for submitting your response.'}
+                />
+            </Box>
+        </>
+    )
+>>>>>>> d4fe944 (add sb for button group for request features)
 };
 
 export default AddFeatureForm;
