@@ -5,11 +5,9 @@ import Link from "next/link";
 import vercel from "../../public/vercel.svg";
 import supabaseIcon from "../../public/supabaseIcon.png";
 import Image from "next/image";
-import styles from "../../styles/Footer.module.css";
-type FooterProps = {
-  ref: HTMLDivElement;
-};
-const Footer: React.FC = (props) => {
+import styles from "./Footer.module.css";
+
+const Footer: React.FC = () => {
   const imageProps = {
     width: 150,
     height: 150,
