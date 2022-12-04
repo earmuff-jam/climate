@@ -26,4 +26,3 @@ Cancel.args = {
     variant: 'text',
     children: 'Cancel',
 };
-
