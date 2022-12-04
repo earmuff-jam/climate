@@ -1,161 +1,188 @@
 import {
-    Button,
-    FormControl,
-    FormHelperText,
-    Input,
-    InputLabel,
-    Snackbar,
-    useMediaQuery,
+  Input,
+  Snackbar,
+  InputLabel,
+  FormControl,
+  useMediaQuery,
+  FormHelperText,
 } from "@mui/material";
 
-import { Box } from "@mui/system";
 import React from "react";
-import RatingButtons from "./RatingButtons";
-import BodyHeaderContent from "../Home/BodyHeaderContent";
+import { Box } from "@mui/system";
 import { useRouter } from "next/router";
+import ButtonGroup from "../Button/ButtonGroup";
+import RatingButtons from "../Button/RatingButtons";
 import { useRequestFeatureForm } from "./CallToActionHook";
+import Text from "../Typography/Text";
 
-const AddFeatureForm: React.FC = () => {
-    const router = useRouter();
-    const mediumSizeOrHigher = useMediaQuery("(min-width:768px)");
-    const [
-        featureDesc,
-        setFeatureDesc,
-        emailDesc,
-        setEmailDesc,
-        rating,
-        setRating,
-        error,
-        handleError,
-        openSnackbar,
-        handleSnackbar,
-    ] = useRequestFeatureForm();
+interface Iprops {
+  requestFeatureInputLabel: string;
+  defaultInputRowsAllowed: number;
+  requestFeatureInputNoErrMsg: string;
+  requestFeatureInputErrMsg: string;
+  requestFeatureEmailInputLabel: string;
+  requestFeatureEmailInputHelper: string;
+}
 
-    const sendRequestFeatureToDb = async (featureDesc: string, email: string, ratingVal: string) => {
-        const data = await fetch('api/request_features', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ featureDesc, email, ratingVal })
-        });
-        return data;
-    };
+const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
+  const {
+    requestFeatureInputLabel,
+    defaultInputRowsAllowed,
+    requestFeatureInputNoErrMsg,
+    requestFeatureInputErrMsg,
+    requestFeatureEmailInputLabel,
+    requestFeatureEmailInputHelper,
+  } = props;
 
-    const handleSubmit = (e: React.MouseEvent) => {
-        if (featureDesc.length > 10) {
-            sendRequestFeatureToDb(featureDesc, emailDesc, rating);
-            setFeatureDesc("");
-            setEmailDesc("");
-            setRating("5");
-            handleError(false);
-            handleSnackbar(true);
-            router.push("/");
-        }
-        handleError(true);
-        return;
+  const router = useRouter();
+  const mediumSizeOrHigher = useMediaQuery("(min-width:768px)");
+  const [
+    featureDesc,
+    setFeatureDesc,
+    emailDesc,
+    setEmailDesc,
+    rating,
+    setRating,
+    error,
+    handleError,
+    openSnackbar,
+    handleSnackbar,
+  ] = useRequestFeatureForm();
+
+  const sendRequestFeatureToDb = async (
+    featureDesc: string,
+    email: string,
+    ratingVal: string
+  ) => {
+    const data = await fetch("api/request_features", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ featureDesc, email, ratingVal }),
+    });
+    return data;
+  };
+
+  const handleSubmit = (e: React.MouseEvent) => {
+    if (featureDesc.length > 10) {
+      sendRequestFeatureToDb(featureDesc, emailDesc, rating);
+      setFeatureDesc("");
+      setEmailDesc("");
+      setRating("3");
+      handleError(false);
+      handleSnackbar(true);
+      router.push("/");
     }
+    handleError(true);
+    return;
+  };
 
-    const handleCancel = () => {
-        setFeatureDesc("");
-        setEmailDesc("");
-        setRating("5");
-        handleError(false);
-        router.push("/");
-    }
+  const handleCancel = () => {
+    setFeatureDesc("");
+    setEmailDesc("");
+    setRating("3");
+    handleError(false);
+    router.push("/");
+  };
 
-    return (
-        <>
-            <Box
-                display="flex"
-                flexDirection="column"
-                justifyContent="center"
-                alignItems="center"
-                minHeight="100vh"
-            >
-                <BodyHeaderContent />
-                <Box component="form" minWidth={mediumSizeOrHigher ? '100vh' : '50vh'}>
-                    <FormControl fullWidth error={error} variant="standard">
-                        <InputLabel htmlFor="component-helper">
-                            How can we make the application better ?
-                        </InputLabel>
-                        <Input
-                            id="component-helper"
-                            multiline
-                            rows={4}
-                            maxRows={4}
-                            value={featureDesc}
-                            onKeyDown={(ev) => {
-                                if (ev.key === "Enter") {
-                                    ev.preventDefault();
-                                }
-                                // ev.target.value -> results an error atm
-                                // although i could ev.target.value in dev console
-                                // this prevents onKeyDown to submit. accessibility issue ?
-                            }}
-                            onChange={(e) => {
-                                if (e.target.value != " ") {
-                                    setFeatureDesc(e.target.value);
-                                    handleError(false);
-                                }
-                            }}
-                            aria-describedby="component-helper-text"
-                        />
-                        <FormHelperText id="component-helper-text">
-                            {
-                                error ? 'Please add more details' : 'All submitted comments will remain anonymous.'
-                            }
-                        </FormHelperText>
+  return (
+    <>
+      <Box display="flex" flexDirection="column">
+        <Text variant={"h4"} color={"textSecondary"} gutterBottom={true}>
+          Climate
+        </Text>
+        <Box component="form">
+          <FormControl fullWidth error={error} variant="standard">
+            <InputLabel htmlFor="component-helper">
+              {requestFeatureInputLabel}
+            </InputLabel>
+            <Input
+              id="component-helper"
+              multiline
+              rows={defaultInputRowsAllowed}
+              maxRows={defaultInputRowsAllowed}
+              value={featureDesc}
+              onKeyDown={(ev) => {
+                if (ev.key === "Enter") {
+                  ev.preventDefault();
+                }
+                // ev.target.value -> results an error atm
+                // although i could ev.target.value in dev console
+                // this prevents onKeyDown to submit. accessibility issue ?
+              }}
+              onChange={(e) => {
+                if (e.target.value != " ") {
+                  setFeatureDesc(e.target.value);
+                  handleError(false);
+                }
+              }}
+              aria-describedby="component-helper-text"
+            />
+            <FormHelperText id="component-helper-text">
+              {error ? requestFeatureInputNoErrMsg : requestFeatureInputErrMsg}
+            </FormHelperText>
 
-                        <FormControl fullWidth variant="standard">
-                            <InputLabel htmlFor="component-helper">Email Address</InputLabel>
-                            <Input
-                                id="component-helper"
-                                value={emailDesc}
-                                onKeyDown={(ev) => {
-                                    if (ev.key === "Enter") {
-                                        ev.preventDefault();
-                                    }
-                                    // ev.target.value -> results an error atm
-                                    // although i could ev.target.value in dev console
-                                    // this prevents onKeyDown to submit. accessibility issue ?
-                                }}
-                                onChange={(e) => {
-                                    if (e.target.value != " ") {
-                                        setEmailDesc(e.target.value);
-                                    }
-                                }}
-                                aria-describedby="component-helper-text"
-                            />
-                            <FormHelperText id="component-helper-text">
-                                Participation is 100 % free and voluntary.
-                            </FormHelperText>
-                        </FormControl>
-                        <br />
-                        <RatingButtons value={rating} handleChange={setRating} />
-                    </FormControl>
-                </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '20vh' }}>
-                    <Button variant="text" onClick={(e) => {
-                        handleSubmit(e);
-                    }}>
-                        {" "}
-                        Submit{" "}
-                    </Button>
-                    <Button variant="text" onClick={() => handleCancel()}>
-                        {" "}
-                        Cancel{" "}
-                    </Button>
-                </Box>
-                <Snackbar
-                    open={openSnackbar}
-                    autoHideDuration={3000}
-                    onClose={() => handleSnackbar(false)}
-                    message={'Thank you for submitting your response.'}
-                />
-            </Box>
-        </>
-    )
+            <FormControl fullWidth variant="standard">
+              <InputLabel htmlFor="component-helper">
+                {requestFeatureEmailInputLabel}
+              </InputLabel>
+              <Input
+                id="component-helper"
+                value={emailDesc}
+                onKeyDown={(ev) => {
+                  if (ev.key === "Enter") {
+                    ev.preventDefault();
+                  }
+                  // ev.target.value -> results an error atm
+                  // although i could ev.target.value in dev console
+                  // this prevents onKeyDown to submit. accessibility issue ?
+                }}
+                onChange={(e) => {
+                  if (e.target.value != " ") {
+                    setEmailDesc(e.target.value);
+                  }
+                }}
+                aria-describedby="component-helper-text"
+              />
+              <FormHelperText id="component-helper-text">
+                {requestFeatureEmailInputHelper}
+              </FormHelperText>
+            </FormControl>
+            <br />
+            <RatingButtons
+              value={rating}
+              label={"How urgent would you rate this issue?"}
+              row={true}
+              display={"flex"}
+              flexDirection={"column"}
+              handleChange={setRating}
+            />
+          </FormControl>
+        </Box>
+
+        <br />
+        <br />
+        
+        <ButtonGroup
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-around"
+          gap="20vh"
+          submitLabel="submit"
+          handleSubmit={handleSubmit}
+          cancelLabel="cancel"
+          handleCancel={handleCancel}
+        />
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={3000}
+          onClose={() => handleSnackbar(false)}
+          message={"Thank you for submitting your response."}
+        />
+      </Box>
+    </>
+  );
 };
 
 export default AddFeatureForm;

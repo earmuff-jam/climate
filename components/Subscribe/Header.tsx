@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 
-const SubscribeHeader = () => {
+const Header = () => {
 
     return (
         <>
@@ -21,4 +21,4 @@ const SubscribeHeader = () => {
     )
 };
 
-export default SubscribeHeader;
+export default Header;

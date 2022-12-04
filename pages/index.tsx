@@ -27,12 +27,9 @@ export default function Home() {
         </p>
         <p className={styles.subscribeText}>
           Not satisfied yet !? You can also
-          <Link href="/requestFeatures"> request features ... </Link>
+          <Link href="/feedback"> request features ... </Link>
         </p>
       </main>
-
-      <footer className={styles.footer}>
-      </footer>
     </div>
   )
 }
