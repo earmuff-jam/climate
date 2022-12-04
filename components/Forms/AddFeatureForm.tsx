@@ -15,7 +15,26 @@ import RatingButtons from "./RatingButtons";
 import BodyHeaderContent from "../Home/BodyHeaderContent";
 import { useRequestFeatureForm } from "./CallToActionHook";
 
-const AddFeatureForm: React.FC = () => {
+interface Iprops {
+    requestFeatureInputLabel: string;
+    defaultInputRowsAllowed: number;
+    requestFeatureInputNoErrMsg: string;
+    requestFeatureInputErrMsg: string;
+    requestFeatureEmailInputLabel: string;
+    requestFeatureEmailInputHelper: string;
+}
+
+const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
+
+    const {
+        requestFeatureInputLabel,
+        defaultInputRowsAllowed,
+        requestFeatureInputNoErrMsg,
+        requestFeatureInputErrMsg,
+        requestFeatureEmailInputLabel,
+        requestFeatureEmailInputHelper,
+    } = props;
+
     const router = useRouter();
     const mediumSizeOrHigher = useMediaQuery("(min-width:768px)");
     const [
@@ -77,13 +96,13 @@ const AddFeatureForm: React.FC = () => {
                 <Box component="form" minWidth={mediumSizeOrHigher ? '100vh' : '50vh'}>
                     <FormControl fullWidth error={error} variant="standard">
                         <InputLabel htmlFor="component-helper">
-                            How can we make the application better ?
+                            {requestFeatureInputLabel}
                         </InputLabel>
                         <Input
                             id="component-helper"
                             multiline
-                            rows={4}
-                            maxRows={4}
+                            rows={defaultInputRowsAllowed}
+                            maxRows={defaultInputRowsAllowed}
                             value={featureDesc}
                             onKeyDown={(ev) => {
                                 if (ev.key === "Enter") {
@@ -103,12 +122,12 @@ const AddFeatureForm: React.FC = () => {
                         />
                         <FormHelperText id="component-helper-text">
                             {
-                                error ? 'Please add more details' : 'All submitted comments will remain anonymous.'
+                                error ? requestFeatureInputNoErrMsg : requestFeatureInputErrMsg
                             }
                         </FormHelperText>
 
                         <FormControl fullWidth variant="standard">
-                            <InputLabel htmlFor="component-helper">Email Address</InputLabel>
+                            <InputLabel htmlFor="component-helper">{requestFeatureEmailInputLabel}</InputLabel>
                             <Input
                                 id="component-helper"
                                 value={emailDesc}
@@ -128,7 +147,7 @@ const AddFeatureForm: React.FC = () => {
                                 aria-describedby="component-helper-text"
                             />
                             <FormHelperText id="component-helper-text">
-                                Participation is 100 % free and voluntary.
+                                {requestFeatureEmailInputHelper}
                             </FormHelperText>
                         </FormControl>
                         <br />
