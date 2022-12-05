@@ -160,6 +160,10 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
             />
           </FormControl>
         </Box>
+
+        <br />
+        <br />
+        
         <ButtonGroup
           display="flex"
           flexDirection="row"
