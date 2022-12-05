@@ -9,7 +9,7 @@ export const TitleComponent: React.FC<Iprops> = (props) => {
   const { title } = props;
   return (
     <Head>
-      <title> Climate Suggestion | {title}</title>
+      <title> Climate | {title}</title>
       <meta name="keywords" content="retail, storage" />
     </Head>
   );

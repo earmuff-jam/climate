@@ -8,13 +8,12 @@ import {
 } from "@mui/material";
 
 import React from "react";
-import Btn from "../Button/Btn";
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
-import RatingButtons from "../Button/RatingButtons";
-import BodyHeaderContent from "../Home/BodyHeaderContent";
-import { useRequestFeatureForm } from "./CallToActionHook";
 import ButtonGroup from "../Button/ButtonGroup";
+import RatingButtons from "../Button/RatingButtons";
+import { useRequestFeatureForm } from "./CallToActionHook";
+import Text from "../Typography/Text";
 
 interface Iprops {
   requestFeatureInputLabel: string;
@@ -70,7 +69,7 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
       sendRequestFeatureToDb(featureDesc, emailDesc, rating);
       setFeatureDesc("");
       setEmailDesc("");
-      setRating("5");
+      setRating("3");
       handleError(false);
       handleSnackbar(true);
       router.push("/");
@@ -82,23 +81,18 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
   const handleCancel = () => {
     setFeatureDesc("");
     setEmailDesc("");
-    setRating("5");
+    setRating("3");
     handleError(false);
     router.push("/");
   };
 
   return (
     <>
-      <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="left"
-        minHeight="100vh"
-        // minWidth={"100vh"}
-      >
-        <BodyHeaderContent />
-        <Box component="form" minWidth={mediumSizeOrHigher ? "100vh" : "50vh"}>
+      <Box display="flex" flexDirection="column">
+        <Text variant={"h4"} color={"textSecondary"} gutterBottom={true}>
+          Climate
+        </Text>
+        <Box component="form">
           <FormControl fullWidth error={error} variant="standard">
             <InputLabel htmlFor="component-helper">
               {requestFeatureInputLabel}
@@ -158,7 +152,7 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
             <br />
             <RatingButtons
               value={rating}
-              label={"Give us some stars \u2605"}
+              label={"How urgent would you rate this issue?"}
               row={true}
               display={"flex"}
               flexDirection={"column"}
