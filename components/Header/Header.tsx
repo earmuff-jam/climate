@@ -11,7 +11,6 @@ const Header: React.FC = () => {
       >
         Skip to Footer
       </Link>
-      Hi
     </div>
   );
 };

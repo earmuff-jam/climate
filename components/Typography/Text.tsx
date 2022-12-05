@@ -4,15 +4,33 @@ import React from "react";
 interface Iprops {
   variant?: any;
   color?: string;
+  justifyContent?: string;
+  alignContent?: string;
+  textAlign?: string;
   gutterBottom?: boolean;
   children: string;
 }
 
 const Text: React.FC<Iprops> = (props) => {
-  const { variant, color, gutterBottom, children } = props;
+  const {
+    variant,
+    color,
+    justifyContent = "left",
+    alignContent = "left",
+    textAlign = "left",
+    gutterBottom,
+    children,
+  } = props;
 
   return (
-    <Typography variant={variant} color={color} gutterBottom={gutterBottom}>
+    <Typography
+      variant={variant}
+      justifyContent={justifyContent}
+      alignContent={alignContent}
+      color={color}
+      textAlign={textAlign}
+      gutterBottom={gutterBottom}
+    >
       {children}
     </Typography>
   );
