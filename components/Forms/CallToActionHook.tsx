@@ -73,7 +73,7 @@ export const useRequestFeatureForm = (): [
 ] => {
   const [featureDesc, setFeatureDesc] = useState<string>("");
   const [emailDesc, setEmailDesc] = useState<string>("");
-  const [rating, setRating] = useState<string>("5");
+  const [rating, setRating] = useState<string>("3"); // default to three
   const [error, setError] = useState<boolean>(false);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 

@@ -1,16 +1,45 @@
 import Text from "../Typography/Text";
 
 const BodyHeaderContent: React.FC = () => {
-
-    return (
-        <>
-            <main>
-                <Text variant="h4">Climate Feedback</Text>
-                <Text variant="body2">Use the form below to send us a feature request, comment or even report a problem.</Text>
-                <Text variant="body2">We read all feedbacks carefully, but please note that we cannot respond to your comments that you submitted.</Text>
-            </main>
-        </>
-    )
+  return (
+    <>
+      <main>
+        <Text variant="h4" color={"textSecondary"} gutterBottom={true}>
+          Product Feedback
+        </Text>
+        <Text variant="body" color={"textSecondary"} gutterBottom={true}>
+          Climate strives to bring the best experience during your item
+          management.
+        </Text>
+        <br />
+        <Text variant="body" color={"textSecondary"} gutterBottom={false}>
+          With a potential to impact billions, Climate welcomes your feedback on
+          its products.
+        </Text>
+        <br />
+        <br />
+        <Text variant="body" color={"textSecondary"} gutterBottom={true}>
+          Begin by using the form below. Submitting this form does not guarentee
+          a response from us. However, we do read each feedback carefully. To
+          keep yourself updated with the changes in your feeback and our
+          response, please be sure to add your email address during your form
+          submission process.
+        </Text>
+        <br />
+        <br />
+        <Text variant="body" color={"textPrimary"} gutterBottom={true}>
+          Please use the form below for your feedback. We read all feedback
+          carefully, however due to the nature of feedbacks, we would be unable
+          to respond to each submission individually. If you provide your email
+          address, you agree that we may contact you to better understand the
+          comments you submitted.
+        </Text>
+        <br />
+        <br />
+        <br />
+      </main>
+    </>
+  );
 };
 
 export default BodyHeaderContent;
