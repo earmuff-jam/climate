@@ -1,22 +1,29 @@
 "use client";
+import Link from "next/link";
+import Image from "next/image";
+import Text from "../Typography/Text";
+import styles from "./Footer.module.css";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { Divider, Typography } from "@mui/material";
-import Link from "next/link";
-import vercel from "../../public/vercel.svg";
 import supabaseIcon from "../../public/supabaseIcon.png";
-import Image from "next/image";
-import styles from "./Footer.module.css";
-import Text from "../Typography/Text";
 
-const Footer: React.FC = () => {
+interface Iprops {
+  variant?: any;
+  color?: string;
+}
+
+const Footer: React.FC<Iprops> = (props: Iprops) => {
   const imageProps = {
     width: 150,
     height: 150,
     className: styles.footerIcon,
   };
+
+  const { variant = "body2", color = "textSecondary" } = props;
+
   return (
-    <footer id="#aboutus">
-      <Typography variant="body2" color="textSecondary" align="center">
+    <footer id="#footer">
+      <Typography variant={variant} color={color} align="center">
         <Link href="https://github.com/earmuff-jam/climate">
           <GitHubIcon className="footerIcon" />
         </Link>
@@ -39,7 +46,7 @@ const Footer: React.FC = () => {
       <Divider />
       <br />
       <Text
-        variant={"body"}
+        variant={"body2"}
         justifyContent="center"
         color={"textSecondary"}
         textAlign="center"
