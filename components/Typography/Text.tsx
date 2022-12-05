@@ -6,7 +6,7 @@ interface Iprops {
   color?: string;
   justifyContent?: string;
   alignContent?: string;
-  textAlign?: string;
+  textAlign?: any;
   gutterBottom?: boolean;
   children: string;
 }
