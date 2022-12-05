@@ -5,7 +5,7 @@ const Header: React.FC = () => {
   return (
     <div>
       <Link
-        href="#aboutus"
+        href="#footer"
         className={styles.skipNav}
         aria-label="Skip to footer"
       >

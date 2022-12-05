@@ -22,7 +22,7 @@ const Footer: React.FC<Iprops> = (props: Iprops) => {
   const { variant = "body2", color = "textSecondary" } = props;
 
   return (
-    <footer id="#footer">
+    <footer id="footer">
       <Typography variant={variant} color={color} align="center">
         <Link href="https://github.com/earmuff-jam/climate">
           <GitHubIcon className="footerIcon" />
