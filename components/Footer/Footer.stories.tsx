@@ -7,9 +7,9 @@ export default {
   component: Footer,
 } as ComponentMeta<typeof Footer>;
 
-const Template: ComponentStory<typeof Footer> = (args) => <Footer {...args} />;
+const Template: ComponentStory<typeof Footer> = () => <Footer />;
 export const FooterWithText = Template.bind({});
 FooterWithText.args = {
   /* the args you need here will depend on your component */
-  
+
 };
