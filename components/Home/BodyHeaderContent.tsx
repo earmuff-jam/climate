@@ -1,3 +1,4 @@
+import { Divider } from "@mui/material";
 import Text from "../Typography/Text";
 
 const BodyHeaderContent: React.FC = () => {
@@ -7,18 +8,16 @@ const BodyHeaderContent: React.FC = () => {
         <Text variant="h4" color={"textSecondary"} gutterBottom={true}>
           Product Feedback
         </Text>
-        <Text variant="body" color={"textSecondary"} gutterBottom={true}>
+        <Text variant="body2" color={"textSecondary"} gutterBottom={true}>
           Climate strives to bring the best experience during your item
           management.
         </Text>
-        <br />
-        <Text variant="body" color={"textSecondary"} gutterBottom={false}>
+        <Text variant="body2" color={"textSecondary"} gutterBottom={false}>
           With a potential to impact billions, Climate welcomes your feedback on
           its products.
         </Text>
         <br />
-        <br />
-        <Text variant="body" color={"textSecondary"} gutterBottom={true}>
+        <Text variant="body2" color={"textSecondary"} gutterBottom={true}>
           Begin by using the form below. Submitting this form does not guarentee
           a response from us. However, we do read each feedback carefully. To
           keep yourself updated with the changes in your feeback and our
@@ -26,8 +25,7 @@ const BodyHeaderContent: React.FC = () => {
           submission process.
         </Text>
         <br />
-        <br />
-        <Text variant="body" color={"textPrimary"} gutterBottom={true}>
+        <Text variant="body2" color={"textPrimary"} gutterBottom={true}>
           Please use the form below for your feedback. We read all feedback
           carefully, however due to the nature of feedbacks, we would be unable
           to respond to each submission individually. If you provide your email
