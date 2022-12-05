@@ -190,16 +190,11 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
 
   return (
     <>
-      <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="left"
-        minHeight="100vh"
-        // minWidth={"100vh"}
-      >
-        <BodyHeaderContent />
-        <Box component="form" minWidth={mediumSizeOrHigher ? "100vh" : "50vh"}>
+      <Box display="flex" flexDirection="column">
+        <Text variant={"h4"} color={"textSecondary"} gutterBottom={true}>
+          Climate
+        </Text>
+        <Box component="form">
           <FormControl fullWidth error={error} variant="standard">
             <InputLabel htmlFor="component-helper">
               {requestFeatureInputLabel}
@@ -259,7 +254,7 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
             <br />
             <RatingButtons
               value={rating}
-              label={"Give us some stars \u2605"}
+              label={"How urgent would you rate this issue?"}
               row={true}
               display={"flex"}
               flexDirection={"column"}
