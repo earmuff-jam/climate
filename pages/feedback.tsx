@@ -1,14 +1,13 @@
-import { Divider, Grid, Paper } from "@mui/material";
 import { Box } from "@mui/system";
-import Image from "next/image";
-import AddFeatureForm from "../components/Forms/AddFeatureForm";
-import BodyHeaderContent from "../components/Home/BodyHeaderContent";
-import { TitleComponent } from "../components/Home/TitleComponent";
-import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import Text from "../components/Typography/Text";
-
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import AddFeatureForm from "../components/Forms/AddFeatureForm";
+import { Divider, Grid, Paper, Typography } from "@mui/material";
+import { TitleComponent } from "../components/Home/TitleComponent";
+import BodyHeaderContent from "../components/Home/BodyHeaderContent";
 
 const RequestFeatures = () => {
+
   const defaultInputRowsAllowed = 4;
   const requestFeatureEmailInputLabel = "Email Address";
   const requestFeatureInputNoErrMsg = "Please add more details";
@@ -21,10 +20,10 @@ const RequestFeatures = () => {
   return (
     <>
       <TitleComponent title="Feedback" />
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column'}}>
         <BodyHeaderContent />
         <Divider />
-        <Grid container spacing={3} sx={{ padding: '2vh 0vh' }}>
+        <Grid container spacing={3} sx={{ padding: '2vh 0vh', alignItems:"center" }}>
           <Grid item xs={6}>
             <Paper elevation={3} sx={{ p: 2 }}>
               <AddFeatureForm
@@ -45,18 +44,19 @@ const RequestFeatures = () => {
               justifyContent: 'center',
               alignItems: "center",
               textAlign: 'center',
+              borderRadius: '0.7vh',
               backgroundColor: '#F5F5F7',
             }}>
               <LightbulbIcon fontSize="large" />
               <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                borderRadius: '25%',
                 backgroundColor: '#F5F5F7',
               }}>
                 <br />
-                <Text variant="h6" justifyContent="left">Have an idea that you want to see in light? </Text>
-                <Text variant="body2" justifyContent="center"> You can submit your ideas on the suggestion box </Text>
+                <Text variant="h6" justifyContent="left">Have an idea that you want alive? </Text>
+                <Typography variant="body1" justifyContent="center"> Submit your suggestion on climate.
+                </Typography>
               </Box>
             </Box>
           </Grid>
