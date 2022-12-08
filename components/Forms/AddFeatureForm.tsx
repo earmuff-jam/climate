@@ -3,8 +3,8 @@ import {
   Snackbar,
   InputLabel,
   FormControl,
-  useMediaQuery,
   FormHelperText,
+  Button,
 } from "@mui/material";
 
 import React from "react";
@@ -35,7 +35,6 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
   } = props;
 
   const router = useRouter();
-  const mediumSizeOrHigher = useMediaQuery("(min-width:768px)");
   const [
     featureDesc,
     setFeatureDesc,
@@ -67,23 +66,23 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
   const handleSubmit = (e: React.MouseEvent) => {
     if (featureDesc.length > 10) {
       sendRequestFeatureToDb(featureDesc, emailDesc, rating);
+      router.push("/");
       setFeatureDesc("");
       setEmailDesc("");
       setRating("3");
       handleError(false);
       handleSnackbar(true);
-      router.push("/");
     }
     handleError(true);
     return;
   };
 
   const handleCancel = () => {
+    router.push("/");
     setFeatureDesc("");
     setEmailDesc("");
     setRating("3");
     handleError(false);
-    router.push("/");
   };
 
   return (
@@ -160,20 +159,11 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
             />
           </FormControl>
         </Box>
-
         <br />
-        <br />
-        
-        <ButtonGroup
-          display="flex"
-          flexDirection="row"
-          justifyContent="space-around"
-          gap="20vh"
-          submitLabel="submit"
-          handleSubmit={handleSubmit}
-          cancelLabel="cancel"
-          handleCancel={handleCancel}
-        />
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2vh', justifyContent: "center" }}>
+          <Button variant="outlined" onClick={handleSubmit}>Submit</Button>
+          <Button onClick={handleCancel}>Cancel</Button>
+        </Box>
         <Snackbar
           open={openSnackbar}
           autoHideDuration={3000}
