@@ -27,7 +27,7 @@ const Header: React.FC = ({ toggleDrawer }) => {
           toggle.current?.();
         }}
       >
-        Hi
+        L1 / L2 MENU GOES HERE
       </div>
     </div>
   );
