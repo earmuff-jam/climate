@@ -1,7 +1,9 @@
 import Link from "next/link";
 import styles from "../../styles/Header.module.css";
 
-const Header: React.FC = () => {
+const Header: React.FC = ({
+  toggleDrawer,
+}) => {
   return (
     <div>
       <Link
@@ -11,7 +13,7 @@ const Header: React.FC = () => {
       >
         Skip to Footer
       </Link>
-      Hi
+      <div onMouseOut={() => {toggleDrawer()}}>Hi</div>
     </div>
   );
 };
