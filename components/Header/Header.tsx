@@ -29,7 +29,7 @@ const Header = ({ toggleDrawer }: HeaderIProps): JSX.Element => {
           toggle.current();
         }}
       >
-        Hi
+        L1 / L2 MENU GOES HERE
       </div>
     </div>
   );
