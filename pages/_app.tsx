@@ -7,7 +7,7 @@ import createEmotionCache from "../utility/createEmotionCache";
 import lightTheme from "../styles/theme/lighttheme";
 const clientSideEmotionCache = createEmotionCache();
 
-export default function App(props: AppProps) {
+export default function App(props: AppProps | any) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   return (
     <CacheProvider value={clientSideEmotionCache}>

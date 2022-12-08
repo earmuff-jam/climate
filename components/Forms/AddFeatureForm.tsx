@@ -89,7 +89,7 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
   return (
     <>
       <Box display="flex" flexDirection="column">
-        <Text variant={"h4"} color={"textSecondary"} gutterBottom={true}>
+        <Text variant={"h4"} gutterBottom={true}>
           Climate
         </Text>
         <Box component="form">
