@@ -1,7 +1,9 @@
 import Link from "next/link";
 import styles from "../../styles/Header.module.css";
 
-const Header: React.FC = () => {
+const Header: React.FC = ({
+  toggleDrawer,
+}) => {
   return (
     <div>
       <Link
