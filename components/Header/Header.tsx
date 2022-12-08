@@ -3,11 +3,14 @@ import { debounce } from "@mui/material";
 import Link from "next/link";
 import styles from "../../styles/Header.module.css";
 
-const Header: React.FC = ({ toggleDrawer }) => {
-  const toggle = useRef(null);
+interface HeaderProps {
+  toggleDrawer: Function;
+}
+const Header: React.FC<HeaderProps> = ({ toggleDrawer }) => {
+  const toggle = useRef<Function>(null);
   let wat = useRef(null);
   useEffect(() => {
-    toggle.current = debounce(wat ? toggleDrawer : () => {}, 1000);
+    toggle.current = debounce(wat ? toggleDrawer : null, 1000);
   });
 
   return (
