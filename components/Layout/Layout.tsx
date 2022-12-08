@@ -11,14 +11,14 @@ type LayoutProps = {
 const Layout = ({ children }: LayoutProps) => {
   const [open, setOpen] = React.useState(false);
 
-  const toggleDrawer = () => {
+  const toggleDrawer = React.useCallback(() => {
     setOpen((prev) => !prev);
-  };
+  },[]);
   return (
     <Box sx={{ display: "flex" }}>
       <MiniDrawer open={open} toggleDrawer={toggleDrawer} />
       <Box sx={{ display: "flex", flexDirection: "column" }}>
-        <Header toggleDrawer={toggleDrawer} />
+        <Header open={open} toggleDrawer={toggleDrawer} />
         <Box sx={{ display: "flex", flexGrow: 1 }}> {children}</Box>
         <Footer />
       </Box>
