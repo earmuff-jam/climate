@@ -25,8 +25,4 @@ export const Cancel = Template.bind({});
 Cancel.args = {
     variant: 'text',
     children: 'Cancel',
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> d4fe944 (add sb for button group for request features)
