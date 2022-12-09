@@ -18,8 +18,12 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
+import { useRouter } from "next/router";
+import QuestionAnswerRoundedIcon from "@mui/icons-material/QuestionAnswerRounded";
+import SubscriptionsRoundedIcon from "@mui/icons-material/SubscriptionsRounded";
+import Person2RoundedIcon from '@mui/icons-material/Person2Rounded';
 
-const drawerWidth = 240;
+const drawerWidth = 220;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -64,7 +68,6 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
@@ -76,7 +79,6 @@ const AppBar = styled(MuiAppBar, {
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
-  width: drawerWidth,
   flexShrink: 0,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
@@ -90,16 +92,38 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-const MiniDrawer = ({ open, toggleDrawer }) => {
+const MiniDrawer: React.FC<any> = ({ open, toggleDrawer }) => {
   const theme = useTheme();
+  const router = useRouter();
 
   const currentRoutes = [
     {
       title: "Home",
-      link: "",
+      link: "/",
       icon: <WebStoriesIcon />,
     },
+    {
+      title: "Subscribe",
+      link: "/subscribe",
+      icon: <SubscriptionsRoundedIcon />,
+    },
+    {
+      title: "Feeback",
+      link: "/feedback",
+      icon: <QuestionAnswerRoundedIcon />,
+    },
+    {
+      title: "Profile",
+      link: "/profile",
+      icon: <Person2RoundedIcon />,
+    },
   ];
+
+  const handleNav = (e: any, index: any) => {
+    const routesList = currentRoutes[index];
+    router.push(routesList.link);
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -118,6 +142,7 @@ const MiniDrawer = ({ open, toggleDrawer }) => {
                     justifyContent: open ? "initial" : "center",
                     px: 2.5,
                   }}
+                  onClick={(e) => handleNav(e, index)}
                 >
                   <ListItemIcon
                     sx={{
