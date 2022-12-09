@@ -89,8 +89,11 @@ const Drawer = styled(MuiDrawer, {
     "& .MuiDrawer-paper": closedMixin(theme),
   }),
 }));
-
-const MiniDrawer = ({ open, toggleDrawer }) => {
+type NavProps = {
+  open?: boolean;
+  toggleDrawer: any;
+};
+const NavBar = ({ open, toggleDrawer }: NavProps) => {
   const theme = useTheme();
 
   const currentRoutes = [
@@ -170,4 +173,4 @@ const MiniDrawer = ({ open, toggleDrawer }) => {
   );
 };
 
-export default MiniDrawer;
+export default NavBar;

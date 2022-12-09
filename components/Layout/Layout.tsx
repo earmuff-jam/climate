@@ -1,7 +1,7 @@
 import * as React from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import MiniDrawer from "../NavBar/Navbar";
+import NavBar from "../NavBar/Navbar";
 import { Box } from "@mui/material";
 
 type LayoutProps = {
@@ -11,12 +11,12 @@ type LayoutProps = {
 const Layout = ({ children }: LayoutProps) => {
   const [open, setOpen] = React.useState(false);
 
-  const toggleDrawer = React.useCallback(() => {
+  const toggleDrawer = React.useCallback((): void => {
     setOpen((prev) => !prev);
-  },[]);
+  },[setOpen]);
   return (
     <Box sx={{ display: "flex" }}>
-      <MiniDrawer open={open} toggleDrawer={toggleDrawer} />
+      <NavBar open={open} toggleDrawer={toggleDrawer} />
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <Header open={open} toggleDrawer={toggleDrawer} />
         <Box sx={{ display: "flex", flexGrow: 1 }}> {children}</Box>

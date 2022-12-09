@@ -2,14 +2,16 @@ import React, { useEffect, useRef } from "react";
 import { debounce } from "@mui/material";
 import Link from "next/link";
 import styles from "../../styles/Header.module.css";
+type HeaderIProps = {
+  open?: boolean;
+  toggleDrawer : any;
+};
 
-const Header: React.FC = ({ toggleDrawer }) => {
-  const toggle = useRef(null);
-  let wat = useRef(null);
+const Header = ({ toggleDrawer }: HeaderIProps): JSX.Element => {
+  const toggle = useRef<Function | (() => {})>(() => {});
   useEffect(() => {
-    toggle.current = debounce(wat ? toggleDrawer : () => {}, 1000);
+    toggle.current = debounce(() => toggleDrawer, 200);
   });
-
   return (
     <div>
       <Link
@@ -21,10 +23,10 @@ const Header: React.FC = ({ toggleDrawer }) => {
       </Link>
       <div
         onMouseEnter={() => {
-          toggle.current?.();
+          toggle.current();
         }}
         onMouseOut={() => {
-          toggle.current?.();
+          toggle.current();
         }}
       >
         Hi
