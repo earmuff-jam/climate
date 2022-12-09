@@ -1,6 +1,7 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import Link from "next/link";
+import styles from "../styles/Home.module.css";
+import SplashMainPage from "../containers/SplashPage/SplashMainPage";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
+        {/* <SplashMainPage /> */}
         <h1 className={styles.title}>
           Currently, under active development.
         </h1>
@@ -30,6 +32,7 @@ export default function Home() {
           <Link href="/feedback"> request features ... </Link>
         </p>
       </main>
+      <footer className={styles.footer}></footer>
     </div>
-  )
+  );
 }
