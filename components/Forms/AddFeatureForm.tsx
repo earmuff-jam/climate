@@ -161,8 +161,7 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
         </Box>
         <br />
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2vh', justifyContent: "center" }}>
-          <Button variant="outlined" onClick={handleSubmit}>Submit</Button>
-          <Button onClick={handleCancel}>Cancel</Button>
+          <Button variant="contained" onClick={handleSubmit}>Submit</Button>
         </Box>
         <Snackbar
           open={openSnackbar}
@@ -177,100 +176,5 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
     handleError(false);
     router.push("/");
   };
-
-  return (
-    <>
-      <Box display="flex" flexDirection="column">
-        <Text variant={"h4"} color={"textSecondary"} gutterBottom={true}>
-          Climate
-        </Text>
-        <Box component="form">
-          <FormControl fullWidth error={error} variant="standard">
-            <InputLabel htmlFor="component-helper">
-              {requestFeatureInputLabel}
-            </InputLabel>
-            <Input
-              id="component-helper"
-              multiline
-              rows={defaultInputRowsAllowed}
-              maxRows={defaultInputRowsAllowed}
-              value={featureDesc}
-              onKeyDown={(ev) => {
-                if (ev.key === "Enter") {
-                  ev.preventDefault();
-                }
-                // ev.target.value -> results an error atm
-                // although i could ev.target.value in dev console
-                // this prevents onKeyDown to submit. accessibility issue ?
-              }}
-              onChange={(e) => {
-                if (e.target.value != " ") {
-                  setFeatureDesc(e.target.value);
-                  handleError(false);
-                }
-              }}
-              aria-describedby="component-helper-text"
-            />
-            <FormHelperText id="component-helper-text">
-              {error ? requestFeatureInputNoErrMsg : requestFeatureInputErrMsg}
-            </FormHelperText>
-
-            <FormControl fullWidth variant="standard">
-              <InputLabel htmlFor="component-helper">
-                {requestFeatureEmailInputLabel}
-              </InputLabel>
-              <Input
-                id="component-helper"
-                value={emailDesc}
-                onKeyDown={(ev) => {
-                  if (ev.key === "Enter") {
-                    ev.preventDefault();
-                  }
-                  // ev.target.value -> results an error atm
-                  // although i could ev.target.value in dev console
-                  // this prevents onKeyDown to submit. accessibility issue ?
-                }}
-                onChange={(e) => {
-                  if (e.target.value != " ") {
-                    setEmailDesc(e.target.value);
-                  }
-                }}
-                aria-describedby="component-helper-text"
-              />
-              <FormHelperText id="component-helper-text">
-                {requestFeatureEmailInputHelper}
-              </FormHelperText>
-            </FormControl>
-            <br />
-            <RatingButtons
-              value={rating}
-              label={"How urgent would you rate this issue?"}
-              row={true}
-              display={"flex"}
-              flexDirection={"column"}
-              handleChange={setRating}
-            />
-          </FormControl>
-        </Box>
-        <ButtonGroup
-          display="flex"
-          flexDirection="row"
-          justifyContent="space-around"
-          gap="20vh"
-          submitLabel="submit"
-          handleSubmit={handleSubmit}
-          cancelLabel="cancel"
-          handleCancel={handleCancel}
-        />
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={3000}
-          onClose={() => handleSnackbar(false)}
-          message={"Thank you for submitting your response."}
-        />
-      </Box>
-    </>
-  );
-};
 
 export default AddFeatureForm;
