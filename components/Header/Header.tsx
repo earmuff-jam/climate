@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import { debounce } from "@mui/material";
+
 import Link from "next/link";
 import styles from "../../styles/Header.module.css";
+
 type HeaderIProps = {
   open?: boolean;
   toggleDrawer : any;
