@@ -13,7 +13,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        {/* <SplashMainPage /> */}
+        <SplashMainPage />
         <h1 className={styles.title}>
           Currently, under active development.
         </h1>
