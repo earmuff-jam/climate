@@ -10,10 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+  GUEST
+}
+
 model BaseUser {
   id    Int     @id @default(autoincrement())
   email String  @unique
   name  String?
+  role  Role    @default(USER)
 }
 
 model SubscribeEmailList {
@@ -28,4 +35,29 @@ model RequestFeatures {
   app_review String
   email      String?
   rating     String  @default("5")
+}
+
+model Items {
+  item_id                 Int          @id @default(autoincrement())
+  item_name               String
+  item_quantity           Int          @default(1)
+  item_location           ItemLocation @relation(references: [location_id], fields: [itemLocationLocation_id])
+  doesExpire              Boolean
+  expiryDate              DateTime?
+  created                 DateTime
+  createdBy               String
+  updated                 DateTime
+  updatedBy               String
+  itemLocationLocation_id Int
+}
+
+model ItemLocation {
+  location_id    Int      @id @default(autoincrement())
+  location_name  String
+  location_desc  String?
+  created        DateTime
+  createdBy      String
+  updated        DateTime
+  updatedBy      String
+  Items          Items[]
 }
