@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useMemo, useRef, useCallback } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { Box } from "@mui/material";
 import "ag-grid-community/styles/ag-grid.css";
@@ -27,6 +27,9 @@ const DataTable = () => {
     }),
     []
   );
+  const cellClickedListener = useCallback((e) => {
+    console.log("cellClicked", e);
+  }, []);
   return (
     <Box
       className="ag-theme-alpine"
@@ -41,7 +44,8 @@ const DataTable = () => {
         columnDefs={columnDefs}
         defaultColDef={defaultColumnDefs}
         animateRows={true}
-        rowSelection='multiple'
+        rowSelection="multiple"
+        onCellClicked={cellClickedListener}
       />
     </Box>
   );
