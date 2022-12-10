@@ -33,12 +33,10 @@ const DataTable = () => {
   return (
     <Box
       className="ag-theme-alpine"
-      sx={{
-        height: "50rem",
-        width: "100rem",
-      }}
+      height="40rem"
     >
       <AgGridReact
+        className="ag-theme-alpine"
         ref={gridRef}
         rowData={rowData}
         columnDefs={columnDefs}

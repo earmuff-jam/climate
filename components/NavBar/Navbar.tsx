@@ -18,6 +18,8 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
+import SourceIcon from "@mui/icons-material/Source";
+import Link from "next/link";
 
 const drawerWidth = 240;
 
@@ -99,12 +101,27 @@ const NavBar = ({ open, toggleDrawer }: NavProps) => {
   const currentRoutes = [
     {
       title: "Home",
-      link: "",
+      link: "/",
       icon: <WebStoriesIcon />,
+    },
+    {
+      title: "Subscribe",
+      link: "/subscribe",
+      icon: <MailIcon />,
+    },
+    {
+      title: "Stuff",
+      link: "/stuff",
+      icon: <SourceIcon />,
+    },
+    {
+      title: "Contact",
+      link: "/requestFeatures",
+      icon: <InboxIcon />,
     },
   ];
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box>
       <CssBaseline />
       <Drawer variant="permanent" open={open}>
         <List>
@@ -115,27 +132,29 @@ const NavBar = ({ open, toggleDrawer }: NavProps) => {
                 disablePadding
                 sx={{ display: "block" }}
               >
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
+                <Link href={route.link}>
+                  <ListItemButton
                     sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
                     }}
                   >
-                    {route.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={route.title}
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {route.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={route.title}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </Link>
               </ListItem>
             );
           })}
