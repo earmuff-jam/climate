@@ -51,6 +51,7 @@ const DataTable = ({
       sx={{
         minHeight: "20rem",
         minWidth: "20rem",
+        height: "100%",
       }}
     >
       <AgGridReact

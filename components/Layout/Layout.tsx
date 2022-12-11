@@ -8,7 +8,16 @@ import styles from "./Layout.module.css";
 type LayoutProps = {
   children: React.ReactNode;
 };
-
+const layout = {
+  display: "flex",
+  flexDirection: "row",
+  height: "100vh",
+};
+const navbar = {
+  flex: "0 0 auto",
+  display: "flex",
+  flexDirection: "column",
+};
 const Layout = ({ children }: LayoutProps) => {
   const [open, setOpen] = React.useState(false);
 
@@ -16,8 +25,8 @@ const Layout = ({ children }: LayoutProps) => {
     setOpen((prev) => !prev);
   }, [setOpen]);
   return (
-    <Box className={styles.layout}>
-      <Box className={styles.navbar}>
+    <Box sx={layout}>
+      <Box sx={navbar}>
         <NavBar open={open} toggleDrawer={toggleDrawer} />
       </Box>
       <Box className={styles.content}>

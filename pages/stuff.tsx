@@ -22,7 +22,6 @@ const Stuff = () => {
           display: "flex",
           flexDirection: "column",
           flexGrow: 1,
-          height: "40rem",
         }}
       >
         <DataTable
