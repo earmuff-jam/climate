@@ -1,27 +1,22 @@
 import * as React from "react";
-import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import WebStoriesIcon from "@mui/icons-material/WebStories";
 import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
+import { useRouter } from "next/router";
 import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import MuiDrawer from "@mui/material/Drawer";
 import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
+import CssBaseline from "@mui/material/CssBaseline";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import { useRouter } from "next/router";
-import QuestionAnswerRoundedIcon from "@mui/icons-material/QuestionAnswerRounded";
-import SubscriptionsRoundedIcon from "@mui/icons-material/SubscriptionsRounded";
+import ListItemButton from "@mui/material/ListItemButton";
+import WebStoriesIcon from "@mui/icons-material/WebStories";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Person2RoundedIcon from '@mui/icons-material/Person2Rounded';
+import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
+import SubscriptionsRoundedIcon from "@mui/icons-material/SubscriptionsRounded";
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import QuestionAnswerRoundedIcon from "@mui/icons-material/QuestionAnswerRounded";
 
 const drawerWidth = 220;
 
@@ -122,7 +117,7 @@ const NavBar = ({ open, toggleDrawer }: NavProps) => {
     },
   ];
 
-  const handleNav = (e: any, index: any) => {
+  const handleNav = (index: number) => {
     const routesList = currentRoutes[index];
     router.push(routesList.link);
   };
@@ -145,7 +140,7 @@ const NavBar = ({ open, toggleDrawer }: NavProps) => {
                     justifyContent: open ? "initial" : "center",
                     px: 2.5,
                   }}
-                  onClick={(e) => handleNav(e, index)}
+                  onClick={() => handleNav(index)}
                 >
                   <ListItemIcon
                     sx={{

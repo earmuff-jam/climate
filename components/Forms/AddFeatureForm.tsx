@@ -9,11 +9,10 @@ import {
 
 import React from "react";
 import { Box } from "@mui/system";
+import Text from "../Typography/Text";
 import { useRouter } from "next/router";
-import ButtonGroup from "../Button/ButtonGroup";
 import RatingButtons from "../Button/RatingButtons";
 import { useRequestFeatureForm } from "./CallToActionHook";
-import Text from "../Typography/Text";
 
 interface Iprops {
   requestFeatureInputLabel: string;
@@ -74,6 +73,7 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
       handleSnackbar(true);
     }
     handleError(true);
+    handleSnackbar(false);
     return;
   };
 
@@ -110,7 +110,7 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
                 // although i could ev.target.value in dev console
                 // this prevents onKeyDown to submit. accessibility issue ?
               }}
-              onChange={(e) => {
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 if (e.target.value != " ") {
                   setFeatureDesc(e.target.value);
                   handleError(false);
@@ -172,9 +172,6 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
       </Box>
     </>
   );
-    setRating("5");
-    handleError(false);
-    router.push("/");
-  };
+};
 
 export default AddFeatureForm;

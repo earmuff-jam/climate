@@ -28,3 +28,11 @@ yarn cache clean
 yarn
 yarn start
 ```
+
+Installation of chartjs and react charts. We have to install the chart as
+
+```
+yarn add react-chartjs-2
+yarn add chartjs
+
+```

@@ -19,11 +19,12 @@ const BodyHeaderContent: React.FC = () => {
         <Typography variant="h6" gutterBottom={true}>
           Please fill the form below.
         </Typography>
+        <Typography variant="body2">
+          We read all feedback carefully, however due to the nature of feedbacks,<br />
+          we would be unable to respond to each submission individually. If you provide <br/>
+          your email address we might reach out to you with more information.
+        </Typography>
         <Typography>
-          We read all feedback carefully, however due to the nature of feedbacks, we would be unable
-          to respond to each submission individually. If you provide your email
-          address, you agree that we may contact you to better understand the
-          comments you submitted.
         </Typography>
         <br />
       </main>
