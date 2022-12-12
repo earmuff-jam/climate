@@ -1,17 +1,13 @@
 import React from "react";
-import IdeaWithText from "./IdeaWithText";
 import RoiCalculator from "../Forms/RoiCalculator";
 
 interface Iprops {
 
 }
 
-const Idea: React.FC<Iprops> = (props) => {
+const Idea: React.FC<Iprops> = () => {
   return (
-    <>
-      <IdeaWithText />
-      <RoiCalculator />
-    </>
+    <RoiCalculator />
   )
 };
 

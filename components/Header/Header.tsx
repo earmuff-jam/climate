@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from "react";
-import { debounce } from "@mui/material";
 import Link from "next/link";
+import { debounce } from "@mui/material";
+import React, { useEffect, useRef } from "react";
 import styles from "../../styles/Header.module.css";
+
 type HeaderIProps = {
   open?: boolean;
   toggleDrawer : any;
@@ -29,7 +30,6 @@ const Header = ({ toggleDrawer }: HeaderIProps): JSX.Element => {
           toggle.current();
         }}
       >
-        L1 / L2 MENU GOES HERE
       </div>
     </div>
   );

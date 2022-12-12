@@ -2,6 +2,7 @@ import {
     Button,
     FormControl,
     Input,
+    InputAdornment,
     InputLabel,
     Paper,
     Tooltip,
@@ -9,6 +10,10 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
+import PercentRoundedIcon from '@mui/icons-material/PercentRounded';
+import NumbersIconRoundedIcon from '@mui/icons-material/NumbersRounded';
+import AttachMoneyRoundedIcon from '@mui/icons-material/AttachMoneyRounded';
+import Diversity1IconRoundedIcon from '@mui/icons-material/Diversity1Rounded';
 
 interface Iprops {
     taxSavings?: number;
@@ -23,9 +28,9 @@ const RoiCalculator: React.FC<Iprops> = ({ taxSavings = 0.021, auditSavings = 25
     const [avgBrokenProducts, setAvgBrokenProducts] = useState<string>('2');
     const [error, setError] = useState<boolean>(false);
 
-    const handleError = (val: boolean) => setError(val);
+    const handleError = (val: boolean): void => setError(val);
 
-    const handleSubmit = () => {
+    const handleSubmit = (): void => {
         setUserCount("0");
         setItemsCount("0");
         handleError(false);
@@ -33,11 +38,23 @@ const RoiCalculator: React.FC<Iprops> = ({ taxSavings = 0.021, auditSavings = 25
 
     const calculate = (): number => (auditSavings + (parseInt(itemCount) * parseInt(avgAssetVal) * taxSavings) - parseInt(avgBrokenProducts));
     const calculateTax = (): number => (parseInt(itemCount) * taxSavings * (parseInt(avgAssetVal)));
+
+    /**
+     * method to filter any not a number property
+     * @param action any function that solves to a value
+     * @returns number or zero
+     */
+    const filterNaN = (action: Function): number => isNaN(action()) ? 0 : action();
+
+
     return (
         <>
-            <Typography variant="h6">Save with our ROI Calculator </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 6, padding: 1}}>
-                <Box component="form" sx={{ display: 'flex', flexDirection: 'column', alignContent: 'center', gap: '2rem' }}>
+            <Typography variant="h6" textAlign="left" color={'primary.main'}>Save with our ROI Calculator </Typography>
+
+            <Typography variant="caption" textAlign="left" color={'secondary.main'}> You can use this calculator to determine an estimation of how much money would you save just by using an item management tool. </Typography>
+
+            <Box sx={{ display: 'flex', flexDirection: 'center', justifyContent: 'space-between', gap: 1, padding: 1 }}>
+                <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                     <FormControl error={error} variant="standard">
                         <InputLabel htmlFor="component-helper">
                             Household members
@@ -54,11 +71,16 @@ const RoiCalculator: React.FC<Iprops> = ({ taxSavings = 0.021, auditSavings = 25
                                 // this prevents onKeyDown to submit. accessibility issue ?
                             }}
                             onChange={(e) => {
-                                if (e.target.value != " ") {
+                                if (e.target.value.match("^[0-9]*$") || [].length > 0) {
                                     setUserCount(e.target.value);
                                     handleError(false);
                                 }
                             }}
+                            startAdornment={
+                                <InputAdornment position="start">
+                                    <Diversity1IconRoundedIcon />
+                                </InputAdornment>
+                            }
                             aria-describedby="component-helper-text"
                         />
                     </FormControl>
@@ -78,11 +100,16 @@ const RoiCalculator: React.FC<Iprops> = ({ taxSavings = 0.021, auditSavings = 25
                                 // this prevents onKeyDown to submit. accessibility issue ?
                             }}
                             onChange={(e) => {
-                                if (e.target.value != " ") {
+                                if (e.target.value.match("^[0-9]*$") || [].length > 0) {
                                     setItemsCount(e.target.value);
                                     handleError(false);
                                 }
                             }}
+                            startAdornment={
+                                <InputAdornment position="start">
+                                    <NumbersIconRoundedIcon />
+                                </InputAdornment>
+                            }
                             aria-describedby="component-helper-text"
                         />
                     </FormControl>
@@ -102,11 +129,16 @@ const RoiCalculator: React.FC<Iprops> = ({ taxSavings = 0.021, auditSavings = 25
                                 // this prevents onKeyDown to submit. accessibility issue ?
                             }}
                             onChange={(e) => {
-                                if (e.target.value != " ") {
+                                if (e.target.value.match("^[0-9]*$") || [].length > 0) {
                                     setAvgAssetVal(e.target.value);
                                     handleError(false);
                                 }
                             }}
+                            startAdornment={
+                                <InputAdornment position="start">
+                                    <AttachMoneyRoundedIcon />
+                                </InputAdornment>
+                            }
                             aria-describedby="component-helper-text"
                         />
                     </FormControl>
@@ -126,28 +158,33 @@ const RoiCalculator: React.FC<Iprops> = ({ taxSavings = 0.021, auditSavings = 25
                                 // this prevents onKeyDown to submit. accessibility issue ?
                             }}
                             onChange={(e) => {
-                                if (e.target.value != " ") {
+                                if (e.target.value.match("^[0-9]*$") || [].length > 0) {
                                     setAvgBrokenProducts(e.target.value);
                                     handleError(false);
                                 }
                             }}
+                            startAdornment={
+                                <InputAdornment position="start">
+                                    <PercentRoundedIcon />
+                                </InputAdornment>
+                            }
                             aria-describedby="component-helper-text"
                         />
                     </FormControl>
                 </Box>
-                <Paper elevation={3} sx={{p: 2, display: 'flex', flexDirection: 'column', gap: 1, borderRadius: 2 }}>
-                    <Tooltip title="Savings" placement="top-start">
-                        <Typography variant="subtitle1">Savings</Typography>
+                <Paper elevation={0} sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1, alignSelf: 'center', borderRadius: 2 }}>
+                    <Tooltip title="savings from audit process" placement="top-start">
+                        <Typography variant="caption">Audit Log Savings</Typography>
                     </Tooltip>
-                    <Typography variant="body1" color={'#1B82A8'}>${calculate().toFixed(2)}</Typography>
-                    <Tooltip title="Tax Savings" placement="top-start">
-                        <Typography variant="subtitle1">Tax Savings</Typography>
+                    <Typography variant="body1" color={'#1B82A8'}>${filterNaN(calculate).toFixed(2)}</Typography>
+                    <Tooltip title="savings from tax expenditures" placement="top-start">
+                        <Typography variant="caption">Tax Savings</Typography>
                     </Tooltip>
-                    <Typography variant="body2" color={'#1B82A8'}>${calculateTax().toFixed(2)}</Typography>
+                    <Typography variant="body2" color={'#1B82A8'}>${filterNaN(calculateTax).toFixed(2)}</Typography>
                     <Tooltip title="Grand total saved" placement="top-start">
                         <Typography variant="h6">Total Saved</Typography>
                     </Tooltip>
-                    <Typography variant="h4" color={'#1B82A8'}>${calculate().toFixed(2)}</Typography>
+                    <Typography variant="h6" color={'#1B82A8'}>${filterNaN(calculate).toFixed(2)}</Typography>
                 </Paper>
             </Box>
             <br />

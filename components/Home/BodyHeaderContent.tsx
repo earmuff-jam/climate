@@ -1,10 +1,12 @@
+import React from "react";
 import { Typography } from "@mui/material";
+import IdeaWithText from "../Idea/IdeaWithText";
 
 const BodyHeaderContent: React.FC = () => {
   return (
     <>
       <main>
-        <Typography variant="h4" gutterBottom={true}>
+        <Typography variant="h4" gutterBottom={true} color={'primary.main'}>
           Product Feedback
         </Typography>
         <Typography variant="body1" gutterBottom={true}>
@@ -17,15 +19,14 @@ const BodyHeaderContent: React.FC = () => {
         </Typography>
         <br />
         <Typography variant="h6" gutterBottom={true}>
-          Please fill the form below.
+          Please fill the form below
         </Typography>
-        <Typography variant="body2">
+        <Typography variant="body2" gutterBottom>
           We read all feedback carefully, however due to the nature of feedbacks,<br />
-          we would be unable to respond to each submission individually. If you provide <br/>
+          we would be unable to respond to each submission individually. If you provide <br />
           your email address we might reach out to you with more information.
         </Typography>
-        <Typography>
-        </Typography>
+        <IdeaWithText />
         <br />
       </main>
     </>
