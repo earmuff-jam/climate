@@ -4,7 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import styles from "../../styles/Home.module.css";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
-import { Divider, Select, Typography } from "@mui/material";
+import { Divider, Grid, Select, Typography } from "@mui/material";
 import KitchenRoundedIcon from "@mui/icons-material/KitchenRounded";
 import GarageRoundedIcon from "@mui/icons-material/GarageRounded";
 import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
@@ -167,34 +167,37 @@ const CategoryBoxList: any = () => {
     };
     return (
         <>
-        <Divider />
-            <Box className={styles.mohit}>
-                {storageLocations.map((x) => {
-                    return (
-                        <>
-                            <Box
-                                className={styles.newMohit}
-                            >
-                                <Typography variant="h5" gutterBottom>
-                                    {generateIcon(x.icon)} {x.title}
-                                </Typography>
-                                <Typography variant="body1" gutterBottom lineHeight="1.6">
-                                    {" "}
-                                    <strong>{x.desc}</strong>
-                                </Typography>
+            <Divider />
+            <Grid container>
+                <Grid item md={12}>
+                    <Box className={styles.mohit}>
+                        {storageLocations?.map((x) => {
+                            return (
+                                <Box
+                                    key={x.id}
+                                    className={styles.newMohit}
+                                >
+                                    <Typography variant="h5" gutterBottom>
+                                        {generateIcon(x.icon)} {x.title}
+                                    </Typography>
+                                    <Typography variant="body1" gutterBottom lineHeight="1.6">
+                                        {" "}
+                                        <strong>{x.desc}</strong>
+                                    </Typography>
 
-                                <Typography variant="h5" gutterBottom lineHeight="1.6">
-                                    {x.expiredItemsCount}
-                                </Typography>
-                                <SampleChart
-                                    labels={x.chartInfo?.labels}
-                                    datasets={x.chartInfo?.datasets}
-                                />
-                            </Box>
-                        </>
-                    );
-                })}
-            </Box>
+                                    <Typography variant="h5" gutterBottom lineHeight="1.6">
+                                        {x.expiredItemsCount}
+                                    </Typography>
+                                    <SampleChart
+                                        labels={x.chartInfo?.labels}
+                                        datasets={x.chartInfo?.datasets}
+                                    />
+                                </Box>
+                            );
+                        })}
+                    </Box>
+                </Grid>
+            </Grid>
         </>
     )
 }

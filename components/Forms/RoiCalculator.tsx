@@ -18,9 +18,11 @@ import Diversity1IconRoundedIcon from '@mui/icons-material/Diversity1Rounded';
 interface Iprops {
     taxSavings?: number;
     auditSavings?: number;
+    elevation?: number;
+    innerPadding?: number;
 }
 
-const RoiCalculator: React.FC<Iprops> = ({ taxSavings = 0.021, auditSavings = 2523 }) => {
+const RoiCalculator: React.FC<Iprops> = ({ taxSavings = 0.021, auditSavings = 2523, elevation = 0, innerPadding = 0 }) => {
 
     const [userCount, setUserCount] = useState<string>("1");
     const [itemCount, setItemsCount] = useState<string>("1");
@@ -48,7 +50,7 @@ const RoiCalculator: React.FC<Iprops> = ({ taxSavings = 0.021, auditSavings = 25
 
 
     return (
-        <>
+        <Paper elevation={elevation} style={{ padding: `${innerPadding}rem` }}>
             <Typography variant="h6" textAlign="left" color={'primary.main'}>Save with our ROI Calculator </Typography>
 
             <Typography variant="caption" textAlign="left" color={'secondary.main'}> You can use this calculator to determine an estimation of how much money would you save just by using an item management tool. </Typography>
@@ -191,7 +193,7 @@ const RoiCalculator: React.FC<Iprops> = ({ taxSavings = 0.021, auditSavings = 25
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: "center" }}>
                 <Button variant="contained" onClick={handleSubmit}>Calculate</Button>
             </Box>
-        </>
+        </Paper>
     )
 };
 

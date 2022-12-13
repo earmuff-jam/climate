@@ -16,11 +16,21 @@ enum Role {
   GUEST
 }
 
+model AuditColumns {
+  id                 Int      @id @default(autoincrement())
+  base_user          BaseUser @relation(references: [id], fields: [updated_by_user_id])
+  updated_by_user_id Int
+  updated_on         DateTime
+}
+
 model BaseUser {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  role  Role    @default(USER)
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  firstName    String
+  lastName     String
+  phone_number String?
+  role         Role           @default(USER)
+  AuditColumns AuditColumns[]
 }
 
 model SubscribeEmailList {
@@ -44,20 +54,12 @@ model Items {
   item_location           ItemLocation @relation(references: [location_id], fields: [itemLocationLocation_id])
   doesExpire              Boolean
   expiryDate              DateTime?
-  created                 DateTime
-  createdBy               String
-  updated                 DateTime
-  updatedBy               String
   itemLocationLocation_id Int
 }
 
 model ItemLocation {
-  location_id    Int      @id @default(autoincrement())
-  location_name  String
-  location_desc  String?
-  created        DateTime
-  createdBy      String
-  updated        DateTime
-  updatedBy      String
-  Items          Items[]
+  location_id   Int      @id @default(autoincrement())
+  location_name String
+  location_desc String?
+  Items         Items[]
 }

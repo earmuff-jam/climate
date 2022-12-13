@@ -4,7 +4,8 @@ import Idea from "../components/Idea/Idea";
 import { Divider, Grid, Paper } from "@mui/material";
 import AddFeatureForm from "../components/Forms/AddFeatureForm";
 import { TitleComponent } from "../components/Home/TitleComponent";
-import BodyHeaderContent from "../components/Home/BodyHeaderContent";
+import BodyHeaderContent from "../components/Home/FeedbackHeader";
+import RoiCalculator from "../components/Forms/RoiCalculator";
 
 const RequestFeatures = () => {
 
@@ -35,7 +36,7 @@ const RequestFeatures = () => {
           </Box>
         </Grid>
         <Grid item md={6} xs={12}>
-          <Paper elevation={3} sx={{ p: 2 }}>
+          <Box sx={{ p: 2 }}>
             <AddFeatureForm
               requestFeatureInputLabel={requestFeatureInputLabel}
               defaultInputRowsAllowed={defaultInputRowsAllowed}
@@ -44,10 +45,10 @@ const RequestFeatures = () => {
               requestFeatureEmailInputLabel={requestFeatureEmailInputLabel}
               requestFeatureEmailInputHelper={requestFeatureEmailInputHelper}
             />
-          </Paper>
+          </Box>
         </Grid>
         <Grid item lg={3} md={6} xs={12}>
-          <Idea />
+          <RoiCalculator elevation={1} innerPadding={1} />
         </Grid>
       </Grid>
     </>
@@ -55,9 +56,3 @@ const RequestFeatures = () => {
 };
 
 export default RequestFeatures;
-
-
-{/* <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-  <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: 1 }}>
-
-  </Box> */}

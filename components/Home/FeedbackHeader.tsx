@@ -2,7 +2,7 @@ import React from "react";
 import { Typography } from "@mui/material";
 import IdeaWithText from "../Idea/IdeaWithText";
 
-const BodyHeaderContent: React.FC = () => {
+const FeedbackHeader: React.FC = () => {
   return (
     <>
       <main>
@@ -33,4 +33,4 @@ const BodyHeaderContent: React.FC = () => {
   );
 };
 
-export default BodyHeaderContent;
+export default FeedbackHeader;
