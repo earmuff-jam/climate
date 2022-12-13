@@ -36,3 +36,10 @@ yarn add react-chartjs-2
 yarn add chartjs
 
 ```
+
+Installation of react map for our map purposes.
+
+```
+yarn add react-simple-maps
+
+```

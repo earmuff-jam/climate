@@ -1,10 +1,9 @@
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
+import { Select, Typography } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
-import { Divider, Select, Typography } from "@mui/material";
-import CategoryBoxList from "../../components/Home/CategoryBoxList";
 
 const options = [
   { value: "24", display: "24 hours", helperText: "24 hours" },
@@ -54,8 +53,6 @@ const SplashMainPage = () => {
             Climate Status for the past {value.helperText}
           </FormHelperText>
         </Box>
-        <Divider />
-        <CategoryBoxList />
       </FormControl>
     </>
   );

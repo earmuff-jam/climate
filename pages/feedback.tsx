@@ -1,10 +1,9 @@
 import Image from "next/image";
 import { Box } from "@mui/system";
-import Idea from "../components/Idea/Idea";
-import { Divider, Grid, Paper } from "@mui/material";
+import { Grid } from "@mui/material";
 import AddFeatureForm from "../components/Forms/AddFeatureForm";
 import { TitleComponent } from "../components/Home/TitleComponent";
-import BodyHeaderContent from "../components/Home/FeedbackHeader";
+import FeedbackHeader from "../components/Home/FeedbackHeader";
 import RoiCalculator from "../components/Forms/RoiCalculator";
 
 const RequestFeatures = () => {
@@ -28,7 +27,7 @@ const RequestFeatures = () => {
       <TitleComponent title="Feedback" />
       <Grid container spacing={2} padding={1}>
         <Grid item md={6} xs={9}>
-          <BodyHeaderContent />
+          <FeedbackHeader />
         </Grid>
         <Grid item md={6} xs={3}>
           <Box sx={{ p: 2, borderRadius: '8rem' }}>

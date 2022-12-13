@@ -3,6 +3,7 @@ import { createTheme } from "@mui/material/styles";
 const primary_main_color = '#1B82A8';
 const secondary_main_color = '#19857b';
 const error_main_color = '#FF0100';
+const primary_grey_shade = '#F5F5F7';
 
 const lightTheme = createTheme({
   palette: {
@@ -12,6 +13,7 @@ const lightTheme = createTheme({
     },
     secondary: {
       main: secondary_main_color,
+      dark: primary_grey_shade,
     },
     error: {
       main: error_main_color,
