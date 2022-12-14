@@ -27,7 +27,7 @@ const lightTheme = createTheme({
       lg: 1200,
       xl: 1536,
     },
-  }
+  },
 });
 
 export default lightTheme;

@@ -1,4 +1,5 @@
-import { Typography } from "@mui/material";
+import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Typography } from "@mui/material";
+import StarIcon from '@mui/icons-material/Star';
 import { Box } from "@mui/system";
 import React from "react";
 
@@ -89,7 +90,6 @@ const sampleActivityTrail = [
     },
 ];
 
-
 const Activity = () => {
 
     const generateActivityTrail = (category: string) => {
@@ -104,19 +104,19 @@ const Activity = () => {
                 </Typography>
                 <br />
                 <br />
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {/* <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     {
                         sampleActivityTrail.map((x) => {
                             return (
                                 <>
-                                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 2 }}>
+                                
+                                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                         <Typography variant="caption">
                                             {x.item}
                                         </Typography>
                                         <Typography variant="caption">
                                             <strong>{x.itemStorageLoc}</strong>
                                         </Typography>
-
                                         <Typography
                                             variant="caption"
                                             sx={{
@@ -129,7 +129,7 @@ const Activity = () => {
                                             {x.overallStatus}
                                         </Typography>
                                     </Box>
-                                    <Box sx={{ backgroundColor: 'secondary.dark', marginTop: 2, marginLeft: 2 }}>
+                                    <Box sx={{ backgroundColor: 'secondary.dark', marginLeft: 6 }}>
                                         {generateActivityTrail(x.item)?.map((x) => {
                                             return (
 
@@ -145,7 +145,52 @@ const Activity = () => {
                             )
                         })
                     }
-                </Box>
+                </Box> */}
+
+                <List
+                    sx={{
+                        width: '100%',
+                        maxWidth: 360,
+                        bgcolor: 'background.paper',
+                        position: 'relative',
+                        overflow: 'auto',
+                        maxHeight: 300,
+                        '& ul': { padding: 0 },
+                    }}
+                    subheader={<li />}
+                >
+                    {sampleActivityTrail.map((trail) => (
+                        <li key={`section-${trail.id}`}>
+                            <ul>
+                                <ListSubheader>{`${trail.item}`}
+                                </ListSubheader>
+                                {
+                                    generateActivityTrail(trail.item)?.map((x) => (
+                                        <ListItem
+                                            key={`item-${trail.item}-${x.id}`}>
+                                            <ListItemText
+                                                primary={`${x.date}`}
+                                                primaryTypographyProps={{
+                                                    color: 'primary',
+                                                    fontWeight: 'medium',
+                                                    variant: 'body2',
+                                                }}
+                                            />
+                                            <ListItemText
+                                                primary={`${x.status}`}
+                                                primaryTypographyProps={{
+                                                    color: 'primary',
+                                                    fontWeight: 'medium',
+                                                    variant: 'body2',
+                                                }}
+                                            />
+                                        </ListItem>
+                                    ))
+                                }
+                            </ul>
+                        </li>
+                    ))}
+                </List>
             </Box>
         </>
     )

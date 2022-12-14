@@ -43,3 +43,23 @@ Installation of react map for our map purposes.
 yarn add react-simple-maps
 
 ```
+
+Installation and Deployment of our Edge functions
+
+The following steps are for developers who have not installed brew before. If you have brew, you can skip the first two steps. If this is your first install on a M1 chip Macbook, please note that you need to run step 3 and restart your terminal too.
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" 
+brew install supabase/tap/supabase
+echo "export PATH=/opt/homebrew/bin:$PATH" >> ~/.zshrc
+
+```
+
+To run / deploy a edge function on Supabase cli. The project_ref can be taken from your project url.
+
+```
+supabase functions new hello
+supabase functions deploy hello --project-ref <your_project_ref_goes_here>
+
+```
+
+This should bundle your hello package and deploy it to the supabse edge functions all across the world

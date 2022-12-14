@@ -35,7 +35,7 @@ const RequestFeatures = () => {
           </Box>
         </Grid>
         <Grid item md={6} xs={12}>
-          <Box sx={{ p: 2 }}>
+          <Box sx={{ p: 2, }}>
             <AddFeatureForm
               requestFeatureInputLabel={requestFeatureInputLabel}
               defaultInputRowsAllowed={defaultInputRowsAllowed}
