@@ -9,7 +9,7 @@ export const useEmailForm = (): [
   string,
   (emailValue: string) => void,
   string,
-  (e: React.MouseEvent) => void,
+  () => void,
   boolean
 ] => {
   const [data, setData] = useState<string>("");
@@ -23,8 +23,7 @@ export const useEmailForm = (): [
     setEmailLabel(emailLabel);
   };
 
-  const handleSubmit = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     const emailReg = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
     if (emailReg.test(data)) {
       setEmail(data);

@@ -60,8 +60,8 @@ const SubscribeForm: React.FC<Iprops> = ({ title, titleVariant, desc, descVarian
                 justifyContent: 'space-between',
                 gap: '20vh',
             }}>
-                <Btn onClick={handleSubmit}>Submit</Btn>
-                <Btn onClick={handleClose}>Cancel</Btn>
+                <Btn onClick={handleSubmit} label="submit" />
+                <Btn onClick={handleClose} label="cancel" />
             </Box>
         </>
     );

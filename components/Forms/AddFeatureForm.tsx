@@ -64,7 +64,7 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
     return data;
   };
 
-  const handleSubmit = (e: React.MouseEvent) => {
+  const handleSubmit = (): void => {
     if (featureDesc.length > 10) {
       sendRequestFeatureToDb(featureDesc, emailDesc, rating);
       setFeatureDesc("");
@@ -163,7 +163,7 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
 
         <br />
         <br />
-        
+
         <ButtonGroup
           display="flex"
           flexDirection="row"

@@ -18,11 +18,11 @@ const Template: ComponentStory<typeof Button> = (args) => <Button {...args} />
 export const Submit = Template.bind({});
 Submit.args = {
     variant: 'text',
-    children: 'Submit',
+    label: 'Submit',
 };
 
 export const Cancel = Template.bind({});
 Cancel.args = {
     variant: 'text',
-    children: 'Cancel',
+    label: 'Cancel',
 };

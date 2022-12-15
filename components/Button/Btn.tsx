@@ -1,17 +1,24 @@
-import { Button } from '@mui/material';
-import React from 'react';
+// button.component.tsx
 
-interface Iprops {
-    variant?: string;
-    onClick: Function;
-    children: any;
+import React from "react";
+import {
+  Button as MuiButton,
+  ButtonProps as MuiButtonProps,
+} from "@mui/material";
+
+// Only include variant, size, and color
+type ButtonBaseProps = Pick<MuiButtonProps, "variant" | "size" | "color">;
+
+// Use all except disableRipple
+// type ButtonBaseProps = Omit<MuiButtonProps, "disableRipple">;
+
+export interface Iprops extends ButtonBaseProps {
+  label: string;
+  onClick: () => void,
 }
 
-const Btn: React.FC<Iprops> = (props: any) => {
-    const { variant = 'text', onClick, children } = props;
-    return (
-        <Button variant={variant} onClick={onClick}>{children}</Button>
-    )
-};
+const Btn = ({ variant = 'text', label = "", onClick, ...rest }: Iprops) => (
+  <MuiButton {...rest}>{label}</MuiButton>
+);
 
 export default Btn;
