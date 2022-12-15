@@ -2,7 +2,6 @@ import * as React from "react";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import WebStoriesIcon from "@mui/icons-material/WebStories";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -18,8 +17,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
+import SourceIcon from "@mui/icons-material/Source";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
-const drawerWidth = 240;
+const drawerWidth = 150;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -36,41 +38,24 @@ const closedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
+  width: `calc(${theme.spacing(5)} + 1px)`,
   [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
+    width: `calc(${theme.spacing(5)} + 1px)`,
   },
 });
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
+const openTextMixin = (theme: Theme): CSSObject => ({
+  transition: theme.transitions.create("opacity", {
+    easing: theme.transitions.easing.easeInOut,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflowX: "hidden",
+});
 
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
+const NavBarText = styled(ListItemText, {
   shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
+})(({ theme }) => ({
+  ...openTextMixin(theme),
 }));
 
 const Drawer = styled(MuiDrawer, {
@@ -99,12 +84,35 @@ const NavBar = ({ open, toggleDrawer }: NavProps) => {
   const currentRoutes = [
     {
       title: "Home",
-      link: "",
+      link: "/",
       icon: <WebStoriesIcon />,
+      isSelected: (val: string): boolean => val === "/",
+    },
+    {
+      title: "Subscribe",
+      link: "/subscribe",
+      icon: <MailIcon />,
+      isSelected: (val: string): boolean => val === "/subscribe",
+    },
+    {
+      title: "Stuff",
+      link: "/stuff",
+      icon: <SourceIcon />,
+      isSelected: (val: string): boolean => val === "/stuff",
+    },
+    {
+      title: "Contact",
+      link: "/feedback",
+      icon: <InboxIcon />,
+      isSelected: (val: string): boolean => val === "/feedback",
     },
   ];
+  const { pathname } = useRouter();
+
+  console.log(pathname);
+
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box>
       <CssBaseline />
       <Drawer variant="permanent" open={open}>
         <List>
@@ -112,37 +120,44 @@ const NavBar = ({ open, toggleDrawer }: NavProps) => {
             return (
               <ListItem
                 key={route.title}
+                dense
                 disablePadding
-                sx={{ display: "block" }}
+                disableGutters
+                divider={index === currentRoutes.length - 1}
+                selected={route.isSelected(pathname) || false}
+                sx={{ display: "block", position: "relative" }}
               >
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
+                <Link href={route.link}>
+                  <ListItemButton
                     sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
                     }}
                   >
-                    {route.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={route.title}
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {route.icon}
+                    </ListItemIcon>
+                    <NavBarText
+                      primary={route.title}
+                      sx={{ opacity: open ? 1 : 0 }}
+                      secondary={route.link}
+                    />
+                  </ListItemButton>
+                </Link>
               </ListItem>
             );
           })}
         </List>
-        <Divider />
         <ListItem
           disablePadding
+          divider
           sx={{
             display: "absolute",
             bottom: 0,
