@@ -5,7 +5,8 @@ Climate is designed to support your items management process. It will allow user
 ## Developer Toolchain
 
 1. `yarn add swr` lib for the prisma client
-2. `npx prisma db push` with the correct `env vars` after schema change.
+2. `npx prisma migrate dev` to be in sync with the migration schema.
+3. `npx prisma db push` with the correct `env vars` after schema change.
 
 # Developer Getting Started
 
@@ -47,6 +48,8 @@ yarn add react-simple-maps
 Installation and Deployment of our Edge functions
 
 The following steps are for developers who have not installed brew before. If you have brew, you can skip the first two steps. If this is your first install on a M1 chip Macbook, please note that you need to run step 3 and restart your terminal too.
+
+You also need to install `DENO` from VS Code of your IDE of choice.
 ```
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" 
 brew install supabase/tap/supabase

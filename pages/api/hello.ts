@@ -10,8 +10,5 @@ export default async function handler(
   res: NextApiResponse<any>
 ) {
 
-  if (req.method === 'GET') {
-    const subscribeEmailList = await prisma.subscribeEmailList.findMany();
-    res.status(200).json(subscribeEmailList)
-  }
+  
 }

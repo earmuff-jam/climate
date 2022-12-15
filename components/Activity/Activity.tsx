@@ -90,6 +90,22 @@ const sampleActivityTrail = [
     },
 ];
 
+const listStylesSx = {
+    width: '100%',
+    maxWidth: 360,
+    bgcolor: 'background.paper',
+    position: 'relative',
+    overflow: 'auto',
+    maxHeight: 300,
+    '& ul': { padding: 0 },
+};
+
+const primaryTypographyPropsSx: any = {
+    color: 'primary',
+    fontWeight: 'medium',
+    variant: 'body2',
+};
+
 const Activity = () => {
 
     const generateActivityTrail = (category: string) => {
@@ -104,7 +120,44 @@ const Activity = () => {
                 </Typography>
                 <br />
                 <br />
-                {/* <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+
+                <List
+                    sx={listStylesSx}
+                    subheader={<li />}
+                >
+                    {sampleActivityTrail.map((trail) => (
+                        <li key={`section-${trail.id}`}>
+                            <ul>
+                                <ListSubheader>{`${trail.item}`}
+                                </ListSubheader>
+                                {
+                                    generateActivityTrail(trail.item)?.map((x) => (
+                                        <ListItem
+                                            key={`item-${trail.item}-${x.id}`}>
+                                            <ListItemText
+                                                primary={`${x.date}`}
+                                                primaryTypographyProps={primaryTypographyPropsSx}
+                                            />
+                                            <ListItemText
+                                                primary={`${x.status}`}
+                                                primaryTypographyProps={primaryTypographyPropsSx}
+                                            />
+                                        </ListItem>
+                                    ))
+                                }
+                            </ul>
+                        </li>
+                    ))}
+                </List>
+            </Box>
+        </>
+    )
+};
+
+export default Activity;
+
+
+{/* <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     {
                         sampleActivityTrail.map((x) => {
                             return (
@@ -146,54 +199,3 @@ const Activity = () => {
                         })
                     }
                 </Box> */}
-
-                <List
-                    sx={{
-                        width: '100%',
-                        maxWidth: 360,
-                        bgcolor: 'background.paper',
-                        position: 'relative',
-                        overflow: 'auto',
-                        maxHeight: 300,
-                        '& ul': { padding: 0 },
-                    }}
-                    subheader={<li />}
-                >
-                    {sampleActivityTrail.map((trail) => (
-                        <li key={`section-${trail.id}`}>
-                            <ul>
-                                <ListSubheader>{`${trail.item}`}
-                                </ListSubheader>
-                                {
-                                    generateActivityTrail(trail.item)?.map((x) => (
-                                        <ListItem
-                                            key={`item-${trail.item}-${x.id}`}>
-                                            <ListItemText
-                                                primary={`${x.date}`}
-                                                primaryTypographyProps={{
-                                                    color: 'primary',
-                                                    fontWeight: 'medium',
-                                                    variant: 'body2',
-                                                }}
-                                            />
-                                            <ListItemText
-                                                primary={`${x.status}`}
-                                                primaryTypographyProps={{
-                                                    color: 'primary',
-                                                    fontWeight: 'medium',
-                                                    variant: 'body2',
-                                                }}
-                                            />
-                                        </ListItem>
-                                    ))
-                                }
-                            </ul>
-                        </li>
-                    ))}
-                </List>
-            </Box>
-        </>
-    )
-};
-
-export default Activity;

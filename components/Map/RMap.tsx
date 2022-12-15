@@ -30,6 +30,10 @@ const geographySx = (mainColor: string) => ({
     },
 });
 
+const storeCoordinates = (xValue: number, yValue: number, arr: any[]) => {
+    arr.push({ x: xValue, y: yValue });
+}
+
 
 const RMap = () => {
 
@@ -37,15 +41,25 @@ const RMap = () => {
     const geoUrl =
         "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
 
+    var coords: any = [];
+    storeCoordinates(-97, 40, coords);
+    storeCoordinates(-0, 23, coords);
+    storeCoordinates(130, 0, coords);
+    storeCoordinates(-73, 0, coords);
+    storeCoordinates(83, 26, coords);
+    storeCoordinates(97, 23, coords);
+    storeCoordinates(78, 24, coords);
+    storeCoordinates(20, 0, coords);
+    storeCoordinates(20, 50, coords);
 
     const mapProps = {
-        markerCoordinates: [-97, 40],
-        zoomLevel: 2
+        markerCoordinates: coords,
+        zoomLevel: 1
     };
 
     return (
         <ComposableMap>
-            <ZoomableGroup center={mapProps.markerCoordinates} zoom={mapProps.zoomLevel}>
+            <ZoomableGroup zoom={mapProps.zoomLevel}>
                 <Geographies geography={geoUrl}>
                     {({ geographies }: any) =>
                         geographies.map((geo: any) => (
@@ -58,7 +72,10 @@ const RMap = () => {
                     }
                 </Geographies>
                 <Annotation
-                    subject={mapProps.markerCoordinates}
+                    subject={[
+                        mapProps.markerCoordinates[0].x,
+                        mapProps.markerCoordinates[0].y
+                    ]}
                     dx={-90}
                     dy={-30}
                     // stroke line is disabled here atm
@@ -68,9 +85,24 @@ const RMap = () => {
                         {"United States"}
                     </text>
                 </Annotation>
-                <Marker coordinates={mapProps.markerCoordinates}>
+                <Marker coordinates={[
+                    mapProps.markerCoordinates[1].x,
+                    mapProps.markerCoordinates[1].y
+                ]}>
                     <circle r={3} fill="#FF5533" />
                 </Marker>
+
+                {
+                    mapProps.markerCoordinates.map((coords: any) => (
+                        <Marker coordinates={[
+                            coords.x,
+                            coords.y
+                        ]}>
+                            <circle r={3} fill="#FF5533" />
+                        </Marker>
+                    ))
+                }
+
             </ZoomableGroup>
         </ComposableMap>
     )
