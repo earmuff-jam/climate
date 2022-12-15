@@ -14,9 +14,10 @@ type ButtonBaseProps = Pick<MuiButtonProps, "variant" | "size" | "color">;
 
 export interface Iprops extends ButtonBaseProps {
   label: string;
+  onClick: () => void,
 }
 
-const Btn = ({ variant = 'text' ,label = "", ...rest }: Iprops) => (
+const Btn = ({ variant = 'text', label = "", onClick, ...rest }: Iprops) => (
   <MuiButton {...rest}>{label}</MuiButton>
 );
 

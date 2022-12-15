@@ -8,9 +8,9 @@ interface Iprops {
     justifyContent: string;
     gap: string;
     submitLabel: string;
-    handleSubmit: Function;
+    handleSubmit: () => void;
     cancelLabel: string;
-    handleCancel: Function;
+    handleCancel: () => void;
 }
 
 const ButtonGroup: React.FC<Iprops> = (props) => {
@@ -19,10 +19,10 @@ const ButtonGroup: React.FC<Iprops> = (props) => {
 
     return (
         <Box sx={{ display, flexDirection, justifyContent, gap }}>
-            <Btn onClick={handleSubmit}>{submitLabel}</Btn>
-            <Btn onClick={handleCancel}>{cancelLabel}</Btn>
+            <Btn onClick={handleSubmit} label={submitLabel} />
+            <Btn onClick={handleCancel} label={cancelLabel} />
         </Box>
-    )
+    )   
 
 };
 
