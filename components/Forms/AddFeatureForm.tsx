@@ -3,17 +3,16 @@ import {
   Snackbar,
   InputLabel,
   FormControl,
-  useMediaQuery,
   FormHelperText,
+  Button,
 } from "@mui/material";
 
 import React from "react";
 import { Box } from "@mui/system";
+import Text from "../Typography/Text";
 import { useRouter } from "next/router";
-import ButtonGroup from "../Button/ButtonGroup";
 import RatingButtons from "../Button/RatingButtons";
 import { useRequestFeatureForm } from "./CallToActionHook";
-import Text from "../Typography/Text";
 
 interface Iprops {
   requestFeatureInputLabel: string;
@@ -35,7 +34,6 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
   } = props;
 
   const router = useRouter();
-  const mediumSizeOrHigher = useMediaQuery("(min-width:768px)");
   const [
     featureDesc,
     setFeatureDesc,
@@ -67,29 +65,30 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
   const handleSubmit = (e: React.MouseEvent) => {
     if (featureDesc.length > 10) {
       sendRequestFeatureToDb(featureDesc, emailDesc, rating);
+      router.push("/");
       setFeatureDesc("");
       setEmailDesc("");
       setRating("3");
       handleError(false);
       handleSnackbar(true);
-      router.push("/");
     }
     handleError(true);
+    handleSnackbar(false);
     return;
   };
 
   const handleCancel = () => {
+    router.push("/");
     setFeatureDesc("");
     setEmailDesc("");
     setRating("3");
     handleError(false);
-    router.push("/");
   };
 
   return (
     <>
       <Box display="flex" flexDirection="column">
-        <Text variant={"h4"} color={"textSecondary"} gutterBottom={true}>
+        <Text variant={"h4"} gutterBottom={true}>
           Climate
         </Text>
         <Box component="form">
@@ -111,7 +110,7 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
                 // although i could ev.target.value in dev console
                 // this prevents onKeyDown to submit. accessibility issue ?
               }}
-              onChange={(e) => {
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 if (e.target.value != " ") {
                   setFeatureDesc(e.target.value);
                   handleError(false);
@@ -160,20 +159,10 @@ const AddFeatureForm: React.FC<Iprops> = (props: Iprops) => {
             />
           </FormControl>
         </Box>
-
         <br />
-        <br />
-        
-        <ButtonGroup
-          display="flex"
-          flexDirection="row"
-          justifyContent="space-around"
-          gap="20vh"
-          submitLabel="submit"
-          handleSubmit={handleSubmit}
-          cancelLabel="cancel"
-          handleCancel={handleCancel}
-        />
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: '2vh', justifyContent: "center" }}>
+          <Button variant="contained" onClick={handleSubmit}>Submit</Button>
+        </Box>
         <Snackbar
           open={openSnackbar}
           autoHideDuration={3000}

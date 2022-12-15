@@ -1,17 +1,31 @@
 import { createTheme } from "@mui/material/styles";
-import { red } from "@mui/material/colors";
+
+const primary_main_color = '#1B82A8';
+const secondary_main_color = '#19857b';
+const error_main_color = '#FF0100';
+const primary_grey_shade = '#F5F5F7';
 
 const lightTheme = createTheme({
   palette: {
-    mode: "dark",
+    mode: "light",
     primary: {
-      main: "#556cd6",
+      main: primary_main_color,
     },
     secondary: {
-      main: "#19857b",
+      main: secondary_main_color,
+      dark: primary_grey_shade,
     },
     error: {
-      main: red.A400,
+      main: error_main_color,
+    },
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
     },
   },
 });
