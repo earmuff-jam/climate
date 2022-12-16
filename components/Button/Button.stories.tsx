@@ -1,6 +1,6 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
 import Button from './Btn';
+import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {
     title: 'Earmuffjam/Button',

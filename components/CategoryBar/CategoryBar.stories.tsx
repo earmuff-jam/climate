@@ -20,5 +20,5 @@ CategoryBarDefault.args = {
         backgroundColor: '#FFFCF4',
         color: 'black',
     },
-    title: ''
+    title: 'default category bar'
 }

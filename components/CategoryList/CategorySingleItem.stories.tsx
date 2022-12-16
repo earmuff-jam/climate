@@ -17,14 +17,14 @@ const Template: ComponentStory<typeof CategorySingleItem> = (args) => <CategoryS
 export const CategorySingleItemDefault = Template.bind({});
 
 CategorySingleItemDefault.args = {
-     title: 'Corn flower 1/2 pound',
-     tags: ['food', 'pantry'],
-     expiresAt: '12/12/2022',
-     imageSx: {
+    title: 'Corn flower 1/2 pound',
+    tags: [{ id: 1, tag: 'food' }, { id: 2, tag: 'garage' }],
+    expiresAt: '12/12/2022',
+    imageSx: {
         id: 1,
         width: 30,
         height: 30,
         src: supabaseIcon,
         alt: "supabase icon that leads to supabase page"
-     },
+    },
 }

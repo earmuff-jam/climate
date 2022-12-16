@@ -1,3 +1,4 @@
+import CategoryToolbar from '../CategoryToolbar/CategoryToolbar';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
@@ -9,8 +10,9 @@ import React from "react";
 
 interface Iprops {
     title?: string;
-    tags?: string[];
+    tags?: { id: number; tag: string; }[];
     expiresAt?: string;
+    note?: string;
     imageSx?: any;
 }
 
@@ -34,7 +36,7 @@ const CategorySingleItem = (props: Iprops) => {
         gap: 1,
     }
 
-    const { title, tags, expiresAt, imageSx } = props;
+    const { title, tags, expiresAt, note, imageSx } = props;
 
     return (
         <Card sx={{ display: 'flex' }}>
@@ -49,14 +51,15 @@ const CategorySingleItem = (props: Iprops) => {
                             {
                                 tags?.map(tag => (
                                     <Chip
-                                        label={tag}
+                                        key={tag.id}
+                                        label={tag.tag}
                                         size={'small'}
                                     />
                                 ))
                             }
                         </Box>
                     </Box>
-                    <Box sx={{ display: 'flex', alignSelf: 'flex-end' }}> toolbar goes here </Box>
+                    <CategoryToolbar note={note}/>
                 </Box>
             </CardContent>
             <CardActions>
