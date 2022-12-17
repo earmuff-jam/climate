@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import { Chip } from "@mui/material";
 import Box from '@mui/material/Box';
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import React from "react";
 
 interface Iprops {
@@ -13,7 +13,8 @@ interface Iprops {
     tags?: { id: number; tag: string; }[];
     expiresAt?: string;
     note?: string;
-    imageSx?: any;
+    imgSrc?: any;
+    imgSx: { id: string, width: number, height: number, alt: string };
 }
 
 const CategorySingleItem = (props: Iprops) => {
@@ -36,13 +37,13 @@ const CategorySingleItem = (props: Iprops) => {
         gap: 1,
     }
 
-    const { title, tags, expiresAt, note, imageSx } = props;
+    const { title, tags, expiresAt, note, imgSx, imgSrc } = props;
 
     return (
         <Card sx={{ display: 'flex' }}>
             <CardContent>
                 <Box sx={cardContentSx}>
-                    <Image {...imageSx} />
+                    <Image src={imgSrc} {...imgSx} />
                     <Box sx={cardHeaderContentSx}>
                         <Typography variant="caption" component="div">
                             {title}
@@ -59,7 +60,7 @@ const CategorySingleItem = (props: Iprops) => {
                             }
                         </Box>
                     </Box>
-                    <CategoryToolbar note={note}/>
+                    <CategoryToolbar note={note} />
                 </Box>
             </CardContent>
             <CardActions>

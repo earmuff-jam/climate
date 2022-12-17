@@ -155,11 +155,11 @@ const CategoryList = (props: Iprops) => {
         return sampleActivityTrail?.find(x => x.item === category)?.trail;
     }
 
-    const imageSx: ImageSxProps = {
+    const imgSrc = supabaseIcon;
+    const imgSx: any = {
         id: 1,
         width: 30,
         height: 30,
-        src: supabaseIcon,
         alt: "supabase icon that leads to supabase page"
     };
 
@@ -188,7 +188,8 @@ const CategoryList = (props: Iprops) => {
                                                             expiresAt={x.date}
                                                             tags={trail.tagList}
                                                             note={x.note}
-                                                            imageSx={imageSx}
+                                                            imgSx={imgSx}
+                                                            imgSrc={imgSrc}
                                                         />
                                                     </>
                                                 }
