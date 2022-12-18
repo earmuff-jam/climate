@@ -7,8 +7,8 @@ import {
 } from "@mui/material";
 import React from "react";
 import { Box } from "@mui/system";
-import CategorySingleItem from "./CategorySingleItem";
 import supabaseIcon from "../../public/supabaseIcon.png";
+import CategoryAccordianItem from "../CategoryAccordian/CategoryAccordianItem";
 
 const sampleActivityTrail = [
     {
@@ -137,12 +137,10 @@ const primaryTypographyPropsSx: any = {
     variant: 'body2',
 };
 
-interface ImageSxProps {
-    id: number;
-    width: number;
-    height: number;
-    src: any;
-    alt: string;
+const tagsSx = {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 1,
 }
 
 interface Iprops {
@@ -174,7 +172,12 @@ const CategoryList = (props: Iprops) => {
                     {sampleActivityTrail.map((trail) => (
                         <li key={`section-${trail.id}`}>
                             <ul>
-                                <ListSubheader>{`${trail.item}`}
+                                <ListSubheader>
+                                    {`${trail.item}`}
+                                </ListSubheader>
+
+                                <ListSubheader>
+                                    Status - {`${trail.overallStatus}`}
                                 </ListSubheader>
                                 {
                                     generateActivityTrail(trail.item)?.map((x) => (
@@ -183,13 +186,16 @@ const CategoryList = (props: Iprops) => {
                                             <ListItemText
                                                 primary={
                                                     <>
-                                                        <CategorySingleItem title={x.status}
+                                                        <CategoryAccordianItem
                                                             key={0}
+                                                            title={x.status}
+                                                            itemLoc={trail.itemStorageLoc}
                                                             expiresAt={x.date}
                                                             tags={trail.tagList}
                                                             note={x.note}
                                                             imgSx={imgSx}
                                                             imgSrc={imgSrc}
+                                                            tagSx={tagsSx}
                                                         />
                                                     </>
                                                 }
