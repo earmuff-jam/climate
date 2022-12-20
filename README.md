@@ -28,3 +28,13 @@ yarn cache clean
 yarn
 yarn start
 ```
+
+Authentication Setup Overview
+
+Installed package list -
+
+```
+yarn add @supabase/supabase-js
+yarn add @supabase/auth-helpers-react @supabase/auth-helpers-nextjs
+yarn add @supabase/auth-ui-react
+```

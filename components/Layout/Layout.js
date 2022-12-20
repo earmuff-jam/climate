@@ -4,10 +4,10 @@ import Footer from "../Footer/Footer";
 import NavBar from "../NavBar/Navbar";
 import { Box } from "@mui/material";
 import styles from "./Layout.module.css";
+import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import Account from "../HomePage/Account";
 
-type LayoutProps = {
-  children: React.ReactNode;
-};
 const layout = {
   display: "flex",
   flexDirection: "row",
@@ -18,12 +18,15 @@ const navbar = {
   display: "flex",
   flexDirection: "column",
 };
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({ children }) => {
+  const session = useSession();
+  const supabase = useSupabaseClient();
   const [open, setOpen] = React.useState(false);
 
-  const toggleDrawer = React.useCallback((): void => {
+  const toggleDrawer = React.useCallback(() => {
     setOpen((prev) => !prev);
   }, [setOpen]);
+
   return (
     <Box sx={layout}>
       <Box sx={navbar}>
@@ -33,7 +36,17 @@ const Layout = ({ children }: LayoutProps) => {
         <Box className={styles.header}>
           <Header open={open} toggleDrawer={toggleDrawer} />
         </Box>
-        <Box className={styles.main}>{children}</Box>
+        <Box className={styles.main}>
+          {!session ? (
+            <Auth
+              supabaseClient={supabase}
+              appearance={{ theme: ThemeSupa }}
+              theme="dark"
+            />
+          ) : (
+            <Account session={session} />
+          )}
+        </Box>
         <Box className={styles.footer}>
           <Footer />
         </Box>
