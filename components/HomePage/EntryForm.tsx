@@ -1,6 +1,9 @@
-import { Grid, Typography } from '@mui/material';
-import { Auth } from '@supabase/auth-ui-react';
+import {
+    Grid,
+    Typography,
+} from '@mui/material';
 import React from 'react';
+import { Auth } from '@supabase/auth-ui-react';
 
 interface Iprops {
     supabase?: any;

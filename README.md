@@ -2,12 +2,7 @@
 
 Climate is designed to support your items management process. It will allow users to share their item storage to a certain limit and users will also be able to get notification for items that are expired and / or destroyed. One of the fundamental problems that we aim to solve is the ability to share one's inventory. We are also working on steps that would allow them to loan a list of items and let you know when the list expires.
 
-## Developer Toolchain
-
-1. `yarn add swr` lib for the prisma client
-2. `npx prisma db push` with the correct `env vars` after schema change.
-
-# Developer Getting Started
+# Developer Toolchain
 
 ## Onboarding
 
@@ -16,9 +11,9 @@ Climate is designed to support your items management process. It will allow user
 3. `yarn dev` to start localhost development.
 4. `yarn storybook` to develop UI components.
 
-# Pain points
+### Pain points
 
-## `Common Issues`
+### `Common Issues`
 
 Some of the common pain point is yarn failing its dependencies. We can try to resolve that by using the following commands.
 
@@ -30,6 +25,8 @@ yarn start
 ```
 
 Authentication Setup Overview
+
+We are currently using Supabase auth and login. Doing this, we are sepearting out auth, user and item data. A user is able to sign into the application using `Magic link`. 
 
 Installed package list -
 
