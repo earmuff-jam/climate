@@ -1,33 +1,45 @@
-import { Divider } from "@mui/material";
-import AddFeatureForm from "../components/Forms/AddFeatureForm";
-import BodyHeaderContent from "../components/Home/BodyHeaderContent";
+import {
+  Grid,
+} from "@mui/material";
+
+import { Box } from "@mui/system";
+import Idea from "../components/Feedback/Idea";
+import RoiCalculator from "../components/Feedback/RoiCalculator";
+import AddFeatureForm from "../components/Forms/RequestFeedback";
+import FeedbackHeader from "../components/Feedback/FeedbackHeader";
 import { TitleComponent } from "../components/Home/TitleComponent";
 
 const RequestFeatures = () => {
-  const defaultInputRowsAllowed = 4;
-  const requestFeatureEmailInputLabel = "Email Address";
-  const requestFeatureInputNoErrMsg = "Please add more details";
-  const requestFeatureInputLabel = "How can we make the application better? *";
-  const requestFeatureInputErrMsg =
-    "Add more details, as we don't know about your problem";
-  const requestFeatureEmailInputHelper =
-    "We will let you know when we fix the issue";
 
   return (
     <>
       <TitleComponent title="Feedback" />
-      <BodyHeaderContent />
-      <Divider />
-      <AddFeatureForm
-        requestFeatureInputLabel={requestFeatureInputLabel}
-        defaultInputRowsAllowed={defaultInputRowsAllowed}
-        requestFeatureInputNoErrMsg={requestFeatureInputNoErrMsg}
-        requestFeatureInputErrMsg={requestFeatureInputErrMsg}
-        requestFeatureEmailInputLabel={requestFeatureEmailInputLabel}
-        requestFeatureEmailInputHelper={requestFeatureEmailInputHelper}
-      />
-      <br />
-      <br />
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        p: 12,
+      }}>
+        <Grid
+          container
+          spacing={1}
+          >
+          <Grid item xs={12} md={6}>
+            <FeedbackHeader />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Idea />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <AddFeatureForm />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <RoiCalculator />
+          </Grid>
+
+        </Grid>
+      </Box>
+
     </>
   );
 };

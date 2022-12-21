@@ -47,7 +47,11 @@ const Layout = ({ children }) => {
               <Box className={styles.header}>
                 <Header open={open} toggleDrawer={toggleDrawer} />
               </Box>
-              <Box>{children}</Box>
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                
+              }}>{children}</Box>
             </>
           )}
         </Box>

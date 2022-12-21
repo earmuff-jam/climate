@@ -3,6 +3,8 @@ create table profiles (
   id uuid references auth.users not null primary key,
   first_name text,
   last_name text,
+  age int,
+  gender text,
   username text unique,
   primary_address_street text,
   primary_address_zip text,

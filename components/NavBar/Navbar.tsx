@@ -1,30 +1,32 @@
-import * as React from "react";
-import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
+import {
+  styled,
+  useTheme,
+  Theme,
+  CSSObject,
+} from "@mui/material/styles";
+
+import React from "react";
+import Link from "next/link";
 import Box from "@mui/material/Box";
-import MuiDrawer from "@mui/material/Drawer";
-import WebStoriesIcon from "@mui/icons-material/WebStories";
 import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { useRouter } from "next/router";
+import MuiDrawer from "@mui/material/Drawer";
 import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import SourceIcon from "@mui/icons-material/Source";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { Button } from "@mui/material";
-import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import CssBaseline from "@mui/material/CssBaseline";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemButton from "@mui/material/ListItemButton";
+import WebStoriesIcon from "@mui/icons-material/WebStories";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import FeedbackRoundedIcon from '@mui/icons-material/FeedbackRounded';
+import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 
 
-const drawerWidth = 150;
+const drawerWidth = 170;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -77,39 +79,45 @@ const Drawer = styled(MuiDrawer, {
     "& .MuiDrawer-paper": closedMixin(theme),
   }),
 }));
-type NavProps = {
+
+const currentRoutes = [
+  {
+    title: "Home",
+    link: "/",
+    icon: <WebStoriesIcon />,
+    isSelected: (val: string): boolean => val === "/",
+  },
+  {
+    title: "Subscribe",
+    link: "/subscribe",
+    icon: <MailIcon />,
+    isSelected: (val: string): boolean => val === "/subscribe",
+  },
+  {
+    title: "Stuff",
+    link: "/stuff",
+    icon: <SourceIcon />,
+    isSelected: (val: string): boolean => val === "/stuff",
+  },
+  {
+    title: "Feedback",
+    link: "/feedback",
+    icon: <FeedbackRoundedIcon />,
+    isSelected: (val: string): boolean => val === "/feedback",
+  }
+];
+
+
+interface NavProps {
   open?: boolean;
   toggleDrawer: any;
 };
+
+
 const NavBar = ({ open, toggleDrawer }: NavProps) => {
+
   const theme = useTheme();
 
-  const currentRoutes = [
-    {
-      title: "Home",
-      link: "/",
-      icon: <WebStoriesIcon />,
-      isSelected: (val: string): boolean => val === "/",
-    },
-    {
-      title: "Subscribe",
-      link: "/subscribe",
-      icon: <MailIcon />,
-      isSelected: (val: string): boolean => val === "/subscribe",
-    },
-    {
-      title: "Stuff",
-      link: "/stuff",
-      icon: <SourceIcon />,
-      isSelected: (val: string): boolean => val === "/stuff",
-    },
-    {
-      title: "Contact",
-      link: "/feedback",
-      icon: <InboxIcon />,
-      isSelected: (val: string): boolean => val === "/feedback",
-    },
-  ];
   const { pathname } = useRouter();
   const supabase = useSupabaseClient();
 
@@ -126,11 +134,11 @@ const NavBar = ({ open, toggleDrawer }: NavProps) => {
                 disablePadding
                 disableGutters
                 divider={index === currentRoutes.length - 1}
-                selected={route.isSelected(pathname) || false}
                 sx={{ display: "block", position: "relative" }}
               >
                 <Link href={route.link}>
                   <ListItemButton
+                    selected={route.isSelected(pathname)}
                     sx={{
                       minHeight: 48,
                       justifyContent: open ? "initial" : "center",
@@ -149,7 +157,6 @@ const NavBar = ({ open, toggleDrawer }: NavProps) => {
                     <NavBarText
                       primary={route.title}
                       sx={{ opacity: open ? 1 : 0 }}
-                      secondary={route.link}
                     />
                   </ListItemButton>
                 </Link>
@@ -157,9 +164,40 @@ const NavBar = ({ open, toggleDrawer }: NavProps) => {
             );
           })}
         </List>
-        <Button onClick={async () => {
-          await supabase.auth.signOut();
-        }}> Log out </Button>
+        <ListItem
+          disablePadding
+          divider
+          sx={{
+            display: "absolute",
+            bottom: 0,
+          }}
+        >
+          <ListItemButton
+            onClick={async () => {
+              await supabase.auth.signOut();
+            }}
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : "auto",
+                justifyContent: "center",
+              }}
+            >
+              <SettingsRoundedIcon />
+            </ListItemIcon>
+            <NavBarText
+              primary="Log off"
+              sx={{ opacity: open ? 1 : 0 }}
+            />
+          </ListItemButton>
+        </ListItem>
+
         <ListItem
           disablePadding
           divider
