@@ -33,6 +33,7 @@ const EntryForm = ({ supabase }: Iprops) => {
                 </Typography>
                 <Auth
                     supabaseClient={supabase}
+                    
                     appearance={{
                         style: {
                             button: {

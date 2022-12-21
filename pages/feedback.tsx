@@ -1,5 +1,7 @@
 import {
   Grid,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 import { Box } from "@mui/system";
@@ -9,21 +11,25 @@ import AddFeatureForm from "../components/Forms/RequestFeedback";
 import FeedbackHeader from "../components/Feedback/FeedbackHeader";
 import { TitleComponent } from "../components/Home/TitleComponent";
 
+const feedbackComponentSx = (onlySmallScreen: boolean) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  p: onlySmallScreen ? 1 : 12,
+});
+
 const RequestFeatures = () => {
+  const theme = useTheme();
+  const onlySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <>
       <TitleComponent title="Feedback" />
-      <Box sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        p: 12,
-      }}>
+      <Box sx={feedbackComponentSx(onlySmallScreen)}>
         <Grid
           container
           spacing={1}
-          >
+        >
           <Grid item xs={12} md={6}>
             <FeedbackHeader />
           </Grid>

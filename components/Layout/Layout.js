@@ -50,7 +50,6 @@ const Layout = ({ children }) => {
               <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                
               }}>{children}</Box>
             </>
           )}
