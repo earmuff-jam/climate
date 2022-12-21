@@ -20,6 +20,9 @@ import MailIcon from "@mui/icons-material/Mail";
 import SourceIcon from "@mui/icons-material/Source";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { Button } from "@mui/material";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+
 
 const drawerWidth = 150;
 
@@ -108,8 +111,7 @@ const NavBar = ({ open, toggleDrawer }: NavProps) => {
     },
   ];
   const { pathname } = useRouter();
-
-  console.log(pathname);
+  const supabase = useSupabaseClient();
 
   return (
     <Box>
@@ -155,6 +157,9 @@ const NavBar = ({ open, toggleDrawer }: NavProps) => {
             );
           })}
         </List>
+        <Button onClick={async () => {
+          await supabase.auth.signOut();
+        }}> Log out </Button>
         <ListItem
           disablePadding
           divider
