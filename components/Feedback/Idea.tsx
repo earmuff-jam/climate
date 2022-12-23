@@ -26,7 +26,7 @@ const Idea = () => {
                     variant="h6"
                     justifyContent="left"
                 >
-                    Have an idea that you want alive?
+                    Have an need to be fulfilled?
                 </Typography>
                 <Typography
                     variant="body1"

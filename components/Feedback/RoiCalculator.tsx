@@ -57,7 +57,10 @@ const RoiCalculator: React.FC<Iprops> = ({
     return (
         <Paper
             elevation={elevation}
-            style={{ padding: `${innerPadding}rem` }}
+            style={{ 
+                padding: `${innerPadding}rem`,
+                borderRadius: 12,
+            }}
         >
             <Typography
                 variant="h6"

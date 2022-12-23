@@ -19,8 +19,8 @@ const feedbackComponentSx = (onlySmallScreen: boolean) => ({
 });
 
 const RequestFeatures = () => {
-  const theme = useTheme();
-  const onlySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const onlySmallScreen = false;
 
   return (
     <>
@@ -28,6 +28,9 @@ const RequestFeatures = () => {
       <Box sx={feedbackComponentSx(onlySmallScreen)}>
         <Grid
           container
+          alignItems="center"
+          justifyContent="center"
+          padding={'2.5rem'}
           spacing={1}
         >
           <Grid item xs={12} md={6}>
