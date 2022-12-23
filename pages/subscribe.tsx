@@ -26,7 +26,6 @@ const Subscribe = () => {
               src='/splashpage.jpeg'
               width={450}
               height={450}
-             
             />
           </div>
 

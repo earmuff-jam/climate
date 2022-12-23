@@ -1,14 +1,15 @@
 import React, { useEffect, useRef } from "react";
-import { debounce } from "@mui/material";
+import { AppBar, debounce } from "@mui/material";
 import Link from "next/link";
 import styles from "../../styles/Header.module.css";
+import MainMenu from "./MainMenu";
 type HeaderIProps = {
   open?: boolean;
-  toggleDrawer : any;
+  toggleDrawer: any;
 };
 
 const Header = ({ toggleDrawer }: HeaderIProps): JSX.Element => {
-  const toggle = useRef<Function | (() => {})>(() => {});
+  const toggle = useRef<Function | (() => {})>(() => { });
   useEffect(() => {
     toggle.current = debounce(() => toggleDrawer, 200);
   });
@@ -30,6 +31,7 @@ const Header = ({ toggleDrawer }: HeaderIProps): JSX.Element => {
         }}
       >
       </div>
+      <MainMenu />
     </div>
   );
 };

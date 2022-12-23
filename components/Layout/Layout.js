@@ -41,9 +41,9 @@ const Layout = ({ children }) => {
             <EntryForm supabase={supabase} />
           ) : (
             <>
-              <Box sx={navbar}>
+              {/* <Box sx={navbar}>
                 <NavBar open={open} toggleDrawer={toggleDrawer} />
-              </Box>
+              </Box> */}
               <Box className={styles.header}>
                 <Header open={open} toggleDrawer={toggleDrawer} />
               </Box>
