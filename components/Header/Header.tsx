@@ -29,7 +29,6 @@ const Header = ({ toggleDrawer }: HeaderIProps): JSX.Element => {
           toggle.current();
         }}
       >
-        Hi
       </div>
     </div>
   );
