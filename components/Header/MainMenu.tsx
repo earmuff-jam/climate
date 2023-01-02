@@ -37,8 +37,8 @@ const pages = [
         isSelected: (val: string): boolean => val === "/subscribe",
     },
     {
-        title: "Stuff",
-        link: "/stuff",
+        title: "Categories",
+        link: "/categories",
         icon: <SourceIcon />,
         isSelected: (val: string): boolean => val === "/stuff",
     },

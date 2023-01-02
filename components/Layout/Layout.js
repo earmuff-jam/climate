@@ -7,7 +7,6 @@ import React from "react";
 import { Box } from "@mui/material";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import NavBar from "../NavBar/Navbar";
 import styles from "./Layout.module.css";
 import EntryForm from "../HomePage/EntryForm";
 

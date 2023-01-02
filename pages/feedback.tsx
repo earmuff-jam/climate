@@ -15,7 +15,7 @@ const feedbackComponentSx = (onlySmallScreen: boolean) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  p: onlySmallScreen ? 1 : 12,
+  p: onlySmallScreen ? 1 : 0,
 });
 
 const RequestFeatures = () => {

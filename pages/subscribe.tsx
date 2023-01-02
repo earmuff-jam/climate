@@ -1,26 +1,16 @@
 
-import Image from "next/image";
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Divider,
   Grid,
   Typography
 } from "@mui/material";
-import { supabase } from "../utility/supabaseClient";
+import Image from "next/image";
+import { Box } from "@mui/system";
 import { TitleComponent } from "../components/Home/TitleComponent";
 import SubscribeForm from "../components/SubscribePage/SubscribeForm";
-import { Box } from "@mui/system";
 
 const Subscribe = () => {
-
-  const fetchExistingUserList = async () => {
-    const { data: profiles } = await supabase.from('profiles').select('id, first_name');
-    console.log(profiles);
-  }
-
-  useEffect(() => {
-    fetchExistingUserList();
-  }, []);
 
   return (
     <>
@@ -36,8 +26,8 @@ const Subscribe = () => {
         <Grid item xs={12} md={6}>
           <Box style={{ width: '100%', height: '100%', position: 'relative' }}>
             <Image
-              alt='Mountains'
-              src='/splashpage.jpeg'
+              alt='type writer image to remind people to submit text'
+              src='/typewriter_subscriber.jpeg'
               width={450}
               height={450}
             />
@@ -45,13 +35,15 @@ const Subscribe = () => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Typography
-            variant="h4"
+            variant="h5"
+            gutterBottom
           >
-            Get the latest news and updates
+            Subscribe
           </Typography>
           <Divider color="red" />
           <Typography
-            variant="body1"
+            variant="h6"
+            fontWeight={200}
             gutterBottom
           >
             Climate is designed to provide overall monitoring capabilities for your item. With flexiblity to monitor, track and view all of your items, never again will you be worried about losing an item.

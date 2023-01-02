@@ -62,8 +62,9 @@ const SubscribeForm = () => {
     return (
         <>
             <Typography
-                variant="h4"
+                variant="body1"
                 color={'secondary.main'}
+                gutterBottom
             >
                 Join the mailing list
             </Typography>
