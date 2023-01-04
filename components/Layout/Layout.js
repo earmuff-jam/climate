@@ -3,12 +3,12 @@ import {
   useSession,
   useSupabaseClient
 } from "@supabase/auth-helpers-react";
+
 import React from "react";
 import { Box } from "@mui/material";
-import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import NavBar from "../NavBar/Navbar";
 import styles from "./Layout.module.css";
+import NavMenuBar from "../NavBar/AppBar";
 import EntryForm from "../HomePage/EntryForm";
 
 const layout = {
@@ -17,21 +17,10 @@ const layout = {
   height: "100vh",
 };
 
-const navbar = {
-  flex: "0 0 auto",
-  display: "flex",
-  flexDirection: "column",
-};
-
 const Layout = ({ children }) => {
 
   const session = useSession();
   const supabase = useSupabaseClient();
-  const [open, setOpen] = React.useState(false);
-
-  const toggleDrawer = React.useCallback(() => {
-    setOpen((prev) => !prev);
-  }, [setOpen]);
 
   return (
     <Box sx={layout}>
@@ -41,12 +30,7 @@ const Layout = ({ children }) => {
             <EntryForm supabase={supabase} />
           ) : (
             <>
-              <Box sx={navbar}>
-                <NavBar open={open} toggleDrawer={toggleDrawer} />
-              </Box>
-              <Box className={styles.header}>
-                <Header open={open} toggleDrawer={toggleDrawer} />
-              </Box>
+              <NavMenuBar />
               <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',
