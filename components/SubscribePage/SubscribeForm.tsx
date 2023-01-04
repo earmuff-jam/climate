@@ -44,7 +44,11 @@ const SubscribeForm = () => {
 
     };
 
-    const sendEmailToDb = async (emailaddress: string) => {
+    const sendEmailToDb = async (
+        emailaddress: string,
+        firstname: string,
+        lastname: string,
+    ) => {
         const data = await fetch('api/subscribe', {
             method: 'PUT',
             headers: {
@@ -56,7 +60,7 @@ const SubscribeForm = () => {
     }
 
     useEffect(() => {
-        emailaddress != "" && sendEmailToDb(emailaddress);
+        emailaddress != "" && sendEmailToDb(emailaddress, firstname, lastname);
     }, [emailaddress]);
 
     return (
@@ -165,7 +169,7 @@ const SubscribeForm = () => {
                 <Button
                     color="secondary"
                     variant="contained"
-                    sx={{ borderRadius: 2}}
+                    sx={{ borderRadius: 2 }}
                     endIcon={<SendRoundedIcon />}
                     onClick={(e) => handlesubmit(e)}
                 >
