@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { supabase } from '../../utility/supabaseClient';
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,17 +10,7 @@ export default async function handler(
 
   if (req.method === 'PUT') {
     const { emailAddress } = req.body;
-    const emailAddressResp = await prisma.subscribeEmailList.upsert({
-      where: {
-        email: emailAddress,
-      },
-      update: {
-        email: emailAddress,
-      },
-      create: {
-        email: emailAddress,
-      }
-    });
-    res.status(200).json(emailAddressResp);
+    const { data, error } = await supabase.from('profiles').select('*');
+    console.log(data);
   }
 }

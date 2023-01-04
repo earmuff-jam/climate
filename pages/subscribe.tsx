@@ -14,8 +14,9 @@ import { Box } from "@mui/system";
 const Subscribe = () => {
 
   const fetchExistingUserList = async () => {
-    const { data: profiles } = await supabase.from('profiles').select('id, first_name');
-    console.log(profiles);
+    const { data, error } = await supabase.from('category').select('*');
+    if (error) { console.log(error); return; }
+    console.log(data);
   }
 
   useEffect(() => {
