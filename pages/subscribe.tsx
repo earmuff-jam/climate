@@ -1,37 +1,18 @@
 
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React from "react";
+
 import {
   Divider,
   Grid,
   Typography
 } from "@mui/material";
 
-
-import {
-  useUser,
-  useSupabaseClient
-} from "@supabase/auth-helpers-react";
-
-import { supabase } from "../utility/supabaseClient";
+import { Box } from "@mui/system";
 import { TitleComponent } from "../components/Home/TitleComponent";
 import SubscribeForm from "../components/SubscribePage/SubscribeForm";
-import { Box } from "@mui/system";
 
 const Subscribe = () => {
-
-  const supabaseClient = useSupabaseClient()
-  const user = useUser()
-  const [data, setData] = useState<any | null>();
-
-  useEffect(() => {
-    async function loadData() {
-      const { data } = await supabaseClient.from('category').select('*')
-      setData(data)
-    }
-    // Only run query once user is logged in.
-    if (user) loadData()
-  }, [user])
 
   return (
     <>

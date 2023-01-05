@@ -2,25 +2,25 @@
 
 BEGIN;
 INSERT INTO category(category_name, category_description, created_by, sharable_groups)
-    VALUES ('PANTRY', 'LOCATION TO STORE COOKING ITEMS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::text, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
+    VALUES ('PANTRY', 'LOCATION TO STORE COOKING ITEMS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::UUID, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
 INSERT INTO category(category_name, category_description, created_by, sharable_groups)
-    VALUES ('GARAGE', 'LOCATION TO STORE COOKING ITEMS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::text, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
+    VALUES ('GARAGE', 'LOCATION TO STORE COOKING ITEMS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::UUID, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
 INSERT INTO category(category_name, category_description, created_by, sharable_groups)
-    VALUES ('KITCHEN CABINET', 'LOCATION TO STORE THE KITCHEN STUFFS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::text, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
+    VALUES ('KITCHEN CABINET', 'LOCATION TO STORE THE KITCHEN STUFFS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::UUID, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
 INSERT INTO category(category_name, category_description, created_by, sharable_groups)
-    VALUES ('BEDROOM CABINET', 'LOCATION TO STORE BEDROOM STUFFS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::text, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
+    VALUES ('BEDROOM CABINET', 'LOCATION TO STORE BEDROOM STUFFS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::UUID, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
 INSERT INTO category(category_name, category_description, created_by, sharable_groups)
-    VALUES ('LIVING ROOM CABINET 1', 'LOCATION TO STORE ROOM CABINET STUFFS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::text, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
+    VALUES ('LIVING ROOM CABINET 1', 'LOCATION TO STORE ROOM CABINET STUFFS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::UUID, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
 INSERT INTO category(category_name, category_description, created_by, sharable_groups)
-    VALUES ('LIVING ROOM CABINET 2', 'LOCATION TO STORE ROOM CABINET STUFFS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::text, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
+    VALUES ('LIVING ROOM CABINET 2', 'LOCATION TO STORE ROOM CABINET STUFFS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::UUID, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
 INSERT INTO category(category_name, category_description, created_by, sharable_groups)
-    VALUES ('LIVING ROOM CABINET 3', 'LOCATION TO STORE ROOM CABINET STUFFS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::text, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
+    VALUES ('LIVING ROOM CABINET 3', 'LOCATION TO STORE ROOM CABINET STUFFS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::UUID, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
 INSERT INTO category(category_name, category_description, created_by, sharable_groups)
-    VALUES ('LIVING ROOM CABINET 4', 'LOCATION TO STORE ROOM CABINET STUFFS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::text, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
+    VALUES ('LIVING ROOM CABINET 4', 'LOCATION TO STORE ROOM CABINET STUFFS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::UUID, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
 INSERT INTO category(category_name, category_description, created_by, sharable_groups)
-    VALUES ('LIVING ROOM CABINET 5', 'LOCATION TO STORE ROOM CABINET STUFFS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::text, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
+    VALUES ('LIVING ROOM CABINET 5', 'LOCATION TO STORE ROOM CABINET STUFFS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::UUID, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
 INSERT INTO category(category_name, category_description, created_by, sharable_groups)
-    VALUES ('LIVING ROOM CABINET 6', 'LOCATION TO STORE ROOM CABINET STUFFS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::text, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
+    VALUES ('LIVING ROOM CABINET 6', 'LOCATION TO STORE ROOM CABINET STUFFS', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::UUID, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
 
 
 -- item --
