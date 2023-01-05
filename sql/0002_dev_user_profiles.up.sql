@@ -1,5 +1,4 @@
 
-
 -- Create a table for public profiles
 CREATE TABLE profiles (
   id uuid REFERENCES auth.users NOT NULL PRIMARY KEY,
@@ -49,3 +48,13 @@ SECURITY DEFINER;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users FOR EACH ROW
   EXECUTE PROCEDURE public.handle_new_user ();
+
+
+
+-- SELECT CURRENT_USER;
+-- select u.usename,
+--        (select string_agg(d.datname, ',' order by d.datname) 
+--         from pg_database d 
+--         where has_database_privilege(u.usename, d.datname, 'CONNECT')) as allowed_databases
+-- from pg_user u
+-- order by u.usename;

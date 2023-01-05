@@ -9,6 +9,12 @@ import {
     InputLabel,
     Typography
 } from "@mui/material";
+
+import {
+    useUser,
+    useSupabaseClient
+} from "@supabase/auth-helpers-react";
+
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 
 const textSubmitSx = {
@@ -23,6 +29,10 @@ const SubscribeForm = () => {
     const [lastname, setlastname] = useState<string>("");
     const [firstname, setfirstname] = useState<string>("");
     const [emailaddress, setemailaddress] = useState<string>("");
+
+    const user = useUser();
+    const supabaseClient = useSupabaseClient();
+    const [userData, setUserData] = useState<string | null>("");
 
     const handlefirstname = (val: string) => setfirstname(val);
     const handlelastname = (val: string) => setlastname(val);
@@ -49,19 +59,28 @@ const SubscribeForm = () => {
         firstname: string,
         lastname: string,
     ) => {
-        const data = await fetch('api/subscribe', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ emailaddress, firstname, lastname })
-        });
-        return data;
+        const { data, error } = await supabaseClient
+            .from('subscriber')
+            .insert([
+                { first_name: firstname, last_name: lastname, email_address: emailaddress, created_by: userData}
+            ]);
+        if (error) {return null;}
     }
 
     useEffect(() => {
         emailaddress != "" && sendEmailToDb(emailaddress, firstname, lastname);
     }, [emailaddress]);
+
+    useEffect(() => {
+        async function loadData() {
+            const { data } = await supabaseClient.from('profiles').select('*').limit(1);
+
+            const user_id = data![0].id;
+            setUserData(user_id);
+        }
+        // Only run query once user is logged in.
+        if (user) loadData()
+    }, [user])
 
     return (
         <>

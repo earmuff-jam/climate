@@ -1,13 +1,13 @@
--- CATEGORY TABLE GOES HERE
-
 BEGIN;
-SET ROLE = 'postgres';
-SET SEARCH_PATH = 'climate';
-SET ROLE = 'climate_admin';
+
+SET ROLE = 'supabase_admin';
+SET SEARCH_PATH = 'postgres';
+SET SCHEMA 'public';
+
 DROP TYPE IF EXISTS type_category_enum CASCADE;
 CREATE TYPE type_category_enum AS ENUM ('BUSINESS', 'PERSONAL');
 
-DROP TABLE IF EXISTS category;
+DROP TABLE IF EXISTS category CASCADE;
 CREATE TABLE category
 (
     id                   SERIAL PRIMARY KEY       NOT NULL,
@@ -15,10 +15,15 @@ CREATE TABLE category
     category_name        TEXT UNIQUE              NOT NULL,
     category_description TEXT,
     created_on           TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    created_by           TEXT                     NOT NULL DEFAULT CURRENT_USER
+    created_by           UUID                     NOT NULL,
+    sharable_groups      UUID[]
 );
 
--- TO LET climate_user do the CRUD
--- GRANT SELECT, INSERT, UPDATE, DELETE ON category TO climate_user;
+ALTER TABLE category
+    ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Authorized users can only manipulate categories" ON category FOR ALL USING (
+    auth.uid() =  ANY (category.sharable_groups)
+    -- ANY (category.sharable_groups)
+);
 
 END;
