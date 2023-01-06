@@ -4,14 +4,12 @@ import {
   InputLabel,
   FormControl,
   FormHelperText,
-  Typography,
   Button,
   Stack,
 } from "@mui/material";
 
 import React from "react";
 import { Box } from "@mui/system";
-import { useRouter } from "next/router";
 import RatingButtons from "../Button/RatingButtons";
 import { useRequestFeatureForm } from "./CallToActionHook";
 
@@ -20,7 +18,6 @@ const RequestFeedback = () => {
   const requestFeatureInputErrMsg =
     "Add more details, as we don't know about your problem";
 
-  const router = useRouter();
   const [
     featureDesc,
     setFeatureDesc,
@@ -51,15 +48,17 @@ const RequestFeedback = () => {
 
   const handleSubmit = (): void => {
     if (featureDesc.length > 10) {
+      handleSnackbar(true);
       sendRequestFeatureToDb(featureDesc, emailDesc, rating);
       setFeatureDesc("");
       setEmailDesc("");
       setRating("3");
       handleError(false);
-      handleSnackbar(true);
-      router.push("/");
     }
-    handleError(true);
+    else if (featureDesc.length < 10) {
+      handleError(true);
+      return;
+    }
     return;
   };
 
@@ -69,8 +68,14 @@ const RequestFeedback = () => {
       flexDirection="column"
     >
       <Box component="form">
-        <FormControl fullWidth error={error} variant="standard">
-          <InputLabel htmlFor="component-helper">
+        <FormControl
+          fullWidth
+          error={error}
+          variant="standard"
+        >
+          <InputLabel
+            htmlFor="component-helper"
+          >
             How can we make climate better?*
           </InputLabel>
           <Input
@@ -142,6 +147,7 @@ const RequestFeedback = () => {
         justifyContent="center"
       >
         <Button
+          color={"secondary"}
           variant="contained"
           onClick={handleSubmit}
         >

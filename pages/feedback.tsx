@@ -6,10 +6,10 @@ import {
 
 import { Box } from "@mui/system";
 import Idea from "../components/Feedback/Idea";
-import RoiCalculator from "../components/Feedback/RoiCalculator";
-import AddFeatureForm from "../components/Forms/RequestFeedback";
+import RequestFeedback from "../components/Forms/RequestFeedback";
 import FeedbackHeader from "../components/Feedback/FeedbackHeader";
 import { TitleComponent } from "../components/Home/TitleComponent";
+import Image from "next/image";
 
 const feedbackComponentSx = (onlySmallScreen: boolean) => ({
   display: 'flex',
@@ -28,6 +28,7 @@ const RequestFeatures = () => {
       <Box sx={feedbackComponentSx(onlySmallScreen)}>
         <Grid
           container
+          justifyContent={"center"}
           spacing={1}
         >
           <Grid item xs={12} md={6}>
@@ -37,15 +38,25 @@ const RequestFeatures = () => {
             <Idea />
           </Grid>
           <Grid item xs={12} md={6}>
-            <AddFeatureForm />
+            <RequestFeedback />
           </Grid>
           <Grid item xs={12} md={6}>
-            <RoiCalculator />
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Image
+                alt="image"
+                src={"/feedback_image.jpeg"}
+                width={450}
+                height={450}
+                style={{
+                  position: "relative",
+                  objectFit: "cover",
+                  borderRadius: 8,
+                }}
+              />
+            </Box>
           </Grid>
-
         </Grid>
       </Box>
-
     </>
   );
 };
