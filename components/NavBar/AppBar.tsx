@@ -1,21 +1,22 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Stack } from '@mui/system';
+import Box from '@mui/material/Box';
+import AppBar from '@mui/material/AppBar';
+import Button from '@mui/material/Button';
+
+import Toolbar from '@mui/material/Toolbar';
+import MenuIcon from '@mui/icons-material/Menu';
+import IconButton from '@mui/material/IconButton';
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { Typography } from '@mui/material';
 import ListItem from "@mui/material/ListItem";
+
 import MailIcon from "@mui/icons-material/Mail";
 import SourceIcon from "@mui/icons-material/Source";
 import WebStoriesIcon from "@mui/icons-material/WebStories";
 import FeedbackRoundedIcon from '@mui/icons-material/FeedbackRounded';
-import { Typography } from '@mui/material';
 
 const currentRoutes = [
     {
@@ -46,7 +47,6 @@ const currentRoutes = [
 
 const NavMenuBar = () => {
 
-    const { pathname } = useRouter();
     const supabase = useSupabaseClient();
 
     return (
@@ -55,7 +55,9 @@ const NavMenuBar = () => {
                 position="static"
                 color='secondary'
             >
-                <Toolbar>
+                <Toolbar
+                    variant="dense"
+                >
                     <IconButton
                         size="small"
                         edge="start"
