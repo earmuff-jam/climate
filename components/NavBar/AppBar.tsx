@@ -31,10 +31,10 @@ const currentRoutes = [
         isSelected: (val: string): boolean => val === "/subscribe",
     },
     {
-        title: "Stuff",
-        link: "/stuff",
+        title: "Category",
+        link: "/category",
         icon: <SourceIcon />,
-        isSelected: (val: string): boolean => val === "/stuff",
+        isSelected: (val: string): boolean => val === "/category",
     },
     {
         title: "Feedback",
@@ -51,9 +51,9 @@ const NavMenuBar = () => {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar 
-            position="static"
-            color='secondary'
+            <AppBar
+                position="static"
+                color='secondary'
             >
                 <Toolbar>
                     <IconButton
