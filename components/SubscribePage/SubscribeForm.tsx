@@ -7,7 +7,7 @@ import {
     FormControl,
     Input,
     InputLabel,
-    Typography
+    Stack,
 } from "@mui/material";
 
 import {
@@ -51,7 +51,6 @@ const SubscribeForm = () => {
         seterror(true);
         setemailaddress("");
         return;
-
     };
 
     const sendEmailToDb = async (
@@ -62,9 +61,9 @@ const SubscribeForm = () => {
         const { data, error } = await supabaseClient
             .from('subscriber')
             .insert([
-                { first_name: firstname, last_name: lastname, email_address: emailaddress, created_by: userData}
+                { first_name: firstname, last_name: lastname, email_address: emailaddress, created_by: userData }
             ]);
-        if (error) {return null;}
+        if (error) { return null; }
     }
 
     useEffect(() => {
@@ -84,18 +83,6 @@ const SubscribeForm = () => {
 
     return (
         <>
-            <Typography
-                variant="h4"
-                color={'secondary.main'}
-            >
-                Join the mailing list
-            </Typography>
-            <Typography
-                variant="body2"
-            >
-                Sign up now and recieve exclusive content on climate application
-            </Typography>
-
             <FormControl
                 fullWidth
                 error={error}
