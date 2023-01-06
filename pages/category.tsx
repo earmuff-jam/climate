@@ -82,16 +82,17 @@ const Category = () => {
             editable: true,
             frozen: Column.FrozenDirection.LEFT
         },
-        {
-            key: "cat_tag",
-            title: "Category Tags",
-            dataKey: "category_tag",
-            width: 250,
-            resizable: true,
-            sortable: true,
-            editable: true,
-            cellRenderer: ({ cellData: tags }) => <DisplayTag tags={tags} />
-        },
+        // {
+        //     key: "cat_tag",
+        //     title: "Category Tags",
+        //     dataKey: "category_tag",
+        //     width: 250,
+        //     resizable: true,
+        //     sortable: true,
+        //     editable: true,
+        //     cellRenderer: ({ cellData: tags }: {tags: any}) => <DisplayTag tags={tags} 
+        //     />
+        // },
         {
             key: "created_on",
             title: "Last updated Date",

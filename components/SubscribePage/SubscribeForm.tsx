@@ -60,7 +60,12 @@ const SubscribeForm = () => {
         const { data, error } = await supabaseClient
             .from('subscriber')
             .insert([
-                { first_name: firstname, last_name: lastname, email_address: emailaddress, created_by: userData }
+                {
+                    first_name: firstname,
+                    last_name: lastname,
+                    email_address: emailaddress,
+                    created_by: userData,
+                }
             ]);
         if (error) { return null; }
     }
@@ -72,8 +77,7 @@ const SubscribeForm = () => {
     useEffect(() => {
         async function loadData() {
             const { data } = await supabaseClient.from('profiles').select('*').limit(1);
-
-            const user_id = data![0].id;
+            const user_id = data && data[0].id;
             setUserData(user_id);
         }
         // Only run query once user is logged in.
