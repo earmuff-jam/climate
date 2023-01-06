@@ -58,15 +58,6 @@ const NavMenuBar = () => {
                 <Toolbar
                     variant="dense"
                 >
-                    <IconButton
-                        size="small"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
                     <Stack
                         direction="row"
                         gap={1}
@@ -81,9 +72,23 @@ const NavMenuBar = () => {
                                     disableGutters
                                 >
                                     <Link href={route.link}>
-                                        <Typography>
-                                            {route.title}
-                                        </Typography>
+                                        <Stack
+                                            direction="row"
+                                            alignItems="center"
+                                        >
+                                            <IconButton
+                                                size="small"
+                                                edge="start"
+                                                color="inherit"
+                                                aria-label="menu"
+                                                sx={{ mr: 2 }}
+                                            >
+                                                {route.icon}
+                                            </IconButton>
+                                            <Typography>
+                                                {route.title}
+                                            </Typography>
+                                        </Stack>
                                     </Link>
                                 </ListItem>
                             );
