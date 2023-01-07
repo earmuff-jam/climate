@@ -1,7 +1,7 @@
 
 import React, {
-    useState,
     useEffect,
+    useState,
 } from "react";
 
 
@@ -13,18 +13,42 @@ import BaseTable, {
 import 'react-base-table/styles.css'
 
 import {
-    useSupabaseClient
-} from "@supabase/auth-helpers-react";
+    Button,
+    Chip,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Modal,
+    Tooltip,
+    Typography,
+} from "@mui/material";
 
 import { Box } from "@mui/system";
-import { Chip, Stack } from "@mui/material";
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import EmergencyShareRoundedIcon from '@mui/icons-material/EmergencyShareRounded';
 
-const Category = () => {
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'red',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
-    const supabaseClient = useSupabaseClient();
+
+const CategoryPage = ({ datasets }) => {
+
+    const [data, setData] = useState(datasets);
+    const [rowData, setRowData] = useState([]);
+    const [displayModal, setDisplayModal] = useState(false);
+
 
     const DisplayTag = (props) => {
         const { category_tag } = props;
@@ -32,7 +56,11 @@ const Category = () => {
             <>
                 {
                     category_tag?.map((el) => (
-                        <Chip key={el.id} label={el.tag_name}>
+                        <Chip
+                            key={el.id}
+                            label={el.tag_name}
+                            size={"small"}
+                        >
                             {el.tag_name}
                         </Chip>
                     ))
@@ -70,13 +98,30 @@ const Category = () => {
         )
     }
 
-    const TableCell = ({ className, cellData }) => (
-        <Box className={className}>{cellData}</Box>
-    )
+    const defaultSort = { key: "name", order: SortOrder.ASC };
+    const [sortBy, setSortBy] = useState(defaultSort);
 
-    const TableHeaderCell = ({ className, column }) => (
-        <Box className={className}>{column.title}</Box>
-    )
+    const onColumnSort = (sortBy) => {
+        const order = sortBy.order === SortOrder.ASC ? 1 : -1;
+        const data = [...data];
+        data.sort((a, b) => (a[sortBy.key] > b[sortBy.key] ? order : -order));
+        setData(data);
+        setSortBy(sortBy);
+    };
+
+    const emptyRenderer = () => {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                Sorry, no matching records found.
+            </Box>
+        )
+    };
+
+    const displayItemsForSingleCategory = ({ rowData }) => {
+        setRowData(rowData);
+        setDisplayModal(true);
+    };
+
 
     const columns = [
         {
@@ -99,7 +144,8 @@ const Category = () => {
             resizable: true,
             sortable: true,
             editable: true,
-            frozen: Column.FrozenDirection.LEFT
+            frozen: Column.FrozenDirection.LEFT,
+            cellRenderer: ({ cellData: category_name }) => <Tooltip title={category_name}><span>{category_name}</span></Tooltip>
         },
         {
             key: "cat_desc",
@@ -109,7 +155,8 @@ const Category = () => {
             resizable: true,
             sortable: true,
             editable: true,
-            frozen: Column.FrozenDirection.LEFT
+            frozen: Column.FrozenDirection.LEFT,
+            cellRenderer: ({ cellData: category_description }) => <Tooltip title={category_description}><span>{category_description}</span></Tooltip>
         },
         {
             key: "cat_status",
@@ -138,11 +185,8 @@ const Category = () => {
             title: "Sharing",
             dataKey: "contains_sharable_items",
             width: 150,
-            resizable: true,
             sortable: true,
-            editable: true,
             align: Column.Alignment.CENTER,
-            frozen: Column.FrozenDirection.RIGHT,
             cellRenderer: ({ cellData: contains_sharable_items }) => <Share contains_sharable_items={contains_sharable_items} />
         },
         {
@@ -150,53 +194,25 @@ const Category = () => {
             title: "Created On",
             dataKey: "created_on",
             width: 250,
-            resizable: true,
             sortable: true,
-            editable: true,
-            frozen: Column.FrozenDirection.RIGHT
         },
+        {
+            key: "action",
+            width: 100,
+            frozen: Column.FrozenDirection.RIGHT,
+            cellRenderer: ({ rowData }) => (
+                <button
+                    onClick={() => displayItemsForSingleCategory(rowData)}
+                >
+                    Critical Items
+                </button>
+            )
+        }
     ];
 
-    const defaultSort = { key: "name", order: SortOrder.ASC };
-
-    const [datasets, setDatasets] = useState([]);
-    const [sortBy, setSortBy] = useState(defaultSort);
-
-    const onColumnSort = (sortBy) => {
-        const order = sortBy.order === SortOrder.ASC ? 1 : -1;
-        const data = [...datasets];
-        data.sort((a, b) => (a[sortBy.key] > b[sortBy.key] ? order : -order));
-        setDatasets(data);
-        setSortBy(sortBy);
-    };
-
-    const emptyRenderer = () => {
-        return (
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                Sorry, no matching records found.
-            </Box>
-        )
-    }
-
-    const fetchCategoryList = async () => {
-        const { data, error } = await supabaseClient.from('category')
-            .select(`
-        category_type,
-        category_name,
-        category_description,
-        created_on,
-        created_by,
-        contains_sharable_items,
-        category_tag(id, tag_name)
-        `);
-        console.log(data);
-        if (error) return;
-        else { setDatasets(data) };
-    }
-
     useEffect(() => {
-        fetchCategoryList();
-    }, []);
+        setData(datasets);
+    }, [datasets])
 
     return (
         <Box style={{ width: "100vw", height: "100vh" }}>
@@ -204,18 +220,54 @@ const Category = () => {
                 {({ width, height }) => (
                     <BaseTable
                         columns={columns}
-                        data={datasets}
+                        data={data}
                         width={width}
                         height={height}
                         sortBy={sortBy}
                         onColumnSort={onColumnSort}
                         emptyRenderer={emptyRenderer}
-                        components={{ TableCell, TableHeaderCell }}
                     />
                 )}
             </AutoResizer>
+            {/* <Modal
+                open={displayModal}
+                onClose={() => setDisplayModal(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box style={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Text in a modal
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                    </Typography>
+                </Box>
+            </Modal> */}
+            <Dialog
+                open={displayModal}
+                onClose={() => setDisplayModal(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Critical Alerts within Category"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Let Google help apps determine location. This means sending anonymous
+                        location data to Google, even when no apps are running.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setDisplayModal(false)}>Disagree</Button>
+                    <Button onClick={() => setDisplayModal(false)} autoFocus>
+                        Agree
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     )
 };
 
-export default Category;
+export default CategoryPage;
