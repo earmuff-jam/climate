@@ -8,22 +8,22 @@ import React, {
 import BaseTable, {
     AutoResizer,
     Column,
+    SortOrder,
 } from 'react-base-table'
 import 'react-base-table/styles.css'
 
 import {
-    useUser,
-    useSession,
     useSupabaseClient
 } from "@supabase/auth-helpers-react";
 
 import { Box } from "@mui/system";
-import { Chip } from "@mui/material";
+import { Chip, Tooltip } from "@mui/material";
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
+import EmergencyShareRoundedIcon from '@mui/icons-material/EmergencyShareRounded';
 
 const Category = () => {
 
-    const user = useUser();
-    const session = useSession(); // user values are here too
     const supabaseClient = useSupabaseClient();
 
     const DisplayTag = (props: any) => {
@@ -41,30 +41,60 @@ const Category = () => {
         )
     };
 
+    const CategoryChoice = ({ category_type }: any) => {
+        return (
+            <Box sx={{
+                pl: 1,
+                borderLeft: (category_type === 'PERSONAL' ? '2px solid green' : 'none'),
+            }}>{category_type}</Box>
+        )
+    };
+
+    const ContainsExpired = (props: any) => {
+        const { expiredItems } = props;
+        return (
+            <Box>
+                {expiredItems && <WarningRoundedIcon color="warning" />}
+                {!expiredItems && <CheckRoundedIcon color="secondary" />}
+            </Box>
+        )
+    };
+
+    const Share = (props: any) => {
+        const { contains_sharable_items } = props;
+        return (
+            <Box>
+                {contains_sharable_items && <EmergencyShareRoundedIcon color="secondary" />}
+                {!contains_sharable_items && <EmergencyShareRoundedIcon color="warning" />}
+            </Box>
+        )
+    }
+
+    const TableCell = ({ className, cellData }) => (
+        <Box className={className}>{cellData}</Box>
+    )
+
+    const TableHeaderCell = ({ className, column }) => (
+        <Box className={className}>{column.dataKey}</Box>
+    )
+
+
     const columns = [
         {
-            key: "id",
-            title: "Category Id",
-            dataKey: "id",
-            width: 200,
-            resizable: true,
-            sortable: true,
-            editable: true,
-            frozen: Column.FrozenDirection.LEFT
-        },
-        {
             key: "cat_type",
-            title: "Category Type",
+            title: "Type",
             dataKey: "category_type",
-            width: 300,
+            width: 150,
             resizable: true,
-            sortable: true,
+            sortable: false,
             editable: true,
+            cellRenderer: ({ cellData: category_type }: any) => <CategoryChoice category_type={category_type} />,
+            align: Column.Alignment.CENTER,
             frozen: Column.FrozenDirection.LEFT
         },
         {
             key: "cat_name",
-            title: "Category Name",
+            title: "Name",
             dataKey: "category_name",
             width: 300,
             resizable: true,
@@ -74,30 +104,53 @@ const Category = () => {
         },
         {
             key: "cat_desc",
-            title: "Category Description",
+            title: "Description",
             dataKey: "category_description",
-            width: 600,
+            width: 400,
             resizable: true,
             sortable: true,
             editable: true,
             frozen: Column.FrozenDirection.LEFT
         },
-        // {
-        //     key: "cat_tag",
-        //     title: "Category Tags",
-        //     dataKey: "category_tag",
-        //     width: 250,
-        //     resizable: true,
-        //     sortable: true,
-        //     editable: true,
-        //     cellRenderer: ({ cellData: tags }: {tags: any}) => <DisplayTag tags={tags} 
-        //     />
-        // },
+        {
+            key: "cat_status",
+            title: "Status",
+            dataKey: "contains_expired_items",
+            width: 100,
+            resizable: true,
+            sortable: true,
+            editable: true,
+            cellRenderer: ({ cellData: expiredItems }: any) => <ContainsExpired expiredItems={expiredItems}
+            />
+        },
+        {
+            key: "cat_tag",
+            title: "Category Tags",
+            dataKey: "category_tags",
+            width: 150,
+            resizable: true,
+            sortable: true,
+            editable: true,
+            cellRenderer: ({ cellData: tags }: any) => <DisplayTag tags={tags}
+            />
+        },
+        {
+            key: "contains_sharable_items",
+            title: "Sharing",
+            dataKey: "contains_sharable_items",
+            width: 150,
+            resizable: true,
+            sortable: true,
+            editable: true,
+            align: Column.Alignment.CENTER,
+            frozen: Column.FrozenDirection.RIGHT,
+            cellRenderer: ({ cellData: contains_sharable_items }: any) => <Share contains_sharable_items={contains_sharable_items} />
+        },
         {
             key: "created_on",
-            title: "Last updated Date",
+            title: "Created On",
             dataKey: "created_on",
-            width: 400,
+            width: 250,
             resizable: true,
             sortable: true,
             editable: true,
@@ -105,17 +158,29 @@ const Category = () => {
         },
     ];
 
+    const defaultSort = { key: "name", order: SortOrder.ASC };
+
     const [datasets, setDatasets] = useState<any | null>([]);
+    const [sortBy, setSortBy] = useState(defaultSort);
+
+    const onColumnSort = (sortBy) => {
+        const order = sortBy.order === SortOrder.ASC ? 1 : -1;
+        const data = [...datasets];
+        data.sort((a, b) => (a[sortBy.key] > b[sortBy.key] ? order : -order));
+        setDatasets(data);
+        setSortBy(sortBy);
+    };
+
 
     const fetchCategoryList = async () => {
         const { data, error } = await supabaseClient.from('category')
             .select(`
-            id,
         category_type,
         category_name,
         category_description,
         created_on,
-        created_by
+        created_by,
+        contains_sharable_items
         `);
         console.log(data, error);
         if (error) return;
@@ -135,6 +200,9 @@ const Category = () => {
                         data={datasets}
                         width={width}
                         height={height}
+                        sortBy={sortBy}
+                        onColumnSort={onColumnSort}
+                        components={{ TableCell, TableHeaderCell }}
                     />
                 )}
             </AutoResizer>
