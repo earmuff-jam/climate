@@ -190,4 +190,9 @@ INSERT INTO item(item_name, item_description, quantity, category_id, created_by,
 INSERT INTO item(item_name, item_description, quantity, category_id, created_by, sharable_groups) VALUES( 'Fresh Flowers', 'Fresh Flowers', 120, (SELECT id FROM category WHERE category_name='BEDROOM CABINET'), 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::text, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
 INSERT INTO item(item_name, item_description, quantity, category_id, created_by, sharable_groups) VALUES( 'Throw Blanket', 'Throw Blanket', 60, (SELECT id FROM category WHERE category_name='BEDROOM CABINET'), 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::text, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid]);
 
+
+INSERT INTO category_tag(tag_name, tag_description, created_by, sharable_groups, category_id) VALUES ( 'Pantry', 'Generic Pantry items', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::text, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid], (SELECT id FROM category WHERE category_name='PANTRY'));
+INSERT INTO category_tag(tag_name, tag_description, created_by, sharable_groups, category_id) VALUES ( 'Food', 'Generic Food items', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::text, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid], (SELECT id FROM category WHERE category_name='PANTRY'));
+INSERT INTO category_tag(tag_name, tag_description, created_by, sharable_groups, category_id) VALUES ( 'Corn', 'Generic Corn items', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::text, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid], (SELECT id FROM category WHERE category_name='PANTRY'));
+INSERT INTO category_tag(tag_name, tag_description, created_by, sharable_groups, category_id) VALUES ( 'Vegetables', 'Generic Vegetables items', 'b7ccdf6f-02d7-44ea-9d67-56533077245f'::text, ARRAY ['b7ccdf6f-02d7-44ea-9d67-56533077245f'::uuid], (SELECT id FROM category WHERE category_name='PANTRY'));
 END;

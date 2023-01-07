@@ -17,7 +17,7 @@ import {
 } from "@supabase/auth-helpers-react";
 
 import { Box } from "@mui/system";
-import { Chip, Tooltip } from "@mui/material";
+import { Chip, Stack } from "@mui/material";
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import EmergencyShareRoundedIcon from '@mui/icons-material/EmergencyShareRounded';
@@ -26,14 +26,14 @@ const Category = () => {
 
     const supabaseClient = useSupabaseClient();
 
-    const DisplayTag = (props: any) => {
-        const { tags } = props;
+    const DisplayTag = (props) => {
+        const { category_tag } = props;
         return (
             <>
                 {
-                    tags?.map((el: any) => (
-                        <Chip key={el.id} label={el.item_name}>
-                            {el.item_name}
+                    category_tag?.map((el) => (
+                        <Chip key={el.id} label={el.tag_name}>
+                            {el.tag_name}
                         </Chip>
                     ))
                 }
@@ -41,7 +41,7 @@ const Category = () => {
         )
     };
 
-    const CategoryChoice = ({ category_type }: any) => {
+    const CategoryChoice = ({ category_type }) => {
         return (
             <Box sx={{
                 pl: 1,
@@ -50,7 +50,7 @@ const Category = () => {
         )
     };
 
-    const ContainsExpired = (props: any) => {
+    const ContainsExpired = (props) => {
         const { expiredItems } = props;
         return (
             <Box>
@@ -60,7 +60,7 @@ const Category = () => {
         )
     };
 
-    const Share = (props: any) => {
+    const Share = (props) => {
         const { contains_sharable_items } = props;
         return (
             <Box>
@@ -75,9 +75,8 @@ const Category = () => {
     )
 
     const TableHeaderCell = ({ className, column }) => (
-        <Box className={className}>{column.dataKey}</Box>
+        <Box className={className}>{column.title}</Box>
     )
-
 
     const columns = [
         {
@@ -88,7 +87,7 @@ const Category = () => {
             resizable: true,
             sortable: false,
             editable: true,
-            cellRenderer: ({ cellData: category_type }: any) => <CategoryChoice category_type={category_type} />,
+            cellRenderer: ({ cellData: category_type }) => <CategoryChoice category_type={category_type} />,
             align: Column.Alignment.CENTER,
             frozen: Column.FrozenDirection.LEFT
         },
@@ -120,18 +119,18 @@ const Category = () => {
             resizable: true,
             sortable: true,
             editable: true,
-            cellRenderer: ({ cellData: expiredItems }: any) => <ContainsExpired expiredItems={expiredItems}
+            cellRenderer: ({ cellData: expiredItems }) => <ContainsExpired expiredItems={expiredItems}
             />
         },
         {
             key: "cat_tag",
             title: "Category Tags",
-            dataKey: "category_tags",
+            dataKey: "category_tag",
             width: 150,
             resizable: true,
             sortable: true,
             editable: true,
-            cellRenderer: ({ cellData: tags }: any) => <DisplayTag tags={tags}
+            cellRenderer: ({ cellData: category_tag }) => <DisplayTag category_tag={category_tag}
             />
         },
         {
@@ -144,7 +143,7 @@ const Category = () => {
             editable: true,
             align: Column.Alignment.CENTER,
             frozen: Column.FrozenDirection.RIGHT,
-            cellRenderer: ({ cellData: contains_sharable_items }: any) => <Share contains_sharable_items={contains_sharable_items} />
+            cellRenderer: ({ cellData: contains_sharable_items }) => <Share contains_sharable_items={contains_sharable_items} />
         },
         {
             key: "created_on",
@@ -160,7 +159,7 @@ const Category = () => {
 
     const defaultSort = { key: "name", order: SortOrder.ASC };
 
-    const [datasets, setDatasets] = useState<any | null>([]);
+    const [datasets, setDatasets] = useState([]);
     const [sortBy, setSortBy] = useState(defaultSort);
 
     const onColumnSort = (sortBy) => {
@@ -171,6 +170,13 @@ const Category = () => {
         setSortBy(sortBy);
     };
 
+    const emptyRenderer = () => {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                Sorry, no matching records found.
+            </Box>
+        )
+    }
 
     const fetchCategoryList = async () => {
         const { data, error } = await supabaseClient.from('category')
@@ -180,9 +186,10 @@ const Category = () => {
         category_description,
         created_on,
         created_by,
-        contains_sharable_items
+        contains_sharable_items,
+        category_tag(id, tag_name)
         `);
-        console.log(data, error);
+        console.log(data);
         if (error) return;
         else { setDatasets(data) };
     }
@@ -202,12 +209,12 @@ const Category = () => {
                         height={height}
                         sortBy={sortBy}
                         onColumnSort={onColumnSort}
+                        emptyRenderer={emptyRenderer}
                         components={{ TableCell, TableHeaderCell }}
                     />
                 )}
             </AutoResizer>
         </Box>
-
     )
 };
 
