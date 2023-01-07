@@ -20,10 +20,9 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    IconButton,
+    Modal,
     Tooltip,
-    useMediaQuery,
-    useTheme,
+    Typography,
 } from "@mui/material";
 
 import { Box } from "@mui/system";
@@ -246,6 +245,42 @@ const CategoryPage = ({ datasets }) => {
             // )
         }
     ];
+
+    const defaultSort = { key: "name", order: SortOrder.ASC };
+
+    const [datasets, setDatasets] = useState([]);
+    const [sortBy, setSortBy] = useState(defaultSort);
+
+    const onColumnSort = (sortBy) => {
+        const order = sortBy.order === SortOrder.ASC ? 1 : -1;
+        const data = [...datasets];
+        data.sort((a, b) => (a[sortBy.key] > b[sortBy.key] ? order : -order));
+        setDatasets(data);
+        setSortBy(sortBy);
+    };
+
+    const emptyRenderer = () => {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                Sorry, no matching records found.
+            </Box>
+        )
+    }
+
+    const fetchCategoryList = async () => {
+        const { data, error } = await supabaseClient.from('category')
+            .select(`
+        category_type,
+        category_name,
+        category_description,
+        created_on,
+        created_by,
+        contains_sharable_items,
+        category_tag(id, tag_name)
+        `);
+        if (error) return;
+        setDatasets(data);
+    }
 
     useEffect(() => {
         setData(datasets);
