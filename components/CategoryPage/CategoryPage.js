@@ -20,9 +20,7 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Modal,
     Tooltip,
-    Typography,
 } from "@mui/material";
 
 import { Box } from "@mui/system";
