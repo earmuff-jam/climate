@@ -20,28 +20,14 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Modal,
     Tooltip,
-    Typography,
 } from "@mui/material";
 
 import { Box } from "@mui/system";
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import EmergencyShareRoundedIcon from '@mui/icons-material/EmergencyShareRounded';
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'red',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
-
+import DisplayAttentionItems from "./DisplayAttentionItems";
 
 const CategoryPage = ({ datasets }) => {
 
@@ -116,12 +102,6 @@ const CategoryPage = ({ datasets }) => {
             </Box>
         )
     };
-
-    const displayItemsForSingleCategory = ({ rowData }) => {
-        setRowData(rowData);
-        setDisplayModal(true);
-    };
-
 
     const columns = [
         {
@@ -201,11 +181,17 @@ const CategoryPage = ({ datasets }) => {
             width: 100,
             frozen: Column.FrozenDirection.RIGHT,
             cellRenderer: ({ rowData }) => (
-                <button
-                    onClick={() => displayItemsForSingleCategory(rowData)}
+                <Button
+                    variant="contained"
+                    color="info"
+                    size="small"
+                    onClick={() => {
+                        setRowData(rowData);
+                        setDisplayModal(true);
+                    }}
                 >
-                    Critical Items
-                </button>
+                    Items
+                </Button>
             )
         }
     ];
@@ -229,21 +215,6 @@ const CategoryPage = ({ datasets }) => {
                     />
                 )}
             </AutoResizer>
-            {/* <Modal
-                open={displayModal}
-                onClose={() => setDisplayModal(false)}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box style={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Text in a modal
-                    </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                    </Typography>
-                </Box>
-            </Modal> */}
             <Dialog
                 open={displayModal}
                 onClose={() => setDisplayModal(false)}
@@ -251,18 +222,19 @@ const CategoryPage = ({ datasets }) => {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">
-                    {"Critical Alerts within Category"}
+                    {"Items that need attention"}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Let Google help apps determine location. This means sending anonymous
-                        location data to Google, even when no apps are running.
+                        <DisplayAttentionItems rowData={rowData} />
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setDisplayModal(false)}>Disagree</Button>
-                    <Button onClick={() => setDisplayModal(false)} autoFocus>
-                        Agree
+                    <Button
+                        autoFocus
+                        onClick={() => setDisplayModal(false)}
+                    >
+                        Close
                     </Button>
                 </DialogActions>
             </Dialog>
