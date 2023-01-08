@@ -89,7 +89,7 @@ const CategoryPage = ({ datasets }) => {
 
     const onColumnSort = (sortBy) => {
         const order = sortBy.order === SortOrder.ASC ? 1 : -1;
-        const data = [...data];
+        const data = [...datasets];
         data.sort((a, b) => (a[sortBy.key] > b[sortBy.key] ? order : -order));
         setData(data);
         setSortBy(sortBy);
@@ -222,7 +222,7 @@ const CategoryPage = ({ datasets }) => {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">
-                    {"Items that need attention"}
+                    {"Items Quickview"}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">

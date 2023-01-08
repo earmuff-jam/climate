@@ -13,13 +13,27 @@ import BaseTable, {
 import 'react-base-table/styles.css'
 
 import { Box, Typography } from "@mui/material";
-import moment, { now } from "moment";
+import moment from "moment";
 
 const columns = [
     {
         key: "item_name",
         title: "Name",
         dataKey: "item_name",
+        width: 150,
+        align: Column.Alignment.LEFT,
+    },
+    {
+        key: "item_description",
+        title: "Description",
+        dataKey: "item_description",
+        width: 150,
+        align: Column.Alignment.LEFT,
+    },
+    {
+        key: "quantity",
+        title: "Quantity",
+        dataKey: "quantity",
         width: 150,
         align: Column.Alignment.CENTER,
     },
@@ -28,10 +42,18 @@ const columns = [
         title: "Expires",
         dataKey: "use_by_date",
         width: 150,
-        align: Column.Alignment.CENTER,
+        align: Column.Alignment.LEFT,
         cellRenderer: ({ cellData: use_by_date }: any) => <CategoryChoice use_by_date={use_by_date} />,
     },
 ];
+
+const emptyRenderer = () => {
+    return (
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            Sorry, no matching records found.
+        </Box>
+    )
+};
 
 const CategoryChoice = ({ use_by_date }: any) => {
     const diff = moment(use_by_date).diff(moment.now(), 'days');
@@ -75,9 +97,7 @@ const DisplayAttentionItems = (props: any) => {
                         data={datasets}
                         width={width}
                         height={height}
-                        // sortBy={sortBy}
-                        // onColumnSort={onColumnSort}
-                        emptyRenderer={() => (<Typography> Sorry, no matching records found. </Typography>)}
+                        emptyRenderer={emptyRenderer}
                     />
                 )}
             </AutoResizer>
