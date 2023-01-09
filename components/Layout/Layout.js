@@ -10,7 +10,6 @@ import { Box } from "@mui/material";
 import Footer from "../Footer/Footer";
 import styles from "./Layout.module.css";
 import NavMenuBar from "../NavBar/AppBar";
-import EntryForm from "../HomePage/EntryForm";
 
 const layout = {
   display: "flex",
