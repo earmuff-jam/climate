@@ -4,7 +4,6 @@ import React, {
     useState,
 } from "react";
 
-
 import BaseTable, {
     AutoResizer,
     Column,
@@ -14,27 +13,38 @@ import 'react-base-table/styles.css'
 
 import {
     Button,
+    Checkbox,
     Chip,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
+    IconButton,
     Tooltip,
+    useMediaQuery,
+    useTheme,
 } from "@mui/material";
 
 import { Box } from "@mui/system";
+import { CSVLink } from 'react-csv';
+import DownloadXcelForData from "./DownloadXcelForData";
+import DisplayAttentionItems from "./DisplayAttentionItems";
+
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import EmergencyShareRoundedIcon from '@mui/icons-material/EmergencyShareRounded';
-import DisplayAttentionItems from "./DisplayAttentionItems";
 
 const CategoryPage = ({ datasets }) => {
 
+    const theme = useTheme();
+    const onlySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
     const [data, setData] = useState(datasets);
     const [rowData, setRowData] = useState([]);
+    const [downloadCategoryName, setDownloadCategoryName] = useState(false);
     const [displayModal, setDisplayModal] = useState(false);
 
+    const [selectRow, setSelectRow] = useState(false);
 
     const DisplayTag = (props) => {
         const { category_tag } = props;
@@ -78,8 +88,12 @@ const CategoryPage = ({ datasets }) => {
         const { contains_sharable_items } = props;
         return (
             <Box>
-                {contains_sharable_items && <EmergencyShareRoundedIcon color="secondary" />}
-                {!contains_sharable_items && <EmergencyShareRoundedIcon color="warning" />}
+                <Tooltip title={`${contains_sharable_items ? 'Currently sharing' : 'Not Sharing '}`}>
+                    <span>
+                        {contains_sharable_items && <EmergencyShareRoundedIcon color="secondary" />}
+                        {!contains_sharable_items && <EmergencyShareRoundedIcon color="warning" />}
+                    </span>
+                </Tooltip>
             </Box>
         )
     }
@@ -103,6 +117,10 @@ const CategoryPage = ({ datasets }) => {
         )
     };
 
+    const handleSelectRow = (e) => {
+        setSelectRow(e.target.checked);
+    }
+
     const columns = [
         {
             key: "cat_type",
@@ -113,7 +131,7 @@ const CategoryPage = ({ datasets }) => {
             sortable: false,
             editable: true,
             cellRenderer: ({ cellData: category_type }) => <CategoryChoice category_type={category_type} />,
-            align: Column.Alignment.CENTER,
+            align: Column.Alignment.LEFT,
             frozen: Column.FrozenDirection.LEFT
         },
         {
@@ -125,6 +143,7 @@ const CategoryPage = ({ datasets }) => {
             sortable: true,
             editable: true,
             frozen: Column.FrozenDirection.LEFT,
+            align: Column.Alignment.LEFT,
             cellRenderer: ({ cellData: category_name }) => <Tooltip title={category_name}><span>{category_name}</span></Tooltip>
         },
         {
@@ -136,6 +155,7 @@ const CategoryPage = ({ datasets }) => {
             sortable: true,
             editable: true,
             frozen: Column.FrozenDirection.LEFT,
+            align: Column.Alignment.LEFT,
             cellRenderer: ({ cellData: category_description }) => <Tooltip title={category_description}><span>{category_description}</span></Tooltip>
         },
         {
@@ -157,6 +177,7 @@ const CategoryPage = ({ datasets }) => {
             resizable: true,
             sortable: true,
             editable: true,
+            align: Column.Alignment.LEFT,
             cellRenderer: ({ cellData: category_tag }) => <DisplayTag category_tag={category_tag}
             />
         },
@@ -179,7 +200,6 @@ const CategoryPage = ({ datasets }) => {
         {
             key: "action",
             width: 100,
-            frozen: Column.FrozenDirection.RIGHT,
             cellRenderer: ({ rowData }) => (
                 <Button
                     variant="contained"
@@ -193,6 +213,37 @@ const CategoryPage = ({ datasets }) => {
                     Items
                 </Button>
             )
+        },
+        {
+            key: "action",
+            width: 100,
+            frozen: Column.FrozenDirection.RIGHT,
+            align: Column.Alignment.LEFT,
+            cellRenderer: ({ rowData }) => (
+                <Checkbox
+                    type="checkbox"
+                    checked={selectRow}
+                    onChange={(e) => {
+                        handleSelectRow(e);
+                        setDownloadCategoryName(rowData.category_name);
+                    }}
+                />
+            ),
+
+            // cellRenderer: ({ rowData }) => (
+            //     <IconButton
+            //         size="small"
+            //         edge="start"
+            //         color="secondary"
+            //         aria-label="menu"
+            //         sx={{ mr: 2 }}
+            //         onClick={() => {
+            //             setDownloadCategoryName(rowData.category_name);
+            //         }}
+            //     >
+
+            //     </IconButton>
+            // )
         }
     ];
 
@@ -236,8 +287,17 @@ const CategoryPage = ({ datasets }) => {
         setData(datasets);
     }, [datasets])
 
+    const regularAndHigherScreenSx = { width: "100vm", height: "100vh" };
+    const smallScreenSx = { width: '70rem', height: '70rem' };
+
     return (
-        <Box style={{ width: "100vw", height: "100vh" }}>
+        <Box style={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>
+            {
+                downloadCategoryName &&
+                <DownloadXcelForData
+                    downloadCategoryName={downloadCategoryName}
+                />
+            }
             <AutoResizer>
                 {({ width, height }) => (
                     <BaseTable
