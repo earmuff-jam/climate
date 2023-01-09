@@ -35,15 +35,13 @@ const Layout = ({ children }) => {
   if (!user)
     return (
       <Auth
-        redirectTo="http://localhost:3000/"
+        redirectTo="http://localhost:3000"
         appearance={{ theme: ThemeSupa }}
         supabaseClient={supabaseClient}
         providers={['google', 'github']}
         socialLayout="horizontal"
       />
     )
-
-
 
   return (
     <Box sx={layout}>

@@ -4,12 +4,12 @@ import {
   useTheme,
 } from "@mui/material";
 
+import Image from "next/image";
 import { Box } from "@mui/system";
 import Idea from "../components/Feedback/Idea";
 import RequestFeedback from "../components/Forms/RequestFeedback";
 import FeedbackHeader from "../components/Feedback/FeedbackHeader";
 import { TitleComponent } from "../components/Home/TitleComponent";
-import Image from "next/image";
 
 const feedbackComponentSx = (onlySmallScreen: boolean) => ({
   display: 'flex',
