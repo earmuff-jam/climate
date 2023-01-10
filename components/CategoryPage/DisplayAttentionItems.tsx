@@ -43,7 +43,7 @@ const columns = [
         dataKey: "use_by_date",
         width: 150,
         align: Column.Alignment.LEFT,
-        cellRenderer: ({ cellData: use_by_date }: any) => <CategoryChoice use_by_date={use_by_date} />,
+        cellRenderer: ({ cellData: use_by_date }: any) => <FormattedDate use_by_date={use_by_date} />,
     },
 ];
 
@@ -55,7 +55,7 @@ const emptyRenderer = () => {
     )
 };
 
-const CategoryChoice = ({ use_by_date }: any) => {
+const FormattedDate = ({ use_by_date }: any) => {
     const diff = moment(use_by_date).diff(moment.now(), 'days');
     const duration = moment(use_by_date).fromNow();
     return (

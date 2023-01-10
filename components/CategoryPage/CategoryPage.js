@@ -31,6 +31,7 @@ import DisplayAttentionItems from "./DisplayAttentionItems";
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import EmergencyShareRoundedIcon from '@mui/icons-material/EmergencyShareRounded';
+import GetAppRoundedIcon from '@mui/icons-material/GetAppRounded';
 
 const CategoryPage = ({ datasets }) => {
 
@@ -217,30 +218,21 @@ const CategoryPage = ({ datasets }) => {
             frozen: Column.FrozenDirection.RIGHT,
             align: Column.Alignment.LEFT,
             cellRenderer: ({ rowData }) => (
-                <Checkbox
-                    type="checkbox"
-                    checked={selectRow}
-                    onChange={(e) => {
+                <IconButton
+                    size="small"
+                    edge="start"
+                    color="secondary"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                    onClick={(e) => {
                         handleSelectRow(e);
                         setDownloadCategoryName(rowData.category_name);
+                        setDisplayDownloadIcon(true);
                     }}
-                />
+                >
+                    <GetAppRoundedIcon />
+                </IconButton>
             ),
-
-            // cellRenderer: ({ rowData }) => (
-            //     <IconButton
-            //         size="small"
-            //         edge="start"
-            //         color="secondary"
-            //         aria-label="menu"
-            //         sx={{ mr: 2 }}
-            //         onClick={() => {
-            //             setDownloadCategoryName(rowData.category_name);
-            //         }}
-            //     >
-
-            //     </IconButton>
-            // )
         }
     ];
 
@@ -250,15 +242,10 @@ const CategoryPage = ({ datasets }) => {
 
     const regularAndHigherScreenSx = { width: "100vm", height: "100vh" };
     const smallScreenSx = { width: '70rem', height: '70rem' };
+    const [displayDownloadIcon, setDisplayDownloadIcon] = useState(false);
 
     return (
         <Box style={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>
-            {
-                downloadCategoryName &&
-                <DownloadXcelForData
-                    downloadCategoryName={downloadCategoryName}
-                />
-            }
             <AutoResizer>
                 {({ width, height }) => (
                     <BaseTable
@@ -290,6 +277,35 @@ const CategoryPage = ({ datasets }) => {
                     <Button
                         autoFocus
                         onClick={() => setDisplayModal(false)}
+                    >
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={displayDownloadIcon}
+                onClose={() => setDisplayDownloadIcon(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Download selected report"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {
+                            downloadCategoryName &&
+                            <DownloadXcelForData
+                                downloadCategoryName={downloadCategoryName}
+                            />
+                        }
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        autoFocus
+                        onClick={() => setDisplayDownloadIcon(false)}
                     >
                         Close
                     </Button>
