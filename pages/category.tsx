@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import CategoryPage from "../components/CategoryPage/CategoryPage";
 
 import {
     useSupabaseClient
 } from "@supabase/auth-helpers-react";
 
-import { Grid } from '@mui/material';
-import CategoryPage from "../components/CategoryPage/CategoryPage";
-
 const Category = () => {
 
     const supabaseClient = useSupabaseClient();
+
     const [datasets, setDatasets] = useState<any | null>([]);
 
     const fetchCategoryList = async () => {
@@ -33,17 +32,7 @@ const Category = () => {
 
     return (
         <>
-            <Grid
-                container
-                alignItems="center"
-            >
-                <Grid item xs={6} md={12}>
-
-                </Grid>
-                <Grid item xs={12} md={12}>
-                    {datasets && <CategoryPage datasets={datasets} />}
-                </Grid>
-            </Grid>
+            {datasets && <CategoryPage datasets={datasets} />}
         </>
     )
 };
