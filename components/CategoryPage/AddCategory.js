@@ -31,8 +31,9 @@ import {
     useSupabaseClient
 } from "@supabase/auth-helpers-react";
 import { MENU_PROPS, TYPE_OPTIONS } from "./constants";
+import CategoryTags from "./CategoryTags";
 
-const AddCategory = (props: any) => {
+const AddCategory = (props) => {
 
     const supabaseClient = useSupabaseClient();
     const { addCategorySelection, setAddCategorySelection } = props;
@@ -43,61 +44,53 @@ const AddCategory = (props: any) => {
 
     const [barCodeValue] = useState(uuid());
     const [error, setError] = useState(false);
-    const [tags, setTags] = useState<string[]>([]);
-    const [tagOptions, setTagOptions] = useState<string[] | undefined>([]);
 
-    const handleSetType = (e: SelectChangeEvent<typeof type>) => {
+    const [tag, setTag] = useState();
+
+    const handleSetType = (e) => {
         setType(e.target.value);
     }
-    const handleSetName = (val: string) => setName(val);
-    const handleSetDesc = (val: string) => setDesc(val);
-    const handleSetTags = (event: SelectChangeEvent<typeof tags>) => {
-        const { target: { value } } = event;
-        setTags(
-            typeof value === 'string' ? value.split(',') : value,
-        );
-    };
+    const handleSetName = (val) => setName(val);
+    const handleSetDesc = (val) => setDesc(val);
 
     const saveToDb = async () => {
         const { data } = await supabaseClient.from('profiles').select('*').limit(1);
         const user_id = data && data[0].id;
-        console.log(user_id, name, type, desc, barCodeValue, user_id);
 
-        const { error } = await supabaseClient
+        const { data: insertCatRes, error: insertCatErr } = await supabaseClient
             .from('category')
-            .insert({ category_type: type.toUpperCase(),
+            .insert({
+                category_type: type.toUpperCase(),
                 category_name: name,
                 category_description: desc,
                 barcode: barCodeValue,
                 created_by: user_id,
                 sharable_groups: [user_id],
-    });
-        if (error) { console.log(error) }
-        else {
-            setAddCategorySelection(false);
-        }
+            }).select();
+
+        const categoryId = insertCatRes?.map(dv => dv.id)[0];
+        const { error: insertTagErr } = await supabaseClient
+            .from('category_tag')
+            .insert({
+                tag_name: tag.name,
+                tag_description: tag.name,
+                created_by: user_id,
+                category_id: categoryId,
+                sharable_groups: [user_id],
+            });
+        setAddCategorySelection(false);
     };
 
     const handleSubmit = () => {
-        if ((name === '' || undefined) || (type === '' || undefined)) {
+        if (
+            (name === '' || undefined) ||
+            (type === '' || undefined)
+        ) {
             setError(true);
             return;
         }
         else { saveToDb() }
     }
-
-    const loadTag = async () => {
-        let { data, error } = await supabaseClient
-            .rpc('fn_gather_tag_list')
-        if (error) console.error(error)
-        const values = data?.map(v => v.name);
-        setTagOptions(values);
-    }
-
-    useEffect(() => {
-        loadTag();
-    }, [])
-
 
     return (
         <>
@@ -212,47 +205,10 @@ const AddCategory = (props: any) => {
                                 </Grid>
 
                                 <Grid item xs={3}>
-                                    <FormControl fullWidth>
-                                        <InputLabel
-                                            id='category-tags-input'
-                                        >
-                                            Tags
-                                        </InputLabel>
-                                        <Select
-                                            labelId="category-tags-input-label"
-                                            id='category-tags-input-id'
-                                            multiple
-                                            value={tags}
-                                            onChange={handleSetTags}
-                                            input={
-                                                <OutlinedInput id='select-multiple-chip-input' label='Chip'
-                                                />
-                                            }
-                                            renderValue={(selected) => (
-                                                <Box
-                                                    sx={{
-                                                        display: "flex",
-                                                        flexWrap: "wrap",
-                                                        gap: 0.5
-                                                    }}
-                                                >
-                                                    {selected.map((value) => (
-                                                        <Chip
-                                                            key={value}
-                                                            label={value}
-                                                        />
-                                                    ))}
-                                                </Box>
-                                            )}
-                                            MenuProps={MENU_PROPS}
-                                        >
-                                            {tagOptions?.map((name) => (
-                                                <MenuItem key={name} value={name}>
-                                                    {name}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
+                                    <CategoryTags
+                                        tag={tag}
+                                        setTag={setTag}
+                                    />
                                 </Grid>
                             </Grid>
                         </form>

@@ -13,11 +13,11 @@ export const MENU_PROPS = {
 export const TYPE_OPTIONS = [
     {
         id: '1',
-        name: 'Personal',
+        name: 'PERSONAL',
     },
     {
         id: '2',
-        name: 'Business',
+        name: 'BUSINESS',
     }
 ];
 

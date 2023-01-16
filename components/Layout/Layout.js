@@ -3,13 +3,14 @@ import {
   useUser,
   useSupabaseClient
 } from "@supabase/auth-helpers-react";
-import { Auth, ThemeSupa } from '@supabase/auth-ui-react';
 
 import React, { useEffect, useState } from "react";
+
 import { Box } from "@mui/material";
 import Footer from "../Footer/Footer";
 import styles from "./Layout.module.css";
 import NavMenuBar from "../NavBar/AppBar";
+import EntryForm from "../HomePage/EntryForm";
 
 const layout = {
   display: "flex",
@@ -19,9 +20,9 @@ const layout = {
 
 const Layout = ({ children }) => {
 
-  const supabaseClient = useSupabaseClient()
   const user = useUser()
   const [data, setData] = useState()
+  const supabaseClient = useSupabaseClient()
 
   useEffect(() => {
     async function loadData() {
@@ -34,12 +35,9 @@ const Layout = ({ children }) => {
 
   if (!user)
     return (
-      <Auth
-        redirectTo="http://localhost:3000"
-        appearance={{ theme: ThemeSupa }}
-        supabaseClient={supabaseClient}
-        providers={['google', 'github']}
-        socialLayout="horizontal"
+      <EntryForm 
+        redirectUri="http://localhost:3000"
+        supabase={supabaseClient}
       />
     )
 

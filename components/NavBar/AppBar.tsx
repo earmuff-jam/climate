@@ -63,7 +63,7 @@ const NavMenuBar = () => {
                         gap={1}
                         sx={{ flexGrow: 1 }}
                     >
-                        {currentRoutes.map((route, index) => {
+                        {currentRoutes?.map((route, index) => {
                             return (
                                 <ListItem
                                     key={route.title}
