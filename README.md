@@ -10,6 +10,7 @@ Climate is designed to support your items management process. It will allow user
 2. `yarn install` to install the dependencies.
 3. `yarn dev` to start localhost development.
 4. `yarn storybook` to develop UI components.
+5. `yarn add react-jsbarcode` for the barcode.
 
 ### Pain points
 

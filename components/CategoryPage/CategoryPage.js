@@ -22,6 +22,7 @@ import {
     DialogTitle,
     IconButton,
     Tooltip,
+    Typography,
     useMediaQuery,
     useTheme,
 } from "@mui/material";
@@ -35,6 +36,7 @@ import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import EmergencyShareRoundedIcon from '@mui/icons-material/EmergencyShareRounded';
 import GetAppRoundedIcon from '@mui/icons-material/GetAppRounded';
+import AddCategory from "./AddCategory";
 
 const CategoryPage = ({ datasets }) => {
 
@@ -44,8 +46,6 @@ const CategoryPage = ({ datasets }) => {
     const [rowData, setRowData] = useState([]);
     const [downloadCategoryName, setDownloadCategoryName] = useState(false);
     const [displayModal, setDisplayModal] = useState(false);
-
-    const [selectRow, setSelectRow] = useState(false);
 
     const DisplayTag = (props) => {
         const { category_tag } = props;
@@ -246,9 +246,31 @@ const CategoryPage = ({ datasets }) => {
     const regularAndHigherScreenSx = { width: "100vm", height: "100vh" };
     const smallScreenSx = { width: '70rem', height: '70rem' };
     const [displayDownloadIcon, setDisplayDownloadIcon] = useState(false);
+    const [addCategorySelection, setAddCategorySelection] = useState(false);
+
+    const handleAddCategory = () => setAddCategorySelection(!addCategorySelection);
 
     return (
         <Box style={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>
+
+            <Box sx={{ p: 1, display: 'flex', gap: 1 }}>
+                <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={handleAddCategory}> Add Category
+                </Button>
+
+                <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={handleAddCategory}> Bookmark Category
+                </Button>
+            </Box>
+            {addCategorySelection &&
+                <AddCategory
+                    addCategorySelection={addCategorySelection}
+                    setAddCategorySelection={setAddCategorySelection} />
+            }
             <AutoResizer>
                 {({ width, height }) => (
                     <BaseTable
