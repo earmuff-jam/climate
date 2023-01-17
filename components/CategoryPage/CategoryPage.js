@@ -28,7 +28,6 @@ import {
 } from "@mui/material";
 
 import { Box } from "@mui/system";
-import { CSVLink } from 'react-csv';
 import DownloadXcelForData from "./DownloadXcelForData";
 import DisplayAttentionItems from "./DisplayAttentionItems";
 
@@ -44,6 +43,7 @@ const CategoryPage = ({ datasets }) => {
     const onlySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
     const [data, setData] = useState(datasets);
     const [rowData, setRowData] = useState([]);
+    const [selectRow, setSelectRow] = useState('');
     const [downloadCategoryName, setDownloadCategoryName] = useState(false);
     const [displayModal, setDisplayModal] = useState(false);
 

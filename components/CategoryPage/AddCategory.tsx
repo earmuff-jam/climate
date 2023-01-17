@@ -8,56 +8,47 @@ import {
     DialogTitle,
     FormControl,
     Grid,
+    IconButton,
     InputLabel,
     MenuItem,
     OutlinedInput,
     Select,
     SelectChangeEvent,
     TextField,
+    Tooltip,
+    Typography,
 } from "@mui/material";
 
+import { uuid } from 'uuidv4';
 import { Box } from "@mui/system";
 import ReactBarcode from "react-jsbarcode";
-import { useTheme } from '@mui/material/styles';
+
 import React, { useState, useEffect } from "react";
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import EmergencyShareRounded from "@mui/icons-material/EmergencyShareRounded";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-
-const fetchedCategoryList = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
-];
+import {
+    useSupabaseClient
+} from "@supabase/auth-helpers-react";
+import { MENU_PROPS, TYPE_OPTIONS } from "./constants";
 
 const AddCategory = (props: any) => {
 
-    const theme = useTheme();
-
+    const supabaseClient = useSupabaseClient();
     const { addCategorySelection, setAddCategorySelection } = props;
 
     const [type, setType] = useState('');
     const [name, setName] = useState('');
     const [desc, setDesc] = useState('');
-    const [tags, setTags] = useState<string[]>([]);
-    const [tagOptions, setTagOptions] = useState<string[]>([]);
 
-    const handleSetType = (val: string) => setType(val);
+    const [barCodeValue] = useState(uuid());
+    const [error, setError] = useState(false);
+    const [tags, setTags] = useState<string[]>([]);
+    const [tagOptions, setTagOptions] = useState<string[] | undefined>([]);
+
+    const handleSetType = (e: SelectChangeEvent<typeof type>) => {
+        setType(e.target.value);
+    }
     const handleSetName = (val: string) => setName(val);
     const handleSetDesc = (val: string) => setDesc(val);
     const handleSetTags = (event: SelectChangeEvent<typeof tags>) => {
@@ -67,11 +58,36 @@ const AddCategory = (props: any) => {
         );
     };
 
-    const handleSubmit = () => { console.log(`handle submit called`) }
+    const saveToDb = async () => {
+        const { data, error } = await supabaseClient
+            .from('category')
+            .insert([
+                { category_type: type.toUpperCase() },
+                { category_name: name },
+                { category_description: desc },
+                { barcode: barCodeValue },
+            ]);
+            if (error) {return;}
+    };
+
+    const handleSubmit = () => {
+        if ((name === '' || undefined) || (type === '' || undefined)) {
+            setError(true);
+            return;
+        }
+        else { saveToDb() }
+    }
+
+    const loadTag = async () => {
+        let { data, error } = await supabaseClient
+            .rpc('fn_gather_tag_list')
+        if (error) console.error(error)
+        const values = data?.map(v => v.name);
+        setTagOptions(values);
+    }
 
     useEffect(() => {
-        // when page loads give tag options
-        setTagOptions(['food', 'mohit', 'breakfast'])
+        loadTag();
     }, [])
 
     return (
@@ -83,7 +99,44 @@ const AddCategory = (props: any) => {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">
-                    {"Add Category"}
+                    {
+                        <Box
+                            display="flex"
+                            flexDirection="row"
+                            alignItems="center"
+                            justifyContent="flex-start"
+                        >
+                            <Typography
+                                variant="h5"
+                            >
+                                Add Category
+                            </Typography>
+                            <Tooltip
+                                title="Sharing is prohibited by default"
+                            >
+                                <IconButton>
+                                    <EmergencyShareRounded />
+                                </IconButton>
+                            </Tooltip>
+
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    'flexGrow': 1,
+                                }} />
+
+                            <Tooltip
+                                sx={{ color: 'red' }}
+                                title="Existing changes will be discarded"
+                            >
+                                <IconButton
+                                    onClick={() => setAddCategorySelection(false)}
+                                >
+                                    <CloseRoundedIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </Box>
+                    }
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
@@ -98,14 +151,32 @@ const AddCategory = (props: any) => {
                                 padding={2}
                             >
                                 <Grid item xs={5}>
-                                    <TextField
-                                        id='category-type-input'
-                                        name="category-type"
-                                        label="Category Type"
-                                        type="text"
-                                        value={type}
-                                        onChange={(e) => handleSetType(e.currentTarget.value)}
-                                    />
+                                    <FormControl fullWidth>
+                                        <InputLabel
+                                            id='category-type-input'
+                                        >
+                                            Type
+                                        </InputLabel>
+                                        <Select
+                                            labelId="category-type-input-label"
+                                            id='category-type-input-id'
+                                            value={type}
+                                            onChange={handleSetType}
+                                            input={
+                                                <OutlinedInput id='select-chip-input' label='Chip'
+                                                />
+                                            }
+                                            MenuProps={MENU_PROPS}
+                                        >
+                                            {TYPE_OPTIONS?.map((item) => (
+                                                <MenuItem
+                                                    key={item.id}
+                                                    value={item.name}>
+                                                    {item.name}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
                                 </Grid>
 
                                 <Grid item xs={5}>
@@ -136,7 +207,7 @@ const AddCategory = (props: any) => {
                                         <InputLabel
                                             id='category-tags-input'
                                         >
-                                            Add Tags
+                                            Tags
                                         </InputLabel>
                                         <Select
                                             labelId="category-tags-input-label"
@@ -164,9 +235,9 @@ const AddCategory = (props: any) => {
                                                     ))}
                                                 </Box>
                                             )}
-                                            MenuProps={MenuProps}
+                                            MenuProps={MENU_PROPS}
                                         >
-                                            {tagOptions.map((name) => (
+                                            {tagOptions?.map((name) => (
                                                 <MenuItem key={name} value={name}>
                                                     {name}
                                                 </MenuItem>
@@ -176,18 +247,27 @@ const AddCategory = (props: any) => {
                                 </Grid>
                             </Grid>
                         </form>
-                        <ReactBarcode
-                            value="ABC123"
-                            options={{ format: 'code128' }}
-                        />
+                        <Tooltip title="Unique Identification for Category">
+                            <Box>
+                                <ReactBarcode
+                                    value={barCodeValue}
+                                    options={{
+                                        format: 'code128',
+                                        fontSize: 7,
+                                        width: 1,
+
+                                    }}
+                                />
+                            </Box>
+                        </Tooltip>
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button
                         autoFocus
-                        onClick={() => setAddCategorySelection(false)}
+                        onClick={handleSubmit}
                     >
-                        Close
+                        Submit
                     </Button>
                 </DialogActions>
             </Dialog>
