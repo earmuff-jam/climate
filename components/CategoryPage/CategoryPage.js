@@ -7,13 +7,12 @@ import React, {
 import BaseTable, {
     AutoResizer,
     Column,
-    SortOrder,
+    SortOrder, // do not remove
 } from 'react-base-table'
 import 'react-base-table/styles.css'
 
 import {
     Button,
-    Checkbox,
     Chip,
     Dialog,
     DialogActions,
@@ -27,26 +26,59 @@ import {
 } from "@mui/material";
 
 import { Box } from "@mui/system";
-import { CSVLink } from 'react-csv';
+import AddCategory from "./AddCategory";
 import DownloadXcelForData from "./DownloadXcelForData";
 import DisplayAttentionItems from "./DisplayAttentionItems";
+import { regularAndHigherScreenSx, smallScreenSx } from "./constants";
 
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
-import EmergencyShareRoundedIcon from '@mui/icons-material/EmergencyShareRounded';
 import GetAppRoundedIcon from '@mui/icons-material/GetAppRounded';
+import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import HighlightAltRoundedIcon from '@mui/icons-material/HighlightAltRounded';
+import EmergencyShareRoundedIcon from '@mui/icons-material/EmergencyShareRounded';
+import AddItem from "./AddItem";
+
 
 const CategoryPage = ({ datasets }) => {
 
     const theme = useTheme();
+    const defaultSort = {
+        key: "name",
+        order: SortOrder.ASC,
+    };
     const onlySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
     const [data, setData] = useState(datasets);
     const [rowData, setRowData] = useState([]);
-    const [downloadCategoryName, setDownloadCategoryName] = useState(false);
+    const [selectRow, setSelectRow] = useState('');
+
+    const [sortBy, setSortBy] = useState(defaultSort);
     const [displayModal, setDisplayModal] = useState(false);
+    const [addItemSelection, setAddItemSelection] = useState(false);
 
-    const [selectRow, setSelectRow] = useState(false);
+    const [displayDownloadIcon, setDisplayDownloadIcon] = useState(false);
+    const [downloadCategoryName, setDownloadCategoryName] = useState(false);
+    const [addCategorySelection, setAddCategorySelection] = useState(false);
 
+    const handleAddCategory = () => setAddCategorySelection(!addCategorySelection);
+    const handleAddItem = () => setAddItemSelection(!addItemSelection);
+
+    const onColumnSort = (sortBy) => {
+        const order = sortBy.order === SortOrder.ASC ? 1 : -1;
+        const data = [...datasets];
+        data.sort((a, b) => (a[sortBy.key] > b[sortBy.key] ? order : -order));
+        setData(data);
+        setSortBy(sortBy);
+    };
+
+    const emptyRenderer = () => {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                Sorry, no matching records found.
+            </Box>
+        )
+    };
     const DisplayTag = (props) => {
         const { category_tag } = props;
         return (
@@ -71,7 +103,9 @@ const CategoryPage = ({ datasets }) => {
             <Box sx={{
                 pl: 1,
                 borderLeft: (category_type === 'PERSONAL' ? '2px solid green' : 'none'),
-            }}>{category_type}</Box>
+            }}>
+                {category_type}
+            </Box>
         )
     };
 
@@ -99,30 +133,50 @@ const CategoryPage = ({ datasets }) => {
         )
     }
 
-    const defaultSort = { key: "name", order: SortOrder.ASC };
-    const [sortBy, setSortBy] = useState(defaultSort);
-
-    const onColumnSort = (sortBy) => {
-        const order = sortBy.order === SortOrder.ASC ? 1 : -1;
-        const data = [...datasets];
-        data.sort((a, b) => (a[sortBy.key] > b[sortBy.key] ? order : -order));
-        setData(data);
-        setSortBy(sortBy);
-    };
-
-    const emptyRenderer = () => {
-        return (
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                Sorry, no matching records found.
-            </Box>
-        )
-    };
-
     const handleSelectRow = (e) => {
         setSelectRow(e.target.checked);
     }
 
     const columns = [
+        {
+            key: "action",
+            width: 100,
+            cellRenderer: ({ rowData }) => (
+                <IconButton
+                    variant="contained"
+                    color="info"
+                    size="small"
+                    onClick={() => {
+                        setRowData(rowData); // save which row the user clicked
+                        handleAddItem(true);
+                    }}
+                >
+                    <AddCircleRoundedIcon />
+                </IconButton>
+            )
+        },
+        {
+            key: "action",
+            title: "View",
+            width: 100,
+            cellRenderer: ({ rowData }) => (
+                <Tooltip title="Items quickview">
+                    <Box>
+                        <IconButton
+                            variant="contained"
+                            color="info"
+                            size="small"
+                            onClick={() => {
+                                setRowData(rowData);
+                                setDisplayModal(true);
+                            }}
+                        >
+                            <HighlightAltRoundedIcon />
+                        </IconButton>
+                    </Box>
+                </Tooltip>
+            )
+        },
         {
             key: "cat_type",
             title: "Type",
@@ -201,23 +255,6 @@ const CategoryPage = ({ datasets }) => {
         {
             key: "action",
             width: 100,
-            cellRenderer: ({ rowData }) => (
-                <Button
-                    variant="contained"
-                    color="info"
-                    size="small"
-                    onClick={() => {
-                        setRowData(rowData);
-                        setDisplayModal(true);
-                    }}
-                >
-                    Items
-                </Button>
-            )
-        },
-        {
-            key: "action",
-            width: 100,
             frozen: Column.FrozenDirection.RIGHT,
             align: Column.Alignment.LEFT,
             cellRenderer: ({ rowData }) => (
@@ -241,14 +278,29 @@ const CategoryPage = ({ datasets }) => {
 
     useEffect(() => {
         setData(datasets);
-    }, [datasets])
-
-    const regularAndHigherScreenSx = { width: "100vm", height: "100vh" };
-    const smallScreenSx = { width: '70rem', height: '70rem' };
-    const [displayDownloadIcon, setDisplayDownloadIcon] = useState(false);
+    }, [datasets, addCategorySelection])
 
     return (
         <Box style={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>
+
+            <Box sx={{ p: 1, display: 'flex', gap: 1 }}>
+                <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={handleAddCategory}> Add Category
+                </Button>
+            </Box>
+            {addCategorySelection &&
+                <AddCategory
+                    addCategorySelection={addCategorySelection}
+                    setAddCategorySelection={setAddCategorySelection} />
+            }
+            {addItemSelection &&
+                <AddItem
+                    rowData={rowData}
+                    addItemSelection={addItemSelection}
+                    setAddItemSelection={setAddItemSelection} />
+            }
             <AutoResizer>
                 {({ width, height }) => (
                     <BaseTable
