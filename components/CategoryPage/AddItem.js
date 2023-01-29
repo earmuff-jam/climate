@@ -17,7 +17,6 @@ import { uuid } from 'uuidv4';
 import { Box } from "@mui/system";
 import ReactBarcode from "react-jsbarcode";
 
-import CategoryTags from './CategoryTags';
 
 import React, { useState } from "react";
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
@@ -27,6 +26,7 @@ import {
     useSupabaseClient
 } from "@supabase/auth-helpers-react";
 import moment from "moment";
+import Tags from "./Tags";
 
 const AddItem = (props) => {
 
@@ -49,18 +49,17 @@ const AddItem = (props) => {
     const handleSetDesc = (val) => setDesc(val);
     const handleSetQuantity = (val) => setQuantity(val);
     const handleShare = () => { setShareItem(!shareItem) };
-    
-    console.log(rowData);
+
     const saveToDb = async () => {
         const { data } = await supabaseClient.from('profiles').select('*').limit(1);
         // always is going to be the logged in user
         const user_id = data && data[0].id;
         let { data: categoryId, error: catIdErr } = await supabaseClient
-        .rpc('fn_gather_category_id_by_name',
-            {
-                createdby: rowData?.created_by,
-                name: rowData?.category_name
-            });
+            .rpc('fn_gather_category_id_by_name',
+                {
+                    createdby: rowData?.created_by,
+                    name: rowData?.category_name
+                });
 
         const { data: response, error } = await supabaseClient
             .from('item')
@@ -206,9 +205,10 @@ const AddItem = (props) => {
                                     />
                                 </Grid>
                                 <Grid item xs={3}>
-                                    <CategoryTags
+                                    <Tags
                                         tag={tag}
                                         setTag={setTag}
+                                        parent={'item'}
                                     />
                                 </Grid>
                             </Grid>

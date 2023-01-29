@@ -11,30 +11,28 @@ import {
     useSupabaseClient
 } from "@supabase/auth-helpers-react";
 
-const CategoryTags = (props) => {
+const Tags = (props) => {
 
     const {
         tag,
-        setTag
+        setTag,
+        parent = 'category',
     } = props;
 
+    const table_name = parent === 'category' ? 'fn_gather_category_tag_list' : 'fn_gather_item_tag_list';
     const supabaseClient = useSupabaseClient();
     const [tagOptions, setTagOptions] = useState([]);
-
     const filter = createFilterOptions();
 
     const loadTag = async () => {
         let { data, error } = await supabaseClient
-            .rpc('fn_gather_tag_list')
-        if (error) console.error(error)
+            .rpc(table_name)
         const values = data?.map(dv => ({ id: dv.id, name: dv.name }));
         setTagOptions(values);
     }
-
     useEffect(() => {
         loadTag();
     }, [])
-
     return (
         <Autocomplete
             value={tag}
@@ -55,7 +53,7 @@ const CategoryTags = (props) => {
             filterOptions={(options, params) => {
                 const filtered = filter(options, params);
                 const { inputValue } = params;
-                const isExisting = options.some((option) => inputValue === option.name);
+                const isExisting = options?.some((option) => inputValue === option.name);
                 if (inputValue !== '' && !isExisting) {
                     filtered.push({
                         inputValue,
@@ -88,4 +86,4 @@ const CategoryTags = (props) => {
     );
 }
 
-export default CategoryTags;
+export default Tags;
