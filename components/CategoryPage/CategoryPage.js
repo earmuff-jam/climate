@@ -21,23 +21,31 @@ import {
     DialogTitle,
     IconButton,
     Tooltip,
+    Typography,
     useMediaQuery,
     useTheme,
 } from "@mui/material";
 
+import moment from "moment";
+import AddItem from "./AddItem";
 import { Box } from "@mui/system";
+
 import AddCategory from "./AddCategory";
+import EditCategory from "./EditCategory";
+
 import DownloadXcelForData from "./DownloadXcelForData";
 import DisplayAttentionItems from "./DisplayAttentionItems";
 import { regularAndHigherScreenSx, smallScreenSx } from "./constants";
 
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import GetAppRoundedIcon from '@mui/icons-material/GetAppRounded';
+
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import HighlightAltRoundedIcon from '@mui/icons-material/HighlightAltRounded';
+
 import EmergencyShareRoundedIcon from '@mui/icons-material/EmergencyShareRounded';
-import AddItem from "./AddItem";
 
 
 const CategoryPage = ({ datasets }) => {
@@ -53,6 +61,7 @@ const CategoryPage = ({ datasets }) => {
     const [rowData, setRowData] = useState([]);
     const [selectRow, setSelectRow] = useState('');
 
+    const [editMode, setEditMode] = useState(false);
     const [sortBy, setSortBy] = useState(defaultSort);
     const [displayModal, setDisplayModal] = useState(false);
     const [addItemSelection, setAddItemSelection] = useState(false);
@@ -61,6 +70,7 @@ const CategoryPage = ({ datasets }) => {
     const [downloadCategoryName, setDownloadCategoryName] = useState(false);
     const [addCategorySelection, setAddCategorySelection] = useState(false);
 
+    const handleEditMode = (val) => setEditMode(val);
     const handleAddCategory = () => setAddCategorySelection(!addCategorySelection);
     const handleAddItem = () => setAddItemSelection(!addItemSelection);
 
@@ -140,7 +150,7 @@ const CategoryPage = ({ datasets }) => {
     const columns = [
         {
             key: "action",
-            width: 100,
+            width: 50,
             cellRenderer: ({ rowData }) => (
                 <IconButton
                     variant="contained"
@@ -152,6 +162,23 @@ const CategoryPage = ({ datasets }) => {
                     }}
                 >
                     <AddCircleRoundedIcon />
+                </IconButton>
+            )
+        },
+        {
+            key: "action",
+            width: 50,
+            cellRenderer: ({ rowData }) => (
+                <IconButton
+                    variant="contained"
+                    color="info"
+                    size="small"
+                    onClick={() => {
+                        setRowData(rowData); // save which row the user clicked
+                        handleEditMode(true);
+                    }}
+                >
+                    <EditRoundedIcon />
                 </IconButton>
             )
         },
@@ -247,10 +274,11 @@ const CategoryPage = ({ datasets }) => {
         },
         {
             key: "created_on",
-            title: "Created On",
+            title: "Created",
             dataKey: "created_on",
             width: 250,
             sortable: true,
+            cellRenderer: ({ cellData: created_on }) => <Typography>{moment(created_on).fromNow()}</Typography>
         },
         {
             key: "action",
@@ -301,6 +329,16 @@ const CategoryPage = ({ datasets }) => {
                     addItemSelection={addItemSelection}
                     setAddItemSelection={setAddItemSelection} />
             }
+
+            {
+                editMode &&
+                <EditCategory
+                    rowData={rowData}
+                    editMode={editMode}
+                    handleEditMode={handleEditMode}
+                />
+            }
+
             <AutoResizer>
                 {({ width, height }) => (
                     <BaseTable
