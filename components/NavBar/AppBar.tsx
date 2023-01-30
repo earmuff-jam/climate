@@ -27,7 +27,7 @@ const currentRoutes = [
     },
     {
         title: "Subscribe",
-        link: "/subscribe",
+        link: "/subscribe", 
         icon: <MailIcon />,
         isSelected: (val: string): boolean => val === "/subscribe",
     },

@@ -32,7 +32,6 @@ const DownloadXcelForData = (props: any) => {
 
     useEffect(() => {
         const excelSheet: any = [];
-        console.log(datasets);
         for (const [i, value] of datasets.entries()) {
             const excelRow = {
                 "column_one": i,

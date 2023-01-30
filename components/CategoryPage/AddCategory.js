@@ -31,7 +31,8 @@ import {
     useSupabaseClient
 } from "@supabase/auth-helpers-react";
 import { MENU_PROPS, TYPE_OPTIONS } from "./constants";
-import CategoryTags from "./CategoryTags";
+import CategoryTags from "./Tags";
+import Tags from "./Tags";
 
 const AddCategory = (props) => {
 
@@ -205,9 +206,10 @@ const AddCategory = (props) => {
                                 </Grid>
 
                                 <Grid item xs={3}>
-                                    <CategoryTags
+                                    <Tags
                                         tag={tag}
                                         setTag={setTag}
+                                        parent={'category'}
                                     />
                                 </Grid>
                             </Grid>
