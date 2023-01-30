@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/Layout/Layout.js", "components/HomePage/Account.js", "pages/category.tsx", "components/CategoryPage/Category.js", "components/HomePage/ImageStepper.js", "components/CategoryPage/AddCategory.js", "components/CategoryPage/AddItem.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/Layout/Layout.js", "components/HomePage/Account.js", "pages/category.tsx", "components/CategoryPage/Category.js", "components/HomePage/ImageStepper.js", "components/CategoryPage/AddCategory.js", "components/CategoryPage/AddItem.js", "pages/index.tsx", "components/Feedback/RoiCalculator.js"],
   "exclude": ["node_modules"]
 }

@@ -15,7 +15,6 @@ import EntryForm from "../HomePage/EntryForm";
 const layout = {
   display: "flex",
   flexDirection: "row",
-  height: "100vh",
 };
 
 const Layout = ({ children }) => {
@@ -35,7 +34,7 @@ const Layout = ({ children }) => {
 
   if (!user)
     return (
-      <EntryForm 
+      <EntryForm
         redirectUri="http://localhost:3000"
         supabase={supabaseClient}
       />
@@ -53,7 +52,7 @@ const Layout = ({ children }) => {
               }}>{children}</Box>
             </>
         </Box>
-        <Box className={styles.footer}>
+        <Box>
           <Footer />
         </Box>
       </Box>

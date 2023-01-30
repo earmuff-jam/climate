@@ -12,6 +12,7 @@ Climate is designed to support your items management process. It will allow user
 4. `yarn storybook` to develop UI components.
 5. `yarn add react-jsbarcode` for the barcode.
 6. `yarn add uuidv4` for uuid.
+7. `yarn add react-chartjs-2 chart.js` for charts.
 
 ### Pain points
 
