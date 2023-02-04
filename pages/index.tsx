@@ -1,12 +1,12 @@
-import { Grid, Paper, useTheme } from '@mui/material'
+import { Grid, Paper, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
-import Head from 'next/head'
+import Head from 'next/head';
 import RoiCalculator from '../components/Feedback/RoiCalculator';
 
 import GoldenInfo from '../components/HomePage/GoldenInfo';
 import Improvements from '../components/HomePage/Improvements';
 import ImprovementSelector from '../components/HomePage/ImprovementSelector';
-import NavBar from '../components/NavBar/Navbar';
+import { TypographyStyled } from '../components/HomePage/TypographyStyled';
 
 export default function Home() {
 
@@ -20,7 +20,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box sx={{display: 'flex', flexDirection: 'row'}}>
+      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
         <Grid
           container
           style={{
@@ -30,12 +30,12 @@ export default function Home() {
           }}
         >
           <Grid item xs={12} md={0}>
-            <Paper>
+            <Paper sx={{ m: 1 }}>
               <GoldenInfo />
             </Paper>
           </Grid>
           <Grid item xs={12} md={12} xl={6}>
-            <ImprovementSelector />
+            <ImprovementSelector name={'Categories'} />
             <Improvements />
           </Grid>
           <Grid item xs={12} md={12} xl={6}>
@@ -43,6 +43,7 @@ export default function Home() {
             <Improvements />
           </Grid>
           <Grid item xs={12} md={12} xl={6}>
+            <TypographyStyled />
             <RoiCalculator />
           </Grid>
         </Grid>

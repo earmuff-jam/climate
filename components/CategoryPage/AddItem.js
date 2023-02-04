@@ -76,15 +76,16 @@ const AddItem = (props) => {
             ]).select();
 
         const itemId = response?.map(dv => dv.id)[0];
-        const { error: insertTagErr } = await supabaseClient
-            .from('item_tag')
-            .insert({
-                name: tag.name,
-                description: tag.name,
-                created_by: user_id,
-                id: itemId,
-                sharable_groups: [user_id],
-            });
+        tag?.name &&
+            await supabaseClient
+                .from('item_tag')
+                .upsert({
+                    name: tag.name,
+                    description: tag.name,
+                    created_by: user_id,
+                    id: itemId,
+                    sharable_groups: [user_id],
+                });
         setAddItemSelection(false);
     };
 

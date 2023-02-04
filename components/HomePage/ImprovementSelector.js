@@ -15,8 +15,9 @@ const selectDropdownSx = {
     paddingBottom: "1vh",
 };
 
-const ImprovementSelector = () => {
+const ImprovementSelector = (props) => {
 
+    const { name: switcher = 'Items' } = props;
     const [value, setValue] = useState({
         value: "24",
         display: "24 hours",
@@ -46,8 +47,12 @@ const ImprovementSelector = () => {
                             <MenuItem key={v.value} value={v.value}>{v.display}</MenuItem>
                         ))}
                     </Select>
-                    <FormHelperText>
-                        Items with warning within {value.helperText}
+                    <FormHelperText sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
+                    >
+                        {switcher} with warning within {value.helperText}
                     </FormHelperText>
                 </Box>
             </FormControl>

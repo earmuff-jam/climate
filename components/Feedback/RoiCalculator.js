@@ -128,93 +128,97 @@ const RoiCalculator = ({
         >
             <Grid container
                 sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
                     mb: 2,
                 }}
             >
-                <Typography
-                    sx={{ fontSize: theme.spacing(2.5) }}
-                >
-                    <IconButton>
-                        <CalculateRoundedIcon />
-                    </IconButton>
-                    Digital savings calculator
-                </Typography>
-                <Typography
-                    sx={{
-                        color: theme.palette.secondary.main,
-                    }}
-                    gutterBottom
-                >
-                    Project your estimated savings within minutes.
-                </Typography>
-            </Grid>
-
-            <Grid
-                container
-                rowGap={2}
-            >
-                {
-                    roiFields?.map(rf => (
-                        <Grid
-                            key={rf.id}
-                            item xs={6}>
-                            <TextField
-                                label={rf.label}
-                                variant={rf.variant}
-                                color="info"
-                                value={rf.value}
-                                gutterBottom
-                                onBlur={(ev) => rf.isFilled(rf.id)}
-                                onChange={(ev) => handleRoiFieldsChanged(ev, rf)}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            {rf.icon}
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
-                        </Grid>
-                    ))
-                }
-
-                <Grid item xs={12}>
-                    <Box sx={{
-                        m: 1,
-                    }}>
-                        <Tooltip title={emailTooltipTitle}>
-                            <Chip
-                                label='email'
-                                sx={{
-                                    backgroundColor: `${emailChip && theme.palette.secondary.main || theme.palette.info.main}`,
-                                    color: theme.palette.common.white,
-                                }}
-                                onClick={sendReportToEmail}
-                            />
-                        </Tooltip>
-                    </Box>
+                <Grid item xs={12} md={6}>
+                    <Typography
+                        sx={{ fontSize: theme.spacing(2.5) }}
+                    >
+                        <IconButton>
+                            <CalculateRoundedIcon />
+                        </IconButton>
+                        Digital savings calculator
+                    </Typography>
+                    <Typography
+                        sx={{
+                            color: theme.palette.secondary.main,
+                        }}
+                        gutterBottom
+                    >
+                        Project your estimated savings within minutes.
+                    </Typography>
+                    <Grid
+                        container
+                        sx={{ mt: 3, gap: 1, }}
+                    >
+                        {
+                            roiFields?.map(rf => (
+                                <Grid
+                                    key={rf.id}
+                                    item xs={4}
+                                >
+                                    <TextField
+                                        label={rf.label}
+                                        variant={rf.variant}
+                                        color="info"
+                                        value={rf.value}
+                                        gutterBottom
+                                        onBlur={(ev) => rf.isFilled(rf.id)}
+                                        onChange={(ev) => handleRoiFieldsChanged(ev, rf)}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    {rf.icon}
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
+                                </Grid>
+                            ))
+                        }
+                    </Grid>
                 </Grid>
+                <Grid item xs={0} md={6}>
+                    {
+                        /* displayChart && */
+                        <Projector
+                            totalSavedInDollars={totalSavedInDollars}
+                            taxSavingsInPercentage={taxSavingsInPercentage}
+                            taxSavings={taxSavings}
+                            auditSavings={auditSavings}
+                            userCount={userCount}
+                            itemCount={itemCount}
+                            avgAssetVal={avgAssetVal}
+                            avgBrokenProducts={avgBrokenProducts}
+                        />
+                    }
+                </Grid>
+
             </Grid>
 
-            <Grid container>
-                {
-                    displayChart &&
-                    <Projector
-                        totalSavedInDollars={totalSavedInDollars}
-                        taxSavingsInPercentage={taxSavingsInPercentage}
-                        taxSavings={taxSavings}
-                        auditSavings={auditSavings}
-                        userCount={userCount}
-                        itemCount={itemCount}
-                        avgAssetVal={avgAssetVal}
-                        avgBrokenProducts={avgBrokenProducts}
-                    />
-                }
-            </Grid>
+
         </Paper>
     )
 };
 
 export default RoiCalculator;
+
+
+// <Box sx={{
+//     m: 1,
+// }}>
+//     <Tooltip title={emailTooltipTitle}>
+//         <Chip
+//             label='email'
+//             sx={{
+//                 backgroundColor: `${emailChip && theme.palette.secondary.main || theme.palette.info.main}`,
+//                 color: theme.palette.common.white,
+//                 width: theme.spacing(8),
+//                 height: theme.spacing(3),
+//                 borderRadius: theme.spacing(1),
+//             }}
+//             onClick={sendReportToEmail}
+//         />
+//     </Tooltip>
+// </Box>
