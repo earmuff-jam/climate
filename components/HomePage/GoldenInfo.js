@@ -141,9 +141,34 @@ const GoldenInfo = () => {
         loadCategoryData();
     }, [data]);
 
+    const loadJunkData = async () => {
+        const data = {
+            id: 1,
+            title: 'Junk',
+            total: 12,
+            lastMoved: 'Junk Drawer',
+            lastCreated: moment().fromNow(),
+            condition: 'throwaway',
+            sharing: true,
+            expiryItemsCount: 23,
+            displayStatus: (condition) => {
+                return (
+                    <ShareLocationRoundedIcon
+                        color={`${condition === ALLOWED_CONDITIONS[1] ? 'error' : 'info'}`}
+                        sx={{ fontSize: theme.spacing(2) }} />
+                )
+            },
+        };
+        setData(prev => [...prev, data]);
+    }
+    const fetchJunkData = useCallback(() => {
+        loadJunkData();
+    }, [data]);
+
     useEffect(() => {
         fetchItemData();
         fetchCategoryData();
+        fetchJunkData();
     }, []);
 
     console.log(data);
@@ -202,16 +227,23 @@ const GoldenInfo = () => {
                             <TypographyStyled>
                                 {
                                     dv?.expiresWithin &&
-                                    `Use ${dv.expiresWithin}`
+                                    `Use with${dv.expiresWithin}`
                                 }
                                 {
                                     !(dv?.expiresWithin) &&
                                     `Created ${dv.lastCreated}`
                                 }
                             </TypographyStyled>
-                            <TypographyStyled>
-                                Last moved - {dv.lastMoved}
-                            </TypographyStyled>
+                            {dv?.expiresWithin &&
+                                <TypographyStyled>
+                                    Last moved - {dv.lastMoved}
+                                </TypographyStyled>
+                            }
+                            {!dv?.expiresWithin &&
+                                <TypographyStyled>
+                                    {dv.lastMoved} Container
+                                </TypographyStyled>
+                            }
                         </Box>
                     </Box>
                 ))
