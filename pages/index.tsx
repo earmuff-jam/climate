@@ -1,12 +1,21 @@
-import { Grid, Paper, useTheme } from '@mui/material'
+import {
+  Grid,
+  useTheme,
+} from '@mui/material'
 import { Box } from '@mui/system';
-import Head from 'next/head'
-import RoiCalculator from '../components/Feedback/RoiCalculator';
 
-import GoldenInfo from '../components/HomePage/GoldenInfo';
-import Improvements from '../components/HomePage/Improvements';
-import ImprovementSelector from '../components/HomePage/ImprovementSelector';
-import NavBar from '../components/NavBar/Navbar';
+import Head from 'next/head';
+import InnerNavigation from '../components/NavBar/InnerNavigation';
+
+const containerRootSx = (theme: any) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  gap: theme.spacing(1),
+  margin: theme.spacing(1),
+});
+
+
 
 export default function Home() {
 
@@ -20,32 +29,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box sx={{display: 'flex', flexDirection: 'row'}}>
-        <Grid
-          container
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: theme.spacing(1),
-          }}
-        >
-          <Grid item xs={12} md={0}>
-            <Paper>
-              <GoldenInfo />
-            </Paper>
-          </Grid>
-          <Grid item xs={12} md={12} xl={6}>
-            <ImprovementSelector />
-            <Improvements />
-          </Grid>
-          <Grid item xs={12} md={12} xl={6}>
-            <ImprovementSelector />
-            <Improvements />
-          </Grid>
-          <Grid item xs={12} md={12} xl={6}>
-            <RoiCalculator />
-          </Grid>
-        </Grid>
+      <Box sx={containerRootSx}>
+        <Box>
+          <InnerNavigation />
+        </Box>
+        <Box> Content</Box>
       </Box>
     </>
   )
