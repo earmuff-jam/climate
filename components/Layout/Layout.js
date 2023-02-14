@@ -26,7 +26,7 @@ const Layout = ({ children }) => {
     )
 
   return (
-    <Box sx={styles.rootLayout}>
+    <Box className={styles.rootLayout}>
       <Box className={styles.content}>
         <Box className={styles.main}>
           <NavMenuBar />

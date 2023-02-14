@@ -1,10 +1,11 @@
 import {
-  Grid,
   useTheme,
 } from '@mui/material'
 import { Box } from '@mui/system';
 
 import Head from 'next/head';
+import React, { useState } from 'react';
+import RootContent from '../components/Home/RootContent';
 import InnerNavigation from '../components/NavBar/InnerNavigation';
 
 const containerRootSx = (theme: any) => ({
@@ -15,11 +16,12 @@ const containerRootSx = (theme: any) => ({
   margin: theme.spacing(1),
 });
 
-
-
 export default function Home() {
 
   const theme = useTheme();
+  const [selected, setSelected] = useState(-1);
+
+  const handleSelected = (ind: any) => setSelected(ind);
 
   return (
     <>
@@ -31,9 +33,14 @@ export default function Home() {
 
       <Box sx={containerRootSx}>
         <Box>
-          <InnerNavigation />
+          <InnerNavigation
+            selected={selected}
+            handleSelected={handleSelected}
+          />
         </Box>
-        <Box> Content</Box>
+        <Box>
+          <RootContent selected={selected} />
+        </Box>
       </Box>
     </>
   )
