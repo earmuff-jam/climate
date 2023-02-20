@@ -13,6 +13,7 @@ const Item = () => {
     const fetchItemList = async () => {
         const { data, error } = await supabaseClient.from('item')
             .select(`
+            id,
         item_name,
         item_description,
         quantity,

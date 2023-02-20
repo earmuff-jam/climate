@@ -28,14 +28,14 @@ import {
 
 import moment from "moment";
 import { Box } from "@mui/system";
+
 import AddItem from "../CategoryPage/AddItem";
+import EditItem from "../CategoryPage/EditItem";
 
-import AddCategory from "../CategoryPage/AddCategory";
-import EditCategory from "../CategoryPage/EditCategory";
-
-import DownloadXcelForData from "../CategoryPage/DownloadXcelForData";
-import DisplayAttentionItems from "../CategoryPage/DisplayAttentionItems";
-import { regularAndHigherScreenSx, smallScreenSx } from "../CategoryPage/constants";
+import {
+    regularAndHigherScreenSx,
+    smallScreenSx,
+} from "../CategoryPage/constants";
 
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
@@ -108,35 +108,15 @@ const ItemPage = ({ datasets }) => {
         )
     };
 
-    const ItemChoice = ({ category_type }) => {
-        return (
-            <Box sx={{
-                pl: 1,
-                borderLeft: (category_type === 'PERSONAL' ? '2px solid green' : 'none'),
-            }}>
-                {category_type}
-            </Box>
-        )
-    };
-
-    const ContainsExpired = (props) => {
-        const { expiredItems } = props;
-        return (
-            <Box>
-                {expiredItems && <WarningRoundedIcon color="warning" />}
-                {!expiredItems && <CheckRoundedIcon color="secondary" />}
-            </Box>
-        )
-    };
-
     const Share = (props) => {
-        const { contains_sharable_items } = props;
+        const { sharable_groups } = props;
+        const currentlySharing = sharable_groups.length > 1;
         return (
             <Box>
-                <Tooltip title={`${contains_sharable_items ? 'Currently sharing' : 'Not Sharing '}`}>
+                <Tooltip title={`${currentlySharing ? 'Currently sharing' : 'Not Sharing '}`}>
                     <span>
-                        {contains_sharable_items && <EmergencyShareRoundedIcon color="secondary" />}
-                        {!contains_sharable_items && <EmergencyShareRoundedIcon color="warning" />}
+                        {currentlySharing && <EmergencyShareRoundedIcon color="secondary" />}
+                        {!currentlySharing && <EmergencyShareRoundedIcon color="warning" />}
                     </span>
                 </Tooltip>
             </Box>
@@ -158,23 +138,6 @@ const ItemPage = ({ datasets }) => {
                     size="small"
                     onClick={() => {
                         setRowData(rowData); // save which row the user clicked
-                        handleAddItem(true);
-                    }}
-                >
-                    <AddCircleRoundedIcon />
-                </IconButton>
-            )
-        },
-        {
-            key: "action",
-            width: 50,
-            cellRenderer: ({ rowData }) => (
-                <IconButton
-                    variant="contained"
-                    color="info"
-                    size="small"
-                    onClick={() => {
-                        setRowData(rowData); // save which row the user clicked
                         handleEditMode(true);
                     }}
                 >
@@ -186,7 +149,7 @@ const ItemPage = ({ datasets }) => {
             key: "item_name",
             title: "Name",
             dataKey: "item_name",
-            width: 300,
+            width: 200,
             resizable: true,
             sortable: true,
             editable: true,
@@ -198,13 +161,22 @@ const ItemPage = ({ datasets }) => {
             key: "item_desc",
             title: "Description",
             dataKey: "item_description",
-            width: 400,
+            width: 350,
             resizable: true,
             sortable: true,
             editable: true,
             frozen: Column.FrozenDirection.LEFT,
             align: Column.Alignment.LEFT,
             cellRenderer: ({ cellData: item_description }) => <Tooltip title={item_description}><span>{item_description}</span></Tooltip>
+        },
+        {
+            key: "sharing",
+            title: "Currently sharing",
+            dataKey: "sharable_groups",
+            width: 100,
+            resizable: true,
+            sortable: false,
+            cellRenderer: ({ cellData: sharable_groups }) => <Share sharable_groups={sharable_groups} />
         },
         {
             key: "item_tag",
@@ -226,59 +198,18 @@ const ItemPage = ({ datasets }) => {
             sortable: true,
             cellRenderer: ({ cellData: created_on }) => <Typography>{moment(created_on).fromNow()}</Typography>
         },
-        {
-            key: "action",
-            width: 100,
-            frozen: Column.FrozenDirection.RIGHT,
-            align: Column.Alignment.LEFT,
-            cellRenderer: ({ rowData }) => (
-                <IconButton
-                    size="small"
-                    edge="start"
-                    color="secondary"
-                    aria-label="menu"
-                    sx={{ mr: 2 }}
-                    onClick={(e) => {
-                        handleSelectRow(e);
-                        setDownloadCategoryName(rowData.item_name);
-                        setDisplayDownloadIcon(true);
-                    }}
-                >
-                    <GetAppRoundedIcon />
-                </IconButton>
-            ),
-        }
     ];
 
     useEffect(() => {
         setData(datasets);
-    }, [datasets, addCategorySelection])
+    }, [datasets, addItemSelection])
 
     return (
         <Box style={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>
 
-            <Box sx={{ p: 1, display: 'flex', gap: 1 }}>
-                <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={handleAddCategory}> Add Category
-                </Button>
-            </Box>
-            {addCategorySelection &&
-                <AddCategory
-                    addCategorySelection={addCategorySelection}
-                    setAddCategorySelection={setAddCategorySelection} />
-            }
-            {addItemSelection &&
-                <AddItem
-                    rowData={rowData}
-                    addItemSelection={addItemSelection}
-                    setAddItemSelection={setAddItemSelection} />
-            }
-
             {
                 editMode &&
-                <EditCategory
+                <EditItem
                     rowData={rowData}
                     editMode={editMode}
                     handleEditMode={handleEditMode}
@@ -298,58 +229,6 @@ const ItemPage = ({ datasets }) => {
                     />
                 )}
             </AutoResizer>
-            <Dialog
-                open={displayModal}
-                onClose={() => setDisplayModal(false)}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {"Items Quickview"}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        <DisplayAttentionItems rowData={rowData} />
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        autoFocus
-                        onClick={() => setDisplayModal(false)}
-                    >
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
-
-            <Dialog
-                open={displayDownloadIcon}
-                onClose={() => setDisplayDownloadIcon(false)}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {"Download selected report"}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        {
-                            downloadCategoryName &&
-                            <DownloadXcelForData
-                                downloadCategoryName={downloadCategoryName}
-                            />
-                        }
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        autoFocus
-                        onClick={() => setDisplayDownloadIcon(false)}
-                    >
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
         </Box>
     )
 };
