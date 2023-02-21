@@ -38,14 +38,10 @@ import DisplayAttentionItems from "./DisplayAttentionItems";
 import { regularAndHigherScreenSx, smallScreenSx } from "./constants";
 
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import GetAppRoundedIcon from '@mui/icons-material/GetAppRounded';
 
-import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import HighlightAltRoundedIcon from '@mui/icons-material/HighlightAltRounded';
-
-import EmergencyShareRoundedIcon from '@mui/icons-material/EmergencyShareRounded';
 
 
 const CategoryPage = ({ datasets }) => {
@@ -108,200 +104,141 @@ const CategoryPage = ({ datasets }) => {
         )
     };
 
-    const CategoryChoice = ({ category_type }) => {
-        return (
-            <Box sx={{
-                pl: 1,
-                borderLeft: (category_type === 'PERSONAL' ? '2px solid green' : 'none'),
-            }}>
-                {category_type}
-            </Box>
-        )
-    };
-
-    const ContainsExpired = (props) => {
-        const { expiredItems } = props;
-        return (
-            <Box>
-                {expiredItems && <WarningRoundedIcon color="warning" />}
-                {!expiredItems && <CheckRoundedIcon color="secondary" />}
-            </Box>
-        )
-    };
-
-    const Share = (props) => {
-        const { contains_sharable_items } = props;
-        return (
-            <Box>
-                <Tooltip title={`${contains_sharable_items ? 'Currently sharing' : 'Not Sharing '}`}>
-                    <span>
-                        {contains_sharable_items && <EmergencyShareRoundedIcon color="secondary" />}
-                        {!contains_sharable_items && <EmergencyShareRoundedIcon color="warning" />}
-                    </span>
-                </Tooltip>
-            </Box>
-        )
-    }
-
     const handleSelectRow = (e) => {
         setSelectRow(e.target.checked);
     }
 
     const columns = [
         {
-            key: "action",
-            width: 50,
-            cellRenderer: ({ rowData }) => (
-                <IconButton
-                    variant="contained"
-                    color="info"
-                    size="small"
-                    onClick={() => {
-                        setRowData(rowData); // save which row the user clicked
-                        handleAddItem(true);
-                    }}
-                >
-                    <AddCircleRoundedIcon />
-                </IconButton>
-            )
-        },
-        {
-            key: "action",
-            width: 50,
-            cellRenderer: ({ rowData }) => (
-                <IconButton
-                    variant="contained"
-                    color="info"
-                    size="small"
-                    onClick={() => {
-                        setRowData(rowData); // save which row the user clicked
-                        handleEditMode(true);
-                    }}
-                >
-                    <EditRoundedIcon />
-                </IconButton>
-            )
-        },
-        {
-            key: "action",
-            title: "View",
-            width: 100,
-            cellRenderer: ({ rowData }) => (
-                <Tooltip title="Items quickview">
-                    <Box>
-                        <IconButton
-                            variant="contained"
-                            color="info"
-                            size="small"
-                            onClick={() => {
-                                setRowData(rowData);
-                                setDisplayModal(true);
-                            }}
-                        >
-                            <HighlightAltRoundedIcon />
-                        </IconButton>
-                    </Box>
-                </Tooltip>
-            )
-        },
-        {
-            key: "cat_type",
-            title: "Type",
-            dataKey: "category_type",
-            width: 150,
-            resizable: true,
-            sortable: false,
-            editable: true,
-            cellRenderer: ({ cellData: category_type }) => <CategoryChoice category_type={category_type} />,
-            align: Column.Alignment.LEFT,
-            frozen: Column.FrozenDirection.LEFT
-        },
-        {
             key: "cat_name",
             title: "Name",
+            width: 150,
             dataKey: "category_name",
-            width: 300,
             resizable: true,
             sortable: true,
-            editable: true,
-            frozen: Column.FrozenDirection.LEFT,
-            align: Column.Alignment.LEFT,
-            cellRenderer: ({ cellData: category_name }) => <Tooltip title={category_name}><span>{category_name}</span></Tooltip>
+            cellRenderer: ({ rowData }) =>
+            (
+                <Box sx={{
+                    pl: 1,
+                    borderLeft: (rowData?.category_type === 'PERSONAL' ? '2px solid green' : 'none'),
+                }}
+                >
+                    <Tooltip title={`${rowData?.category_type.toLowerCase()} category`}>
+                        <span>{rowData?.category_name}</span>
+                    </Tooltip>
+                </Box>
+            )
+
         },
         {
             key: "cat_desc",
             title: "Description",
             dataKey: "category_description",
-            width: 400,
+            width: 250,
             resizable: true,
             sortable: true,
-            editable: true,
-            frozen: Column.FrozenDirection.LEFT,
-            align: Column.Alignment.LEFT,
             cellRenderer: ({ cellData: category_description }) => <Tooltip title={category_description}><span>{category_description}</span></Tooltip>
-        },
-        {
-            key: "cat_status",
-            title: "Status",
-            dataKey: "contains_expired_items",
-            width: 100,
-            resizable: true,
-            sortable: true,
-            editable: true,
-            cellRenderer: ({ cellData: expiredItems }) => <ContainsExpired expiredItems={expiredItems}
-            />
         },
         {
             key: "cat_tag",
             title: "Category Tags",
             dataKey: "category_tag",
-            width: 150,
+            width: 100,
             resizable: true,
             sortable: true,
-            editable: true,
-            align: Column.Alignment.LEFT,
             cellRenderer: ({ cellData: category_tag }) => <DisplayTag category_tag={category_tag}
             />
         },
         {
-            key: "contains_sharable_items",
-            title: "Sharing",
-            dataKey: "contains_sharable_items",
+            key: "created_on",
+            title: "Last Edited",
+            dataKey: "created_on",
             width: 150,
+            resizable: true,
             sortable: true,
-            align: Column.Alignment.CENTER,
-            cellRenderer: ({ cellData: contains_sharable_items }) => <Share contains_sharable_items={contains_sharable_items} />
+            cellRenderer: ({ rowData }) => (
+                <Tooltip title={`${rowData?.expiredItems ? 'items require your attention' : ''}`}>
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                        <Typography sx={{ fontSize: '11px' }}>{moment(rowData?.created_on).fromNow()}</Typography>
+                    </Box>
+                </Tooltip>
+            )
         },
         {
-            key: "created_on",
-            title: "Created",
-            dataKey: "created_on",
-            width: 250,
+            key: "created_by",
+            title: "Created By",
+            dataKey: "created_by",
+            width: 150,
+            resizable: true,
             sortable: true,
-            cellRenderer: ({ cellData: created_on }) => <Typography>{moment(created_on).fromNow()}</Typography>
+            cellRenderer: ({ rowData }) => (
+                <Box sx={{ fontSize: '11px' }}>
+                    <span>{rowData?.created_by}</span>
+                </Box>
+            )
         },
         {
             key: "action",
-            width: 100,
-            frozen: Column.FrozenDirection.RIGHT,
-            align: Column.Alignment.LEFT,
+            title: "Quick Edits",
+            width: 200,
+            resizable: true,
+            sortable: true,
             cellRenderer: ({ rowData }) => (
-                <IconButton
-                    size="small"
-                    edge="start"
-                    color="secondary"
-                    aria-label="menu"
-                    sx={{ mr: 2 }}
-                    onClick={(e) => {
-                        handleSelectRow(e);
-                        setDownloadCategoryName(rowData.category_name);
-                        setDisplayDownloadIcon(true);
-                    }}
-                >
-                    <GetAppRoundedIcon />
-                </IconButton>
-            ),
-        }
+                <>
+                    <IconButton
+                        variant="contained"
+                        color="info"
+                        size="small"
+                        onClick={() => {
+                            setRowData(rowData); // save which row the user clicked
+                            handleAddItem(true);
+                        }}
+                    >
+                        <AddCircleRoundedIcon />
+                    </IconButton>
+                    <IconButton
+                        variant="contained"
+                        color="info"
+                        size="small"
+                        onClick={() => {
+                            setRowData(rowData); // save which row the user clicked
+                            handleEditMode(true);
+                        }}
+                    >
+                        <EditRoundedIcon />
+                    </IconButton>
+                    <Tooltip title="Items quickview">
+                        <Box>
+                            <IconButton
+                                variant="contained"
+                                color="info"
+                                size="small"
+                                onClick={() => {
+                                    setRowData(rowData);
+                                    setDisplayModal(true);
+                                }}
+                            >
+                                <HighlightAltRoundedIcon />
+                            </IconButton>
+                        </Box>
+                    </Tooltip>
+                    <IconButton
+                        size="small"
+                        edge="start"
+                        color="secondary"
+                        aria-label="menu"
+                        sx={{ mr: 2 }}
+                        onClick={(e) => {
+                            handleSelectRow(e);
+                            setDownloadCategoryName(rowData.category_name);
+                            setDisplayDownloadIcon(true);
+                        }}
+                    >
+                        <GetAppRoundedIcon />
+                    </IconButton>
+                </>
+            )
+        },
     ];
 
     useEffect(() => {

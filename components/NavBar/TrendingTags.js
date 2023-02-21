@@ -9,8 +9,11 @@ import {
     ListItem,
     Tooltip,
     Paper,
+    Icon,
 } from '@mui/material';
+
 import { TRENDING_TAG_OPTIONS } from './constant';
+import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded';
 
 const containerStylesSx = (theme) => ({
     marginTop: theme.spacing(2),
@@ -34,7 +37,10 @@ const TrendingTags = () => {
             aria-labelledby="nested-list-subheader"
             subheader={
                 <ListSubheader component="div" id="nested-list-subheader">
-                    Cutomized Tags
+                    Trending Tags
+                    <Icon sx={{ color: 'pink' }}>
+                        <TrendingUpRoundedIcon />
+                    </Icon>
                 </ListSubheader>
             }
         >
@@ -51,10 +57,10 @@ const TrendingTags = () => {
                                     <ListItemText>
                                         {item.primaryText}
                                     </ListItemText>
-                                    <Paper sx={{ pl: 0.6, pr: 0.6 }}elevation={1}>
-                                    <ListItemText>
-                                        +{item.numberOfItemsWithinTag}
-                                    </ListItemText>
+                                    <Paper sx={{ pl: 0.6, pr: 0.6 }} elevation={1}>
+                                        <ListItemText>
+                                            +{item.numberOfItemsWithinTag}
+                                        </ListItemText>
                                     </Paper>
                                 </ListItemButton>
                             </Tooltip>

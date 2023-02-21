@@ -59,20 +59,11 @@ const ItemPage = ({ datasets }) => {
 
     const [data, setData] = useState(datasets);
     const [rowData, setRowData] = useState([]);
-    const [selectRow, setSelectRow] = useState('');
 
     const [editMode, setEditMode] = useState(false);
     const [sortBy, setSortBy] = useState(defaultSort);
-    const [displayModal, setDisplayModal] = useState(false);
-    const [addItemSelection, setAddItemSelection] = useState(false);
-
-    const [displayDownloadIcon, setDisplayDownloadIcon] = useState(false);
-    const [downloadCategoryName, setDownloadCategoryName] = useState(false);
-    const [addCategorySelection, setAddCategorySelection] = useState(false);
 
     const handleEditMode = (val) => setEditMode(val);
-    const handleAddCategory = () => setAddCategorySelection(!addCategorySelection);
-    const handleAddItem = () => setAddItemSelection(!addItemSelection);
 
     const onColumnSort = (sortBy) => {
         const order = sortBy.order === SortOrder.ASC ? 1 : -1;
@@ -108,25 +99,6 @@ const ItemPage = ({ datasets }) => {
         )
     };
 
-    const Share = (props) => {
-        const { sharable_groups } = props;
-        const currentlySharing = sharable_groups.length > 1;
-        return (
-            <Box>
-                <Tooltip title={`${currentlySharing ? 'Currently sharing' : 'Not Sharing '}`}>
-                    <span>
-                        {currentlySharing && <EmergencyShareRoundedIcon color="secondary" />}
-                        {!currentlySharing && <EmergencyShareRoundedIcon color="warning" />}
-                    </span>
-                </Tooltip>
-            </Box>
-        )
-    }
-
-    const handleSelectRow = (e) => {
-        setSelectRow(e.target.checked);
-    }
-
     const columns = [
         {
             key: "action",
@@ -147,19 +119,27 @@ const ItemPage = ({ datasets }) => {
         },
         {
             key: "item_name",
-            title: "Name",
+            title: "Item Name",
             dataKey: "item_name",
-            width: 200,
+            width: 150,
             resizable: true,
             sortable: true,
             editable: true,
             frozen: Column.FrozenDirection.LEFT,
             align: Column.Alignment.LEFT,
-            cellRenderer: ({ cellData: item_name }) => <Tooltip title={item_name}><span>{item_name}</span></Tooltip>
+            cellRenderer: ({ rowData }) => <Tooltip title={rowData?.item_name}>
+                <Box sx={{
+                    pl: 1,
+                    borderLeft: (rowData?.sharable_groups?.length > 1 ? '2px solid green' : 'none'),
+                }}
+                >
+                    <span>{rowData?.item_name}</span>
+                </Box>
+            </Tooltip>
         },
         {
             key: "item_desc",
-            title: "Description",
+            title: "Item Description",
             dataKey: "item_description",
             width: 350,
             resizable: true,
@@ -170,13 +150,16 @@ const ItemPage = ({ datasets }) => {
             cellRenderer: ({ cellData: item_description }) => <Tooltip title={item_description}><span>{item_description}</span></Tooltip>
         },
         {
-            key: "sharing",
-            title: "Currently sharing",
-            dataKey: "sharable_groups",
+            key: "item_quantity",
+            title: "Item Quantity",
+            dataKey: "quantity",
             width: 100,
             resizable: true,
-            sortable: false,
-            cellRenderer: ({ cellData: sharable_groups }) => <Share sharable_groups={sharable_groups} />
+            sortable: true,
+            editable: true,
+            frozen: Column.FrozenDirection.LEFT,
+            align: Column.Alignment.LEFT,
+            cellRenderer: ({ rowData }) => <Tooltip title={rowData?.quantity}><span>{rowData?.quantity}</span></Tooltip>
         },
         {
             key: "item_tag",
@@ -187,22 +170,53 @@ const ItemPage = ({ datasets }) => {
             sortable: true,
             editable: true,
             align: Column.Alignment.LEFT,
-            cellRenderer: ({ cellData: item_tag }) => <DisplayTag item_tag={item_tag}
+            cellRenderer: ({ rowData }) => <DisplayTag item_tag={rowData?.item_tag}
             />
+        },
+        {
+            key: "use_by_date",
+            title: "Use",
+            dataKey: "use_by_date",
+            width: 150,
+            resizable: true,
+            sortable: true,
+            cellRenderer: ({ rowData }) => (
+                <Box sx={{ fontSize: '11px' }}>
+                    <span>{moment(rowData?.use_by_date).fromNow()}</span>
+                </Box>
+            )
         },
         {
             key: "created_on",
             title: "Created",
             dataKey: "created_on",
-            width: 250,
+            width: 150,
             sortable: true,
-            cellRenderer: ({ cellData: created_on }) => <Typography>{moment(created_on).fromNow()}</Typography>
+            cellRenderer: ({ rowData }) =>
+                <Typography
+                    sx={{ fontSize: '11px' }}
+                >
+                    {moment(rowData?.created_on).fromNow()}
+                </Typography>
+        },
+        {
+            key: "created_by",
+            title: "Created By",
+            dataKey: "created_by",
+            width: 200,
+            resizable: true,
+            sortable: true,
+            cellRenderer: ({ rowData }) => (
+                <Box sx={{ fontSize: '11px' }}>
+                    <span>{rowData?.created_by}</span>
+                </Box>
+            )
         },
     ];
 
     useEffect(() => {
         setData(datasets);
-    }, [datasets, addItemSelection])
+    }, [datasets])
 
     return (
         <Box style={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>
