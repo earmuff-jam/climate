@@ -171,11 +171,14 @@ const CategoryPage = ({ datasets }) => {
             width: 150,
             resizable: true,
             sortable: true,
-            cellRenderer: ({ rowData }) => (
-                <Box sx={{ fontSize: '11px' }}>
-                    <span>{rowData?.created_by}</span>
-                </Box>
-            )
+            cellRenderer: ({ rowData }) => {
+                
+                return (
+                    <Box sx={{ fontSize: '11px' }}>
+                        <span>{rowData?.created_by}</span>
+                    </Box>
+                )
+            }
         },
         {
             key: "action",
