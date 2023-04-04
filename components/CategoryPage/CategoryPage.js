@@ -34,7 +34,7 @@ import AddCategory from "./AddCategory";
 import EditCategory from "./EditCategory";
 
 import DownloadXcelForData from "./DownloadXcelForData";
-import DisplayAttentionItems from "./DisplayAttentionItems";
+import DisplayAttentionItems from "./DisplayAttentionItems.jsx";
 import { regularAndHigherScreenSx, smallScreenSx } from "./constants";
 
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
@@ -47,7 +47,7 @@ import HighlightAltRoundedIcon from '@mui/icons-material/HighlightAltRounded';
 
 import EmergencyShareRoundedIcon from '@mui/icons-material/EmergencyShareRounded';
 
-
+import Warranty from "../Warranty/Warranty";
 const CategoryPage = ({ datasets }) => {
 
     const theme = useTheme();
@@ -239,7 +239,7 @@ const CategoryPage = ({ datasets }) => {
                 width: 150,
                 sortable: true,
                 align: Column.Alignment.LEFT,
-                cellRenderer: ({ cellData: warranty }) => <Warranty warranty={warranty} />
+                cellRenderer: ({ rowData: warranty }) => <div>wat</div>
             }];
             setColumns(newColumns);
         }
@@ -317,21 +317,6 @@ const CategoryPage = ({ datasets }) => {
                     <span>
                         {contains_sharable_items && <EmergencyShareRoundedIcon color="secondary" />}
                         {!contains_sharable_items && <EmergencyShareRoundedIcon color="warning" />}
-                    </span>
-                </Tooltip>
-            </Box>
-        )
-    }
-
-    // create a component for this
-    const Warranty = (props) => {
-        const { warranty } = props;
-        return (
-            <Box>
-                <Tooltip title={`${warranty ? 'Warranty' : 'No Warranty'}`}>
-                    <span>
-                        {warranty && <CheckRoundedIcon color="secondary" />}
-                        {!warranty && <WarningRoundedIcon color="warning" />}
                     </span>
                 </Tooltip>
             </Box>

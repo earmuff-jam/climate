@@ -1,0 +1,17 @@
+BEGIN;
+SET ROLE = 'supabase_admin';
+SET SCHEMA 'public';
+
+
+DROP TABLE IF EXISTS item_warranty;
+CREATE TABLE item_warranty (
+  id SERIAL PRIMARY KEY,
+  item_id SERIAL NOT NULL,
+  created_on TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  created_by TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  FOREIGN KEY (item_id) REFERENCES item(id)
+);
+
+END;
