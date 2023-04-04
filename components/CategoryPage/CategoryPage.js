@@ -55,99 +55,7 @@ const CategoryPage = ({ datasets }) => {
         key: "name",
         order: SortOrder.ASC,
     };
-    const onlySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
-    const [data, setData] = useState(datasets);
-    const [rowData, setRowData] = useState([]);
-    const [selectRow, setSelectRow] = useState('');
-
-    const [editMode, setEditMode] = useState(false);
-    const [sortBy, setSortBy] = useState(defaultSort);
-    const [displayModal, setDisplayModal] = useState(false);
-    const [addItemSelection, setAddItemSelection] = useState(false);
-
-    const [displayDownloadIcon, setDisplayDownloadIcon] = useState(false);
-    const [downloadCategoryName, setDownloadCategoryName] = useState(false);
-    const [addCategorySelection, setAddCategorySelection] = useState(false);
-
-    const handleEditMode = (val) => setEditMode(val);
-    const handleAddCategory = () => setAddCategorySelection(!addCategorySelection);
-    const handleAddItem = () => setAddItemSelection(!addItemSelection);
-
-    const onColumnSort = (sortBy) => {
-        const order = sortBy.order === SortOrder.ASC ? 1 : -1;
-        const data = [...datasets];
-        data.sort((a, b) => (a[sortBy.key] > b[sortBy.key] ? order : -order));
-        setData(data);
-        setSortBy(sortBy);
-    };
-
-    const emptyRenderer = () => {
-        return (
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                Sorry, no matching records found.
-            </Box>
-        )
-    };
-    const DisplayTag = (props) => {
-        const { category_tag } = props;
-        return (
-            <>
-                {
-                    category_tag?.map((el) => (
-                        <Chip
-                            key={el.id}
-                            label={el.tag_name}
-                            size={"small"}
-                        >
-                            {el.tag_name}
-                        </Chip>
-                    ))
-                }
-            </>
-        )
-    };
-
-    const CategoryChoice = ({ category_type }) => {
-        return (
-            <Box sx={{
-                pl: 1,
-                borderLeft: (category_type === 'PERSONAL' ? '2px solid green' : 'none'),
-            }}>
-                {category_type}
-            </Box>
-        )
-    };
-
-    const ContainsExpired = (props) => {
-        const { expiredItems } = props;
-        return (
-            <Box>
-                {expiredItems && <WarningRoundedIcon color="warning" />}
-                {!expiredItems && <CheckRoundedIcon color="secondary" />}
-            </Box>
-        )
-    };
-
-    const Share = (props) => {
-        const { contains_sharable_items } = props;
-        return (
-            <Box>
-                <Tooltip title={`${contains_sharable_items ? 'Currently sharing' : 'Not Sharing '}`}>
-                    <span>
-                        {contains_sharable_items && <EmergencyShareRoundedIcon color="secondary" />}
-                        {!contains_sharable_items && <EmergencyShareRoundedIcon color="warning" />}
-                    </span>
-                </Tooltip>
-            </Box>
-        )
-    }
-
-    const handleSelectRow = (e) => {
-        setSelectRow(e.target.checked);
-    }
-
-    const columns = [
+    const defaultColumns = [
         {
             key: "action",
             width: 50,
@@ -303,6 +211,138 @@ const CategoryPage = ({ datasets }) => {
             ),
         }
     ];
+    const onlySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+    const [data, setData] = useState(datasets);
+    const [rowData, setRowData] = useState([]);
+    const [selectRow, setSelectRow] = useState('');
+
+    const [editMode, setEditMode] = useState(false);
+    const [sortBy, setSortBy] = useState(defaultSort);
+    const [displayModal, setDisplayModal] = useState(false);
+    const [addItemSelection, setAddItemSelection] = useState(false);
+
+    const [displayDownloadIcon, setDisplayDownloadIcon] = useState(false);
+    const [downloadCategoryName, setDownloadCategoryName] = useState(false);
+    const [addCategorySelection, setAddCategorySelection] = useState(false);
+
+    const [toggleInspectWarranty, setToggleInspectWarranty] = useState(false);
+    const handleToggleInspectWarranty = () => {
+        setToggleInspectWarranty(!toggleInspectWarranty);
+        // refactor the code below
+
+        if (toggleInspectWarranty === false) {
+            const newColumns = [...columns, {
+                key: "warranty",
+                title: "Warranty",
+                dataKey: "warranty",
+                width: 150,
+                sortable: true,
+                align: Column.Alignment.LEFT,
+                cellRenderer: ({ cellData: warranty }) => <Warranty warranty={warranty} />
+            }];
+            setColumns(newColumns);
+        }
+        // remove columns if toggle is false
+        if (toggleInspectWarranty === true) {
+            const newColumns = columns.filter((column) => column.key !== "warranty");
+            setColumns(newColumns);
+        }
+    };
+
+    const handleEditMode = (val) => setEditMode(val);
+    const handleAddCategory = () => setAddCategorySelection(!addCategorySelection);
+    const handleAddItem = () => setAddItemSelection(!addItemSelection);
+    const [columns, setColumns] = useState(defaultColumns);
+    const onColumnSort = (sortBy) => {
+        const order = sortBy.order === SortOrder.ASC ? 1 : -1;
+        const data = [...datasets];
+        data.sort((a, b) => (a[sortBy.key] > b[sortBy.key] ? order : -order));
+        setData(data);
+        setSortBy(sortBy);
+    };
+
+    const emptyRenderer = () => {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                Sorry, no matching records found.
+            </Box>
+        )
+    };
+    const DisplayTag = (props) => {
+        const { category_tag } = props;
+        return (
+            <>
+                {
+                    category_tag?.map((el) => (
+                        <Chip
+                            key={el.id}
+                            label={el.tag_name}
+                            size={"small"}
+                        >
+                            {el.tag_name}
+                        </Chip>
+                    ))
+                }
+            </>
+        )
+    };
+
+    const CategoryChoice = ({ category_type }) => {
+        return (
+            <Box sx={{
+                pl: 1,
+                borderLeft: (category_type === 'PERSONAL' ? '2px solid green' : 'none'),
+            }}>
+                {category_type}
+            </Box>
+        )
+    };
+
+    const ContainsExpired = (props) => {
+        const { expiredItems } = props;
+        return (
+            <Box>
+                {expiredItems && <WarningRoundedIcon color="warning" />}
+                {!expiredItems && <CheckRoundedIcon color="secondary" />}
+            </Box>
+        )
+    };
+
+    const Share = (props) => {
+        const { contains_sharable_items } = props;
+        return (
+            <Box>
+                <Tooltip title={`${contains_sharable_items ? 'Currently sharing' : 'Not Sharing '}`}>
+                    <span>
+                        {contains_sharable_items && <EmergencyShareRoundedIcon color="secondary" />}
+                        {!contains_sharable_items && <EmergencyShareRoundedIcon color="warning" />}
+                    </span>
+                </Tooltip>
+            </Box>
+        )
+    }
+
+    // create a component for this
+    const Warranty = (props) => {
+        const { warranty } = props;
+        return (
+            <Box>
+                <Tooltip title={`${warranty ? 'Warranty' : 'No Warranty'}`}>
+                    <span>
+                        {warranty && <CheckRoundedIcon color="secondary" />}
+                        {!warranty && <WarningRoundedIcon color="warning" />}
+                    </span>
+                </Tooltip>
+            </Box>
+        )
+    };
+
+    const handleSelectRow = (e) => {
+        setSelectRow(e.target.checked);
+    }
+
+
 
     useEffect(() => {
         setData(datasets);
@@ -310,12 +350,16 @@ const CategoryPage = ({ datasets }) => {
 
     return (
         <Box style={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>
-
             <Box sx={{ p: 1, display: 'flex', gap: 1 }}>
                 <Button
                     variant="outlined"
                     color="secondary"
                     onClick={handleAddCategory}> Add Category
+                </Button>
+                <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={handleToggleInspectWarranty}> Inspect Warranty
                 </Button>
             </Box>
             {addCategorySelection &&
@@ -330,13 +374,11 @@ const CategoryPage = ({ datasets }) => {
                     setAddItemSelection={setAddItemSelection} />
             }
 
-            {
-                editMode &&
+            {editMode &&
                 <EditCategory
                     rowData={rowData}
                     editMode={editMode}
-                    handleEditMode={handleEditMode}
-                />
+                    handleEditMode={handleEditMode} />
             }
 
             <AutoResizer>
@@ -363,7 +405,7 @@ const CategoryPage = ({ datasets }) => {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        <DisplayAttentionItems rowData={rowData} />
+                        <DisplayAttentionItems rowData={rowData} toggleInspectWarranty={toggleInspectWarranty} />
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

@@ -15,7 +15,7 @@ import 'react-base-table/styles.css'
 import { Box, Typography } from "@mui/material";
 import moment from "moment";
 
-const columns = [
+const defaultColumns = [
     {
         key: "item_name",
         title: "Name",
@@ -69,10 +69,23 @@ const FormattedDate = ({ use_by_date }: any) => {
 
 const DisplayAttentionItems = (props: any) => {
 
-    const { rowData } = props;
+    const { rowData, toggleInspectWarranty } = props;
     const categoryName = rowData['category_name'];
     const supabaseClient = useSupabaseClient();
     const [datasets, setDatasets] = useState<any | null>([]);
+    const [columns, setColumns] = useState<any | null>(defaultColumns);
+
+    useEffect(() => {
+        const newColumns = toggleInspectWarranty ? [...defaultColumns, {
+            key: "inspect_warranty",
+            title: "Inspect Warranty",
+            dataKey: "inspect_warranty",
+            width: 150,
+            align: Column.Alignment.CENTER,
+        }] : defaultColumns;
+        setColumns(newColumns);
+    }, [toggleInspectWarranty]);
+
 
     const fetchCategoryList = async () => {
         let { data, error } = await supabaseClient
