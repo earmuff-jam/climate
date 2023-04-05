@@ -22,8 +22,8 @@ export const TYPE_OPTIONS = [
 ];
 
 export const regularAndHigherScreenSx = {
-    width: "100vm",
-    height: "100vh",
+    width: 'calc(50vw + 220px)',
+    height: '50vh',
 };
 
 export const smallScreenSx = {

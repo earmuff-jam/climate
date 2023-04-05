@@ -1,36 +1,21 @@
 
 import {
   useUser,
-  useSupabaseClient
+  useSupabaseClient,
 } from "@supabase/auth-helpers-react";
 
-import React, { useEffect, useState } from "react";
-
+import React from "react";
 import { Box } from "@mui/material";
 import Footer from "../Footer/Footer";
-import styles from "./Layout.module.css";
 import NavMenuBar from "../NavBar/AppBar";
 import EntryForm from "../HomePage/EntryForm";
 
-const layout = {
-  display: "flex",
-  flexDirection: "row",
-};
+import styles from "./Layout.module.css";
 
 const Layout = ({ children }) => {
 
-  const user = useUser()
-  const [data, setData] = useState()
-  const supabaseClient = useSupabaseClient()
-
-  useEffect(() => {
-    async function loadData() {
-      const { data } = await supabaseClient.from('profiles').select('*')
-      setData(data)
-    }
-    // Only run query once user is logged in.
-    if (user) loadData()
-  }, [user])
+  const user = useUser();
+  const supabaseClient = useSupabaseClient();
 
   if (!user)
     return (
@@ -41,20 +26,15 @@ const Layout = ({ children }) => {
     )
 
   return (
-    <Box sx={layout}>
+    <Box className={styles.rootLayout}>
       <Box className={styles.content}>
         <Box className={styles.main}>
-            <>
-              <NavMenuBar />
-              <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-              }}>{children}</Box>
-            </>
+          <NavMenuBar />
+          <Box className={styles.container}>
+            {children}
+          </Box>
         </Box>
-        <Box>
-          <Footer />
-        </Box>
+        <Footer />
       </Box>
     </Box>
   );

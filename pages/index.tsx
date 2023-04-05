@@ -1,16 +1,27 @@
-import { Grid, Paper, useTheme } from '@mui/material'
+import {
+  useTheme,
+} from '@mui/material'
 import { Box } from '@mui/system';
-import Head from 'next/head'
-import RoiCalculator from '../components/Feedback/RoiCalculator';
 
-import GoldenInfo from '../components/HomePage/GoldenInfo';
-import Improvements from '../components/HomePage/Improvements';
-import ImprovementSelector from '../components/HomePage/ImprovementSelector';
-import NavBar from '../components/NavBar/Navbar';
+import Head from 'next/head';
+import React, { useState } from 'react';
+import RootContent from '../components/Home/RootContent';
+import InnerNavigation from '../components/NavBar/InnerNavigation';
+
+const containerRootSx = (theme: any) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  gap: theme.spacing(1),
+  margin: theme.spacing(1),
+});
 
 export default function Home() {
 
   const theme = useTheme();
+  const [selected, setSelected] = useState(-1);
+
+  const handleSelected = (ind: any) => setSelected(ind);
 
   return (
     <>
@@ -20,32 +31,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box sx={{display: 'flex', flexDirection: 'row'}}>
-        <Grid
-          container
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: theme.spacing(1),
-          }}
-        >
-          <Grid item xs={12} md={0}>
-            <Paper>
-              <GoldenInfo />
-            </Paper>
-          </Grid>
-          <Grid item xs={12} md={12} xl={6}>
-            <ImprovementSelector />
-            <Improvements />
-          </Grid>
-          <Grid item xs={12} md={12} xl={6}>
-            <ImprovementSelector />
-            <Improvements />
-          </Grid>
-          <Grid item xs={12} md={12} xl={6}>
-            <RoiCalculator />
-          </Grid>
-        </Grid>
+      <Box sx={containerRootSx}>
+        <Box>
+          <InnerNavigation
+            selected={selected}
+            handleSelected={handleSelected}
+          />
+        </Box>
+        <Box>
+          <RootContent selected={selected} />
+        </Box>
       </Box>
     </>
   )

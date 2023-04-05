@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import CategoryPage from "../components/CategoryPage/CategoryPage";
 
 import {
     useSupabaseClient
 } from "@supabase/auth-helpers-react";
+import CategoryPage from '../CategoryPage/CategoryPage';
 
 const Category = () => {
 
     const supabaseClient = useSupabaseClient();
-
-    const [datasets, setDatasets] = useState<any | null>([]);
+    const [datasets, setDatasets] = useState([]);
 
     const fetchCategoryList = async () => {
         const { data, error } = await supabaseClient.from('category')

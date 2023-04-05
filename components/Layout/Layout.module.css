@@ -2,7 +2,6 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  /* background-color: red; */
 }
 
 .header {
@@ -10,10 +9,19 @@
   height: 2.5rem;
 }
 
+.rootLayout {
+  display: "flex";
+  flex-direction: "row";
+}
+
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+.container {
+  /* background-color: red; */
 }
 
 .footer {

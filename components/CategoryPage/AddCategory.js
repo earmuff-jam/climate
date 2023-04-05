@@ -28,14 +28,15 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import EmergencyShareRounded from "@mui/icons-material/EmergencyShareRounded";
 
 import {
-    useSupabaseClient
+    useSupabaseClient, useUser
 } from "@supabase/auth-helpers-react";
-import { MENU_PROPS, TYPE_OPTIONS } from "./constants";
-import CategoryTags from "./Tags";
+
 import Tags from "./Tags";
+import { MENU_PROPS, TYPE_OPTIONS } from "./constants";
 
 const AddCategory = (props) => {
 
+    const user = useUser();
     const supabaseClient = useSupabaseClient();
     const { addCategorySelection, setAddCategorySelection } = props;
 
@@ -55,8 +56,6 @@ const AddCategory = (props) => {
     const handleSetDesc = (val) => setDesc(val);
 
     const saveToDb = async () => {
-        const { data } = await supabaseClient.from('profiles').select('*').limit(1);
-        const user_id = data && data[0].id;
 
         const { data: insertCatRes, error: insertCatErr } = await supabaseClient
             .from('category')
@@ -65,8 +64,8 @@ const AddCategory = (props) => {
                 category_name: name,
                 category_description: desc,
                 barcode: barCodeValue,
-                created_by: user_id,
-                sharable_groups: [user_id],
+                created_by: user.id,
+                sharable_groups: [user.id],
             }).select();
 
         const categoryId = insertCatRes?.map(dv => dv.id)[0];
@@ -75,9 +74,9 @@ const AddCategory = (props) => {
             .insert({
                 tag_name: tag.name,
                 tag_description: tag.name,
-                created_by: user_id,
+                created_by: user.id,
                 category_id: categoryId,
-                sharable_groups: [user_id],
+                sharable_groups: [user.id],
             });
         setAddCategorySelection(false);
     };

@@ -23,13 +23,14 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import EmergencyShareRounded from "@mui/icons-material/EmergencyShareRounded";
 
 import {
-    useSupabaseClient
+    useSupabaseClient, useUser
 } from "@supabase/auth-helpers-react";
 import moment from "moment";
 import Tags from "./Tags";
 
 const AddItem = (props) => {
 
+    const user = useUser();
     const supabaseClient = useSupabaseClient();
     const { addItemSelection, setAddItemSelection, rowData = [] } = props;
 
@@ -51,17 +52,14 @@ const AddItem = (props) => {
     const handleShare = () => { setShareItem(!shareItem) };
 
     const saveToDb = async () => {
-        const { data } = await supabaseClient.from('profiles').select('*').limit(1);
-        // always is going to be the logged in user
-        const user_id = data && data[0].id;
-        let { data: categoryId, error: catIdErr } = await supabaseClient
+        let { data: categoryId } = await supabaseClient
             .rpc('fn_gather_category_id_by_name',
                 {
                     createdby: rowData?.created_by,
                     name: rowData?.category_name
                 });
 
-        const { data: response, error } = await supabaseClient
+        const { data: response } = await supabaseClient
             .from('item')
             .insert([
                 {
@@ -70,20 +68,20 @@ const AddItem = (props) => {
                     quantity: quantity,
                     use_by_date: moment().add(30, 'days').toISOString(),
                     category_id: categoryId,
-                    created_by: user_id,
-                    sharable_groups: [user_id]
+                    created_by: user?.id,
+                    sharable_groups: [user?.id]
                 }
             ]).select();
 
         const itemId = response?.map(dv => dv.id)[0];
-        const { error: insertTagErr } = await supabaseClient
+        await supabaseClient
             .from('item_tag')
             .insert({
-                name: tag.name,
-                description: tag.name,
-                created_by: user_id,
-                id: itemId,
-                sharable_groups: [user_id],
+                tag_name: tag.name,
+                tag_description: tag.name,
+                created_by: user.id,
+                item_id: itemId,
+                sharable_groups: [user?.id],
             });
         setAddItemSelection(false);
     };
