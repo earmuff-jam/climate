@@ -1,29 +1,25 @@
-
-import React, {
-    useEffect,
-    useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 
 import BaseTable, {
-    AutoResizer,
-    Column,
-    SortOrder, // do not remove
-} from 'react-base-table'
-import 'react-base-table/styles.css'
+  AutoResizer,
+  Column,
+  SortOrder, // do not remove
+} from "react-base-table";
+import "react-base-table/styles.css";
 
 import {
-    Button,
-    Chip,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    IconButton,
-    Tooltip,
-    Typography,
-    useMediaQuery,
-    useTheme,
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  Tooltip,
+  Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 import moment from "moment";
@@ -37,402 +33,424 @@ import DownloadXcelForData from "./DownloadXcelForData";
 import DisplayAttentionItems from "./DisplayAttentionItems.jsx";
 import { regularAndHigherScreenSx, smallScreenSx } from "./constants";
 
-import EditRoundedIcon from '@mui/icons-material/EditRounded';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import GetAppRoundedIcon from '@mui/icons-material/GetAppRounded';
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import GetAppRoundedIcon from "@mui/icons-material/GetAppRounded";
 
-import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
-import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import HighlightAltRoundedIcon from '@mui/icons-material/HighlightAltRounded';
+import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
+import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import HighlightAltRoundedIcon from "@mui/icons-material/HighlightAltRounded";
 
-import EmergencyShareRoundedIcon from '@mui/icons-material/EmergencyShareRounded';
+import EmergencyShareRoundedIcon from "@mui/icons-material/EmergencyShareRounded";
 
 import Warranty from "../Warranty/Warranty";
 const CategoryPage = ({ datasets }) => {
+  const theme = useTheme();
+  const defaultSort = {
+    key: "name",
+    order: SortOrder.ASC,
+  };
+  const defaultColumns = [
+    {
+      key: "action",
+      width: 50,
+      cellRenderer: ({ rowData }) => (
+        <IconButton
+          variant="contained"
+          color="info"
+          size="small"
+          onClick={() => {
+            setRowData(rowData); // save which row the user clicked
+            handleAddItem(true);
+          }}
+        >
+          <AddCircleRoundedIcon />
+        </IconButton>
+      ),
+    },
+    {
+      key: "action",
+      width: 50,
+      cellRenderer: ({ rowData }) => (
+        <IconButton
+          variant="contained"
+          color="info"
+          size="small"
+          onClick={() => {
+            setRowData(rowData); // save which row the user clicked
+            handleEditMode(true);
+          }}
+        >
+          <EditRoundedIcon />
+        </IconButton>
+      ),
+    },
+    {
+      key: "action",
+      title: "View",
+      width: 100,
+      cellRenderer: ({ rowData }) => (
+        <Tooltip title="Items quickview">
+          <Box>
+            <IconButton
+              variant="contained"
+              color="info"
+              size="small"
+              onClick={() => {
+                setRowData(rowData);
+                setDisplayModal(true);
+              }}
+            >
+              <HighlightAltRoundedIcon />
+            </IconButton>
+          </Box>
+        </Tooltip>
+      ),
+    },
+    {
+      key: "cat_type",
+      title: "Type",
+      dataKey: "category_type",
+      width: 150,
+      resizable: true,
+      sortable: false,
+      editable: true,
+      cellRenderer: ({ cellData: category_type }) => (
+        <CategoryChoice category_type={category_type} />
+      ),
+      align: Column.Alignment.LEFT,
+      frozen: Column.FrozenDirection.LEFT,
+    },
+    {
+      key: "cat_name",
+      title: "Name",
+      dataKey: "category_name",
+      width: 300,
+      resizable: true,
+      sortable: true,
+      editable: true,
+      frozen: Column.FrozenDirection.LEFT,
+      align: Column.Alignment.LEFT,
+      cellRenderer: ({ cellData: category_name }) => (
+        <Tooltip title={category_name}>
+          <span>{category_name}</span>
+        </Tooltip>
+      ),
+    },
+    {
+      key: "cat_desc",
+      title: "Description",
+      dataKey: "category_description",
+      width: 400,
+      resizable: true,
+      sortable: true,
+      editable: true,
+      frozen: Column.FrozenDirection.LEFT,
+      align: Column.Alignment.LEFT,
+      cellRenderer: ({ cellData: category_description }) => (
+        <Tooltip title={category_description}>
+          <span>{category_description}</span>
+        </Tooltip>
+      ),
+    },
+    {
+      key: "cat_status",
+      title: "Status",
+      dataKey: "contains_expired_items",
+      width: 100,
+      resizable: true,
+      sortable: true,
+      editable: true,
+      cellRenderer: ({ cellData: expiredItems }) => (
+        <ContainsExpired expiredItems={expiredItems} />
+      ),
+    },
+    {
+      key: "cat_tag",
+      title: "Category Tags",
+      dataKey: "category_tag",
+      width: 150,
+      resizable: true,
+      sortable: true,
+      editable: true,
+      align: Column.Alignment.LEFT,
+      cellRenderer: ({ cellData: category_tag }) => (
+        <DisplayTag category_tag={category_tag} />
+      ),
+    },
+    {
+      key: "contains_sharable_items",
+      title: "Sharing",
+      dataKey: "contains_sharable_items",
+      width: 150,
+      sortable: true,
+      align: Column.Alignment.CENTER,
+      cellRenderer: ({ cellData: contains_sharable_items }) => (
+        <Share contains_sharable_items={contains_sharable_items} />
+      ),
+    },
+    {
+      key: "created_on",
+      title: "Created",
+      dataKey: "created_on",
+      width: 250,
+      sortable: true,
+      cellRenderer: ({ cellData: created_on }) => (
+        <Typography>{moment(created_on).fromNow()}</Typography>
+      ),
+    },
+    {
+      key: "action",
+      width: 100,
+      frozen: Column.FrozenDirection.RIGHT,
+      align: Column.Alignment.LEFT,
+      cellRenderer: ({ rowData }) => (
+        <IconButton
+          size="small"
+          edge="start"
+          color="secondary"
+          aria-label="menu"
+          sx={{ mr: 2 }}
+          onClick={(e) => {
+            handleSelectRow(e);
+            setDownloadCategoryName(rowData.category_name);
+            setDisplayDownloadIcon(true);
+          }}
+        >
+          <GetAppRoundedIcon />
+        </IconButton>
+      ),
+    },
+  ];
+  const onlySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-    const theme = useTheme();
-    const defaultSort = {
-        key: "name",
-        order: SortOrder.ASC,
-    };
-    const defaultColumns = [
+  const [data, setData] = useState(datasets);
+  const [rowData, setRowData] = useState([]);
+  const [selectRow, setSelectRow] = useState("");
+
+  const [editMode, setEditMode] = useState(false);
+  const [sortBy, setSortBy] = useState(defaultSort);
+  const [displayModal, setDisplayModal] = useState(false);
+  const [addItemSelection, setAddItemSelection] = useState(false);
+
+  const [displayDownloadIcon, setDisplayDownloadIcon] = useState(false);
+  const [downloadCategoryName, setDownloadCategoryName] = useState(false);
+  const [addCategorySelection, setAddCategorySelection] = useState(false);
+
+  const [toggleInspectWarranty, setToggleInspectWarranty] = useState(false);
+  const handleToggleInspectWarranty = () => {
+    setToggleInspectWarranty(!toggleInspectWarranty);
+    if (toggleInspectWarranty === false) {
+      const newColumns = [
+        ...columns,
         {
-            key: "action",
-            width: 50,
-            cellRenderer: ({ rowData }) => (
-                <IconButton
-                    variant="contained"
-                    color="info"
-                    size="small"
-                    onClick={() => {
-                        setRowData(rowData); // save which row the user clicked
-                        handleAddItem(true);
-                    }}
-                >
-                    <AddCircleRoundedIcon />
-                </IconButton>
-            )
+          key: "warranty",
+          title: "Warranty",
+          dataKey: "warranty",
+          width: 150,
+          sortable: true,
+          align: Column.Alignment.LEFT,
+          cellRenderer: ({ rowData: warranty }) => <div>wat</div>,
         },
-        {
-            key: "action",
-            width: 50,
-            cellRenderer: ({ rowData }) => (
-                <IconButton
-                    variant="contained"
-                    color="info"
-                    size="small"
-                    onClick={() => {
-                        setRowData(rowData); // save which row the user clicked
-                        handleEditMode(true);
-                    }}
-                >
-                    <EditRoundedIcon />
-                </IconButton>
-            )
-        },
-        {
-            key: "action",
-            title: "View",
-            width: 100,
-            cellRenderer: ({ rowData }) => (
-                <Tooltip title="Items quickview">
-                    <Box>
-                        <IconButton
-                            variant="contained"
-                            color="info"
-                            size="small"
-                            onClick={() => {
-                                setRowData(rowData);
-                                setDisplayModal(true);
-                            }}
-                        >
-                            <HighlightAltRoundedIcon />
-                        </IconButton>
-                    </Box>
-                </Tooltip>
-            )
-        },
-        {
-            key: "cat_type",
-            title: "Type",
-            dataKey: "category_type",
-            width: 150,
-            resizable: true,
-            sortable: false,
-            editable: true,
-            cellRenderer: ({ cellData: category_type }) => <CategoryChoice category_type={category_type} />,
-            align: Column.Alignment.LEFT,
-            frozen: Column.FrozenDirection.LEFT
-        },
-        {
-            key: "cat_name",
-            title: "Name",
-            dataKey: "category_name",
-            width: 300,
-            resizable: true,
-            sortable: true,
-            editable: true,
-            frozen: Column.FrozenDirection.LEFT,
-            align: Column.Alignment.LEFT,
-            cellRenderer: ({ cellData: category_name }) => <Tooltip title={category_name}><span>{category_name}</span></Tooltip>
-        },
-        {
-            key: "cat_desc",
-            title: "Description",
-            dataKey: "category_description",
-            width: 400,
-            resizable: true,
-            sortable: true,
-            editable: true,
-            frozen: Column.FrozenDirection.LEFT,
-            align: Column.Alignment.LEFT,
-            cellRenderer: ({ cellData: category_description }) => <Tooltip title={category_description}><span>{category_description}</span></Tooltip>
-        },
-        {
-            key: "cat_status",
-            title: "Status",
-            dataKey: "contains_expired_items",
-            width: 100,
-            resizable: true,
-            sortable: true,
-            editable: true,
-            cellRenderer: ({ cellData: expiredItems }) => <ContainsExpired expiredItems={expiredItems}
-            />
-        },
-        {
-            key: "cat_tag",
-            title: "Category Tags",
-            dataKey: "category_tag",
-            width: 150,
-            resizable: true,
-            sortable: true,
-            editable: true,
-            align: Column.Alignment.LEFT,
-            cellRenderer: ({ cellData: category_tag }) => <DisplayTag category_tag={category_tag}
-            />
-        },
-        {
-            key: "contains_sharable_items",
-            title: "Sharing",
-            dataKey: "contains_sharable_items",
-            width: 150,
-            sortable: true,
-            align: Column.Alignment.CENTER,
-            cellRenderer: ({ cellData: contains_sharable_items }) => <Share contains_sharable_items={contains_sharable_items} />
-        },
-        {
-            key: "created_on",
-            title: "Created",
-            dataKey: "created_on",
-            width: 250,
-            sortable: true,
-            cellRenderer: ({ cellData: created_on }) => <Typography>{moment(created_on).fromNow()}</Typography>
-        },
-        {
-            key: "action",
-            width: 100,
-            frozen: Column.FrozenDirection.RIGHT,
-            align: Column.Alignment.LEFT,
-            cellRenderer: ({ rowData }) => (
-                <IconButton
-                    size="small"
-                    edge="start"
-                    color="secondary"
-                    aria-label="menu"
-                    sx={{ mr: 2 }}
-                    onClick={(e) => {
-                        handleSelectRow(e);
-                        setDownloadCategoryName(rowData.category_name);
-                        setDisplayDownloadIcon(true);
-                    }}
-                >
-                    <GetAppRoundedIcon />
-                </IconButton>
-            ),
-        }
-    ];
-    const onlySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
-    const [data, setData] = useState(datasets);
-    const [rowData, setRowData] = useState([]);
-    const [selectRow, setSelectRow] = useState('');
-
-    const [editMode, setEditMode] = useState(false);
-    const [sortBy, setSortBy] = useState(defaultSort);
-    const [displayModal, setDisplayModal] = useState(false);
-    const [addItemSelection, setAddItemSelection] = useState(false);
-
-    const [displayDownloadIcon, setDisplayDownloadIcon] = useState(false);
-    const [downloadCategoryName, setDownloadCategoryName] = useState(false);
-    const [addCategorySelection, setAddCategorySelection] = useState(false);
-
-    const [toggleInspectWarranty, setToggleInspectWarranty] = useState(false);
-    const handleToggleInspectWarranty = () => {
-        setToggleInspectWarranty(!toggleInspectWarranty);
-        // refactor the code below
-
-        if (toggleInspectWarranty === false) {
-            const newColumns = [...columns, {
-                key: "warranty",
-                title: "Warranty",
-                dataKey: "warranty",
-                width: 150,
-                sortable: true,
-                align: Column.Alignment.LEFT,
-                cellRenderer: ({ rowData: warranty }) => <div>wat</div>
-            }];
-            setColumns(newColumns);
-        }
-        // remove columns if toggle is false
-        if (toggleInspectWarranty === true) {
-            const newColumns = columns.filter((column) => column.key !== "warranty");
-            setColumns(newColumns);
-        }
-    };
-
-    const handleEditMode = (val) => setEditMode(val);
-    const handleAddCategory = () => setAddCategorySelection(!addCategorySelection);
-    const handleAddItem = () => setAddItemSelection(!addItemSelection);
-    const [columns, setColumns] = useState(defaultColumns);
-    const onColumnSort = (sortBy) => {
-        const order = sortBy.order === SortOrder.ASC ? 1 : -1;
-        const data = [...datasets];
-        data.sort((a, b) => (a[sortBy.key] > b[sortBy.key] ? order : -order));
-        setData(data);
-        setSortBy(sortBy);
-    };
-
-    const emptyRenderer = () => {
-        return (
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                Sorry, no matching records found.
-            </Box>
-        )
-    };
-    const DisplayTag = (props) => {
-        const { category_tag } = props;
-        return (
-            <>
-                {
-                    category_tag?.map((el) => (
-                        <Chip
-                            key={el.id}
-                            label={el.tag_name}
-                            size={"small"}
-                        >
-                            {el.tag_name}
-                        </Chip>
-                    ))
-                }
-            </>
-        )
-    };
-
-    const CategoryChoice = ({ category_type }) => {
-        return (
-            <Box sx={{
-                pl: 1,
-                borderLeft: (category_type === 'PERSONAL' ? '2px solid green' : 'none'),
-            }}>
-                {category_type}
-            </Box>
-        )
-    };
-
-    const ContainsExpired = (props) => {
-        const { expiredItems } = props;
-        return (
-            <Box>
-                {expiredItems && <WarningRoundedIcon color="warning" />}
-                {!expiredItems && <CheckRoundedIcon color="secondary" />}
-            </Box>
-        )
-    };
-
-    const Share = (props) => {
-        const { contains_sharable_items } = props;
-        return (
-            <Box>
-                <Tooltip title={`${contains_sharable_items ? 'Currently sharing' : 'Not Sharing '}`}>
-                    <span>
-                        {contains_sharable_items && <EmergencyShareRoundedIcon color="secondary" />}
-                        {!contains_sharable_items && <EmergencyShareRoundedIcon color="warning" />}
-                    </span>
-                </Tooltip>
-            </Box>
-        )
-    };
-
-    const handleSelectRow = (e) => {
-        setSelectRow(e.target.checked);
+      ];
+      setColumns(newColumns);
     }
+    // remove columns if toggle is false
+    if (toggleInspectWarranty === true) {
+      const newColumns = columns.filter((column) => column.key !== "warranty");
+      setColumns(newColumns);
+    }
+  };
 
+  const handleEditMode = (val) => setEditMode(val);
+  const handleAddCategory = () =>
+    setAddCategorySelection(!addCategorySelection);
+  const handleAddItem = () => setAddItemSelection(!addItemSelection);
+  const [columns, setColumns] = useState(defaultColumns);
+  const onColumnSort = (sortBy) => {
+    const order = sortBy.order === SortOrder.ASC ? 1 : -1;
+    const data = [...datasets];
+    data.sort((a, b) => (a[sortBy.key] > b[sortBy.key] ? order : -order));
+    setData(data);
+    setSortBy(sortBy);
+  };
 
-
-    useEffect(() => {
-        setData(datasets);
-    }, [datasets, addCategorySelection])
-
+  const emptyRenderer = () => {
     return (
-        <Box style={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>
-            <Box sx={{ p: 1, display: 'flex', gap: 1 }}>
-                <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={handleAddCategory}> Add Category
-                </Button>
-                <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={handleToggleInspectWarranty}> Inspect Warranty
-                </Button>
-            </Box>
-            {addCategorySelection &&
-                <AddCategory
-                    addCategorySelection={addCategorySelection}
-                    setAddCategorySelection={setAddCategorySelection} />
-            }
-            {addItemSelection &&
-                <AddItem
-                    rowData={rowData}
-                    addItemSelection={addItemSelection}
-                    setAddItemSelection={setAddItemSelection} />
-            }
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        Sorry, no matching records found.
+      </Box>
+    );
+  };
+  const DisplayTag = (props) => {
+    const { category_tag } = props;
+    return (
+      <>
+        {category_tag?.map((el) => (
+          <Chip key={el.id} label={el.tag_name} size={"small"}>
+            {el.tag_name}
+          </Chip>
+        ))}
+      </>
+    );
+  };
 
-            {editMode &&
-                <EditCategory
-                    rowData={rowData}
-                    editMode={editMode}
-                    handleEditMode={handleEditMode} />
-            }
+  const CategoryChoice = ({ category_type }) => {
+    return (
+      <Box
+        sx={{
+          pl: 1,
+          borderLeft: category_type === "PERSONAL" ? "2px solid green" : "none",
+        }}
+      >
+        {category_type}
+      </Box>
+    );
+  };
 
-            <AutoResizer>
-                {({ width, height }) => (
-                    <BaseTable
-                        columns={columns}
-                        data={data}
-                        width={width}
-                        height={height}
-                        sortBy={sortBy}
-                        onColumnSort={onColumnSort}
-                        emptyRenderer={emptyRenderer}
-                    />
-                )}
-            </AutoResizer>
-            <Dialog
-                open={displayModal}
-                onClose={() => setDisplayModal(false)}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {"Items Quickview"}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        <DisplayAttentionItems rowData={rowData} toggleInspectWarranty={toggleInspectWarranty} />
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        autoFocus
-                        onClick={() => setDisplayModal(false)}
-                    >
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
+  const ContainsExpired = (props) => {
+    const { expiredItems } = props;
+    return (
+      <Box>
+        {expiredItems && <WarningRoundedIcon color="warning" />}
+        {!expiredItems && <CheckRoundedIcon color="secondary" />}
+      </Box>
+    );
+  };
 
-            <Dialog
-                open={displayDownloadIcon}
-                onClose={() => setDisplayDownloadIcon(false)}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {"Download selected report"}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        {
-                            downloadCategoryName &&
-                            <DownloadXcelForData
-                                downloadCategoryName={downloadCategoryName}
-                            />
-                        }
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        autoFocus
-                        onClick={() => setDisplayDownloadIcon(false)}
-                    >
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </Box>
-    )
+  const Share = (props) => {
+    const { contains_sharable_items } = props;
+    return (
+      <Box>
+        <Tooltip
+          title={`${
+            contains_sharable_items ? "Currently sharing" : "Not Sharing "
+          }`}
+        >
+          <span>
+            {contains_sharable_items && (
+              <EmergencyShareRoundedIcon color="secondary" />
+            )}
+            {!contains_sharable_items && (
+              <EmergencyShareRoundedIcon color="warning" />
+            )}
+          </span>
+        </Tooltip>
+      </Box>
+    );
+  };
+
+  const handleSelectRow = (e) => {
+    setSelectRow(e.target.checked);
+  };
+
+  useEffect(() => {
+    setData(datasets);
+  }, [datasets, addCategorySelection]);
+
+  return (
+    <Box style={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>
+      <Box sx={{ p: 1, display: "flex", gap: 1 }}>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={handleAddCategory}
+        >
+          {" "}
+          Add Category
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={handleToggleInspectWarranty}
+        >
+          {" "}
+          Inspect Warranty
+        </Button>
+      </Box>
+      {addCategorySelection && (
+        <AddCategory
+          addCategorySelection={addCategorySelection}
+          setAddCategorySelection={setAddCategorySelection}
+        />
+      )}
+      {addItemSelection && (
+        <AddItem
+          rowData={rowData}
+          addItemSelection={addItemSelection}
+          setAddItemSelection={setAddItemSelection}
+        />
+      )}
+
+      {editMode && (
+        <EditCategory
+          rowData={rowData}
+          editMode={editMode}
+          handleEditMode={handleEditMode}
+        />
+      )}
+
+      <AutoResizer>
+        {({ width, height }) => (
+          <BaseTable
+            columns={columns}
+            data={data}
+            width={width}
+            height={height}
+            sortBy={sortBy}
+            onColumnSort={onColumnSort}
+            emptyRenderer={emptyRenderer}
+          />
+        )}
+      </AutoResizer>
+      <Dialog
+        open={displayModal}
+        onClose={() => setDisplayModal(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Items Quickview"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <DisplayAttentionItems
+              rowData={rowData}
+              toggleInspectWarranty={toggleInspectWarranty}
+            />
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={() => setDisplayModal(false)}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={displayDownloadIcon}
+        onClose={() => setDisplayDownloadIcon(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Download selected report"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {downloadCategoryName && (
+              <DownloadXcelForData
+                downloadCategoryName={downloadCategoryName}
+              />
+            )}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={() => setDisplayDownloadIcon(false)}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  );
 };
 
 export default CategoryPage;

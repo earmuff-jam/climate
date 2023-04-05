@@ -76,7 +76,7 @@ const DisplayAttentionItems = (props) => {
 
   const [editWarranty, setEditWarranty] = useState(null);
 
-  const openWarrantyPanel = (id) => { console.log('click', id); setEditWarranty(id); };
+  const openWarrantyPanel = (id) => { setEditWarranty(id); };
   const closeWarrantyPanel = () => setEditWarranty(null);
 
   useEffect(() => {
@@ -105,7 +105,7 @@ const DisplayAttentionItems = (props) => {
 
   const fetchCategoryList = async () => {
     let { data, error } = await supabaseClient.rpc(
-      "fn_gather_items_by_category_use_by_date",
+      "fn_gather_items_by_category_use_by_date_warranty_id",
       {
         category: categoryName,
       }

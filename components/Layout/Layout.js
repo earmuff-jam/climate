@@ -1,8 +1,4 @@
-
-import {
-  useUser,
-  useSupabaseClient
-} from "@supabase/auth-helpers-react";
+import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 
 import React, { useEffect, useState } from "react";
 
@@ -18,19 +14,18 @@ const layout = {
 };
 
 const Layout = ({ children }) => {
-
-  const user = useUser()
-  const [data, setData] = useState()
-  const supabaseClient = useSupabaseClient()
+  const user = useUser();
+  const [data, setData] = useState();
+  const supabaseClient = useSupabaseClient();
 
   useEffect(() => {
     async function loadData() {
-      const { data } = await supabaseClient.from('profiles').select('*')
-      setData(data)
+      const { data } = await supabaseClient.from("profiles").select("*");
+      setData(data);
     }
     // Only run query once user is logged in.
-    if (user) loadData()
-  }, [user])
+    if (user) loadData();
+  }, [user]);
 
   if (!user)
     return (
@@ -38,19 +33,21 @@ const Layout = ({ children }) => {
         redirectUri="http://localhost:3000"
         supabase={supabaseClient}
       />
-    )
+    );
 
   return (
     <Box sx={layout}>
       <Box className={styles.content}>
         <Box className={styles.main}>
-            <>
-              <NavMenuBar />
-              <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-              }}>{children}</Box>
-            </>
+          <NavMenuBar />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {children}
+          </Box>
         </Box>
         <Box>
           <Footer />
