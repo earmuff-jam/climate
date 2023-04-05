@@ -128,7 +128,6 @@ const CategoryPage = ({ datasets }) => {
                     </Tooltip>
                 </Box>
             )
-
         },
         {
             key: "cat_desc",
