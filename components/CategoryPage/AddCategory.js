@@ -30,16 +30,13 @@ import EmergencyShareRounded from "@mui/icons-material/EmergencyShareRounded";
 import {
     useSupabaseClient, useUser
 } from "@supabase/auth-helpers-react";
-
 import Tags from "./Tags";
 import { MENU_PROPS, TYPE_OPTIONS } from "./constants";
 
 const AddCategory = (props) => {
-
     const user = useUser();
     const supabaseClient = useSupabaseClient();
-    const { addCategorySelection, setAddCategorySelection } = props;
-
+    const { addCategorySelection, updatePageProperties } = props;
     const [type, setType] = useState('');
     const [name, setName] = useState('');
     const [desc, setDesc] = useState('');
@@ -78,7 +75,7 @@ const AddCategory = (props) => {
                 category_id: categoryId,
                 sharable_groups: [user.id],
             });
-        setAddCategorySelection(false);
+        updatePageProperties('addCategorySelection', false);
     };
 
     const handleSubmit = () => {
@@ -91,12 +88,11 @@ const AddCategory = (props) => {
         }
         else { saveToDb() }
     }
-
     return (
         <>
             <Dialog
                 open={addCategorySelection}
-                onClose={() => setAddCategorySelection(false)}
+                onClose={() => updatePageProperties('addCategorySelection', false)}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
@@ -113,14 +109,9 @@ const AddCategory = (props) => {
                             >
                                 Add Category
                             </Typography>
-                            <Tooltip
-                                title="Sharing is prohibited by default"
-                            >
-                                <IconButton>
+                                <IconButton disabled>
                                     <EmergencyShareRounded />
                                 </IconButton>
-                            </Tooltip>
-
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -132,7 +123,7 @@ const AddCategory = (props) => {
                                 title="Existing changes will be discarded"
                             >
                                 <IconButton
-                                    onClick={() => setAddCategorySelection(false)}
+                                    onClick={() => updatePageProperties('addCategorySelection', false)}
                                 >
                                     <CloseRoundedIcon />
                                 </IconButton>
@@ -153,9 +144,10 @@ const AddCategory = (props) => {
                                 padding={2}
                             >
                                 <Grid item xs={5}>
-                                    <FormControl fullWidth>
+                                    <FormControl fullWidth required variant="standard">
                                         <InputLabel
                                             id='category-type-input'
+                                            variant="standard"
                                         >
                                             Type
                                         </InputLabel>
@@ -164,10 +156,6 @@ const AddCategory = (props) => {
                                             id='category-type-input-id'
                                             value={type}
                                             onChange={handleSetType}
-                                            input={
-                                                <OutlinedInput id='select-chip-input' label='Chip'
-                                                />
-                                            }
                                             MenuProps={MENU_PROPS}
                                         >
                                             {TYPE_OPTIONS?.map((item) => (
@@ -183,9 +171,11 @@ const AddCategory = (props) => {
 
                                 <Grid item xs={5}>
                                     <TextField
+                                        required
+                                        variant="standard"
                                         id='category-name-input'
                                         name="category-name"
-                                        label="Category Name"
+                                        label="Name"
                                         type="text"
                                         value={name}
                                         onChange={(e) => handleSetName(e.currentTarget.value)}
@@ -195,6 +185,7 @@ const AddCategory = (props) => {
                                 <Grid item xs={8}>
                                     <TextField
                                         fullWidth
+                                        variant="standard"
                                         id='category-description-input'
                                         name="category-description"
                                         label="Category Description"
@@ -213,19 +204,15 @@ const AddCategory = (props) => {
                                 </Grid>
                             </Grid>
                         </form>
-                        <Tooltip title="Unique Identification for Category">
-                            <Box>
-                                <ReactBarcode
-                                    value={barCodeValue}
-                                    options={{
-                                        format: 'code128',
-                                        fontSize: 7,
-                                        width: 1,
-
-                                    }}
-                                />
-                            </Box>
-                        </Tooltip>
+                        <ReactBarcode
+                            value={barCodeValue}
+                            options={{
+                                format: 'code128',
+                                fontSize: 9,
+                                width: 1,
+                                height: 50,
+                            }}
+                        />
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

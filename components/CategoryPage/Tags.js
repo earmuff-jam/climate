@@ -1,18 +1,15 @@
 
 import React, { useState, useEffect } from 'react';
-
 import {
     Autocomplete,
     createFilterOptions,
     TextField,
 } from '@mui/material';
-
 import {
     useSupabaseClient
 } from "@supabase/auth-helpers-react";
 
 const Tags = (props) => {
-
     const {
         tag,
         setTag,
@@ -57,7 +54,7 @@ const Tags = (props) => {
                 if (inputValue !== '' && !isExisting) {
                     filtered.push({
                         inputValue,
-                        name: `Create:  "${inputValue}"`,
+                        name: `Create: "${inputValue}"`,
                     });
                 }
                 return filtered;
@@ -80,7 +77,7 @@ const Tags = (props) => {
             renderOption={(props, option) => <li {...props}>{option.name}</li>}
             freeSolo
             renderInput={(params) => (
-                <TextField {...params} label="Tag item" />
+                <TextField {...params} label="tag selection" variant='standard' />
             )}
         />
     );
