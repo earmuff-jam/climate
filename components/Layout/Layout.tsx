@@ -29,7 +29,7 @@ const Layout = ({ children }: LayoutProps) => {
     <Box sx={layout}>
       <Box sx={navbar}>
         {/* <NavBar open={open} toggleDrawer={toggleDrawer} /> */}
-        <SideNav open={open} toggleDrawer={toggleDrawer} />
+        <SideNav />
       </Box>
       <Box className={styles.content}>
         <Box className={styles.header}>
