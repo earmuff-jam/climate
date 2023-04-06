@@ -5,7 +5,7 @@ const CommentPage = () => {
     const router = useRouter()
     const id = router.query.id;
     return (
-        <div>CommentPage: {id}</div>
+        <div> Property Page Details : {id}</div>
     )
 }
 
