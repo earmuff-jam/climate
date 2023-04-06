@@ -1,0 +1,13 @@
+.skipNav {
+  position: absolute;
+  transform: translateY(-125%);
+}
+.skipNav:focus {
+  transform: translateY(0);
+  color: red;
+  background-color: blue;
+  border-radius: "0 0 1rem 1rem";
+  padding: 1rem;
+  left: 1rem; 
+  transition: transform 325ms ease;
+} 
