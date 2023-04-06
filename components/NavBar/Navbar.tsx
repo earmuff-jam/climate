@@ -5,10 +5,6 @@ import MuiDrawer from "@mui/material/Drawer";
 import WebStoriesIcon from "@mui/icons-material/WebStories";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
@@ -16,7 +12,6 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import SourceIcon from "@mui/icons-material/Source";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -89,16 +84,10 @@ const NavBar = ({ open, toggleDrawer }: NavProps) => {
       isSelected: (val: string): boolean => val === "/",
     },
     {
-      title: "Subscribe",
-      link: "/subscribe",
-      icon: <MailIcon />,
-      isSelected: (val: string): boolean => val === "/subscribe",
-    },
-    {
       title: "Stuff",
-      link: "/stuff",
+      link: "/propertylist",
       icon: <SourceIcon />,
-      isSelected: (val: string): boolean => val === "/stuff",
+      isSelected: (val: string): boolean => val === "/propertylist",
     },
     {
       title: "Contact",
@@ -108,8 +97,6 @@ const NavBar = ({ open, toggleDrawer }: NavProps) => {
     },
   ];
   const { pathname } = useRouter();
-
-  console.log(pathname);
 
   return (
     <Box>
@@ -147,7 +134,6 @@ const NavBar = ({ open, toggleDrawer }: NavProps) => {
                     <NavBarText
                       primary={route.title}
                       sx={{ opacity: open ? 1 : 0 }}
-                      secondary={route.link}
                     />
                   </ListItemButton>
                 </Link>

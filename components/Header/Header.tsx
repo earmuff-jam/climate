@@ -29,7 +29,7 @@ const Header = ({ toggleDrawer }: HeaderIProps): JSX.Element => {
           toggle.current();
         }}
       >
-        Hi
+        App bar goes here
       </div>
     </div>
   );

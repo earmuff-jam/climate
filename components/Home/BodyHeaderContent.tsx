@@ -1,4 +1,3 @@
-import { Divider } from "@mui/material";
 import Text from "../Typography/Text";
 
 const BodyHeaderContent: React.FC = () => {
@@ -9,7 +8,7 @@ const BodyHeaderContent: React.FC = () => {
           Product Feedback
         </Text>
         <Text variant="body2" color={"textSecondary"} gutterBottom={true}>
-          Climate strives to bring the best experience during your item
+          We strives to bring the best experience during your item
           management.
         </Text>
         <Text variant="body2" color={"textSecondary"} gutterBottom={false}>

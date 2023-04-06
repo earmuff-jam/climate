@@ -22,10 +22,6 @@ export default function Home() {
           Revisit us soon, for more updates.
         </p>
         <p className={styles.subscribeText}>
-          You can even
-          <Link href="/subscribe"> subscribe for updates.</Link>
-        </p>
-        <p className={styles.subscribeText}>
           Not satisfied yet !? You can also
           <Link href="/feedback"> request features ... </Link>
         </p>
