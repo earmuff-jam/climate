@@ -4,11 +4,11 @@ import Link from "next/link";
 import styles from "../../styles/Header.module.css";
 type HeaderIProps = {
   open?: boolean;
-  toggleDrawer : any;
+  toggleDrawer: any;
 };
 
 const Header = ({ toggleDrawer }: HeaderIProps): JSX.Element => {
-  const toggle = useRef<Function | (() => {})>(() => {});
+  const toggle = useRef<Function | (() => {})>(() => { });
   useEffect(() => {
     toggle.current = debounce(() => toggleDrawer, 200);
   });
@@ -29,7 +29,7 @@ const Header = ({ toggleDrawer }: HeaderIProps): JSX.Element => {
           toggle.current();
         }}
       >
-        App bar goes here
+        {/* App bar goes here */}
       </div>
     </div>
   );

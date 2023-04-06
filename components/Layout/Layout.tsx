@@ -4,6 +4,7 @@ import Footer from "../Footer/Footer";
 import NavBar from "../NavBar/Navbar";
 import { Box } from "@mui/material";
 import styles from "./Layout.module.css";
+import SideNav from "../NavBar/SideNav";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -27,7 +28,8 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <Box sx={layout}>
       <Box sx={navbar}>
-        <NavBar open={open} toggleDrawer={toggleDrawer} />
+        {/* <NavBar open={open} toggleDrawer={toggleDrawer} /> */}
+        <SideNav open={open} toggleDrawer={toggleDrawer} />
       </Box>
       <Box className={styles.content}>
         <Box className={styles.header}>

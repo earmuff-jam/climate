@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import styles from '../styles/Home.module.css'
+import HomePage from '../containers/HomeContainer/HomePage';
 
 export default function Home() {
   return (
@@ -12,19 +13,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Currently, under active development.
-        </h1>
-        <h2>
-          Climate is designed to aide you with your item management.
-        </h2>
-        <p className={styles.description}>
-          Revisit us soon, for more updates.
-        </p>
-        <p className={styles.subscribeText}>
-          Not satisfied yet !? You can also
-          <Link href="/feedback"> request features ... </Link>
-        </p>
+        <HomePage />
       </main>
     </div>
   )
