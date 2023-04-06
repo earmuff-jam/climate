@@ -1,7 +1,5 @@
 import * as React from "react";
-import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import NavBar from "../NavBar/Navbar";
 import { Box } from "@mui/material";
 import styles from "./Layout.module.css";
 import SideNav from "../NavBar/SideNav";
@@ -28,12 +26,10 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <Box sx={layout}>
       <Box sx={navbar}>
-        {/* <NavBar open={open} toggleDrawer={toggleDrawer} /> */}
         <SideNav />
       </Box>
       <Box className={styles.content}>
         <Box className={styles.header}>
-          <Header open={open} toggleDrawer={toggleDrawer} />
         </Box>
         <Box className={styles.main}>{children}</Box>
         <Box className={styles.footer}>
