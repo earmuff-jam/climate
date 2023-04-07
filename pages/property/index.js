@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { AddRounded, CloseRounded } from '@mui/icons-material';
-import AddProperty from '../../containers/PropertiesContainer/AddProperty';
-import DisplayPropertyList from '../../containers/PropertiesContainer/DisplayPropertyList';
-import { Box, Button, Grid, Typography } from '@mui/material';
 import default_img_property from '../../public/default_img_property.jpeg';
-import PropertyListReports from '../../containers/PropertiesContainer/PropertyListReports';
-import MaintenanceRequests from '../../containers/PropertiesContainer/MaintenanceRequests';
 import { maintenanceRequests } from './constants';
+import MyRentalProperties from '../../containers/PropertiesContainer/MyRentalProperties';
 
 const Property = () => {
   const [properties, setProperties] = useState([]);
@@ -29,28 +24,12 @@ const Property = () => {
   };
 
   return (
-    <Box>
-      <Grid container alignItems="center" justifyContent="space-between" mb={2}>
-        <Grid item>
-          <Typography variant="h5">My Properties</Typography>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" startIcon={!editMode ? <AddRounded /> : <CloseRounded />} onClick={handleAddProperty}>
-            {!editMode ? 'Add Property' : 'Close'}
-          </Button>
-        </Grid>
-      </Grid>
-      <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-        {editMode && <AddProperty />}
-        {!editMode && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <DisplayPropertyList properties={properties} />
-            <MaintenanceRequests maintenanceRequests={maintenanceRequests} />
-            <PropertyListReports width={'70rem'} height={'30rem'} properties={properties} />
-          </Box>
-        )}
-      </Box>
-    </Box>
+    <MyRentalProperties
+      editMode={editMode}
+      handleAddProperty={handleAddProperty}
+      properties={properties}
+      maintenanceRequests={maintenanceRequests}
+    />
   )
 }
 
