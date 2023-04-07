@@ -22,18 +22,19 @@ import LinkIcon from '@mui/icons-material/Link';
 import { useRouter } from 'next/router';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 
-const AccountPage = ({ id, username, full_name, avatar_url, website }) => {
-
+const AccountPage = (props) => {
+    const { userDetails } = props;
+    const { id, username, full_name, avatar_url, website } = userDetails;
     const router = useRouter();
     const user = useUser();
     const supabaseClient = useSupabaseClient();
 
     const blankUserInfo = {
-        name: full_name,
+        full_name: full_name,
         username: username,
         websiteUrl: website,
     };
-    const [userInfo, setUserInfo] = useState({ ...blankUserInfo });
+    const [userInfo, setUserInfo] = useState(blankUserInfo);
 
     const resetFields = () => {
         setUserInfo({ ...blankUserInfo });
@@ -50,7 +51,7 @@ const AccountPage = ({ id, username, full_name, avatar_url, website }) => {
         // Code to save the edited information
         await supabaseClient
             .from('profiles')
-            .upsert({ id: user?.id, full_name: userInfo?.name, username: userInfo?.username, website: userInfo?.websiteUrl, updated_at: new Date().toISOString() })
+            .upsert({ id: user?.id, full_name: userInfo?.full_name, username: userInfo?.username, website: userInfo?.websiteUrl, updated_at: new Date().toISOString() })
             .select();
         router.push("/");
         resetFields();
@@ -61,10 +62,10 @@ const AccountPage = ({ id, username, full_name, avatar_url, website }) => {
     };
 
     useEffect(() => {
-        const userInfo = { id: id, username: username, name: full_name, avatar_url: avatar_url, website: website };
-        setUserInfo({ ...userInfo });
-    }, []);
+        setUserInfo({ ...userDetails });
+    }, [userDetails]);
 
+    console.log(userDetails);
     return (
         <Container maxWidth="md">
             <Box
@@ -90,9 +91,9 @@ const AccountPage = ({ id, username, full_name, avatar_url, website }) => {
                 <Typography variant="h6">Edit Profile</Typography>
                 <TextField
                     id="name"
-                    name="name"
+                    name="full_name"
                     label="Full Name"
-                    value={userInfo?.name}
+                    value={userInfo?.full_name}
                     onChange={handleChange}
                     fullWidth
                     margin="normal"
