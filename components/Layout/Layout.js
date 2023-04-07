@@ -11,6 +11,7 @@ import Footer from "../Footer/Footer";
 import styles from "./Layout.module.css";
 import EntryForm from "../../containers/HomeContainer/EntryForm";
 import SideNav from "../NavBar/SideNav";
+import AccountPage from '../../containers/HomeContainer/AccountPage';
 
 const layout = {
   display: "flex",
@@ -24,26 +25,39 @@ const navbar = {
 
 const Layout = ({ children }) => {
 
-  const user = useUser()
-  const [data, setData] = useState()
+  const user = useUser();
   const supabaseClient = useSupabaseClient()
 
-  useEffect(() => {
-    async function loadData() {
-      const { data } = await supabaseClient.from('profiles').select('*')
-      setData(data)
-    }
-    // Only run query once user is logged in.
-    if (user) loadData()
-  }, [user])
+  const [userDetails, setUserDetails] = useState({});
+  const fetchProfile = async () => {
+    const { data, error } = await supabaseClient
+      .from('profiles')
+      .select('id, username, full_name, avatar_url, website')
+      .eq('id', user?.id);
+    if (data?.length >= 2) { return null; }
+    const userDetailsDb = data?.[0];
+    setUserDetails(userDetailsDb);
+  };
 
-  if (!user)
+  useEffect(() => {
+    fetchProfile();
+  }, [user]);
+
+  if (!user?.id)
     return (
       <EntryForm
         redirectUri="http://localhost:3000"
         supabase={supabaseClient}
       />
     )
+
+  if (userDetails) {
+    if (Object.values(userDetails).filter(Boolean).length <= 2) {
+      return (
+        <AccountPage userDetails={userDetails} />
+      )
+    }
+  };
 
   return (
     <Box sx={layout}>
