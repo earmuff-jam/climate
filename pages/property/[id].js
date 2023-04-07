@@ -6,7 +6,7 @@ import default_img_property from '../../public/default_img_property.jpeg';
 import Image from 'next/image';
 import PropertyReport from '../../containers/PropertiesContainer/PropertyReport';
 import PaymentHistory from '../../containers/PropertiesContainer/PaymentHistory';
-import { payments } from './constants';
+import { payments } from '../../containers/HomeContainer/constants';
 
 const PropertyDetails = () => {
     const [property, setProperty] = useState({});

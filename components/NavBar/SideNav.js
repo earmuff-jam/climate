@@ -3,11 +3,13 @@ import { AccountCircleRounded, Home, ListAlt, Settings } from '@mui/icons-materi
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 const drawerWidth = 240;
 
 const SideNav = () => {
   const router = useRouter();
+  const supabase = useSupabaseClient();
   const [selectedItem, setSelectedItem] = useState('dashboard');
 
   const handleItemClick = (item) => {
@@ -15,9 +17,10 @@ const SideNav = () => {
     router.push(`/${item}`);
   };
 
-  const handleSignOut = () => {
-    console.log('handle sign out here');
-  }
+  const handleSignOut = async () => {
+    console.log('hit');
+    await supabase.auth.signOut();
+  };
 
   const DrawerWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -64,7 +67,7 @@ const SideNav = () => {
             </ListItemIcon>
             <ListItemText primary="Settings" />
           </ListItem>
-          <ListItem onClick={() => handleSignOut}>
+          <ListItem button onClick={handleSignOut}>
             <ListItemIcon>
               <AccountCircleRounded sx={{ mr: 1 }} />
             </ListItemIcon>

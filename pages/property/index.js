@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import default_img_property from '../../public/default_img_property.jpeg';
-import { maintenanceRequests } from './constants';
+import { maintenanceRequests } from '../../containers/HomeContainer/constants';
 import MyRentalProperties from '../../containers/PropertiesContainer/MyRentalProperties';
 
 const Property = () => {
