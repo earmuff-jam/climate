@@ -54,7 +54,7 @@ const PaymentHistory = ({ payments }) => {
 
   return (
     <Box style={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>
-      <Typography variant='h5'>Maintenance History</Typography>
+      <Typography variant='h5'>Payment History</Typography>
       <AutoResizer>
         {({ width, height }) => (
           <BaseTable
