@@ -32,12 +32,12 @@ const Settings = () => {
         property: "123 Main St",
     });
 
-    const handleInputChange = (event) => {
+    const handleInputChange = (event: any) => {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = (event: any) => {
         event.preventDefault();
         console.log(formData);
         // TODO: Submit form data to server
