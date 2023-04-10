@@ -12,13 +12,15 @@ const PropertyCard = ({ property }) => {
                 sx={{ width: { xs: 200, md: 300 }, maxHeight: 200, maxWidth: 200, }}
             >
                 <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-                    <Image
+                    {property?.image && <Image
                         src={property.image || default_img_property}
+                        width={"100"}
+                        height={"100"}
                         style={{
                             objectFit: "cover",
                             width: '100%'
                         }}
-                    />
+                    />}
                 </div>
             </CardMedia>
             <CardContent sx={{ flex: '1 0 auto', textAlign: 'left' }}>

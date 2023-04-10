@@ -65,7 +65,6 @@ const AccountPage = (props) => {
         setUserInfo({ ...userDetails });
     }, [userDetails]);
 
-    console.log(userDetails);
     return (
         <Container maxWidth="md">
             <Box

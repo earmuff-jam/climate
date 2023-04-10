@@ -2,20 +2,25 @@ import React, { useState, useEffect } from 'react'
 import default_img_property from '../../public/default_img_property.jpeg';
 import { maintenanceRequests } from '../../containers/HomeContainer/constants';
 import MyRentalProperties from '../../containers/PropertiesContainer/MyRentalProperties';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
 const Property = () => {
+
+  const supabaseClient = useSupabaseClient();
   const [properties, setProperties] = useState([]);
   const [editMode, setEditMode] = useState(false);
 
+  const retrieveUserProperties = async () => {
+    const { data, error } = await supabaseClient
+      .from('properties')
+      .select('*')
+    if (error) return;
+    setProperties(data);
+  };
+
   useEffect(() => {
     // Fetch properties from API or database
-    const fetchedProperties = [
-      { id: 1, name: '129 Issac Newton Crossing', city: 'Little Elm Dallas', state: 'TX', zipcode: '12345', sqFt: '1109', numberOfBedRooms: '2', numberOfBathrooms: '2', yearBuilt: '1985', garage: '2', image: default_img_property },
-      { id: 2, name: '456 Oak Ave.', city: 'Los Angeles', state: 'CA', zipcode: '12345', sqFt: '1109', numberOfBedRooms: '3', numberOfBathrooms: '2', yearBuilt: '2016', garage: '3', image: default_img_property },
-      { id: 3, name: '789 Elm St.', city: 'New York', state: 'NY', zipcode: '12345', sqFt: '1109', numberOfBedRooms: '2', numberOfBathrooms: '2', yearBuilt: '1985', garage: '2', image: default_img_property },
-      { id: 1, name: '123 Main St.', city: 'San Francisco', state: 'CA', zipcode: '12345', sqFt: '1109', numberOfBedRooms: '2', numberOfBathrooms: '3', yearBuilt: '2019', garage: '3', image: default_img_property },
-    ];
-    setProperties(fetchedProperties);
+    retrieveUserProperties();
     setEditMode(false);
   }, []);
 
@@ -34,3 +39,4 @@ const Property = () => {
 }
 
 export default Property;
+
