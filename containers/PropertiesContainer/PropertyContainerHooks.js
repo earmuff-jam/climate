@@ -75,19 +75,27 @@ export const labels = [
 export const useGenerateReport = (properties) => {
   const currentYear = new Date().getFullYear();
   const [data, setData] = useState({});
-
-  const totalProfit = properties.reduce(
-    (total, property) => total + property.profit,
-    0
-  );
-  const totalLoss = properties.reduce(
-    (total, property) => total + property.loss,
-    0
-  );
-  const totalExpenses = properties.reduce(
-    (total, property) => total + property.expenses,
-    0
-  );
+  const property_financial_history = properties
+    .flatMap((v) => v.property_financial_history)
+    .filter(Boolean);
+  const totalProfit = property_financial_history.reduce((acc, el) => {
+    if (el.financial_type === "profit") {
+      acc += el.amount;
+    }
+    return acc;
+  }, 0);
+  const totalLoss = property_financial_history.reduce((acc, el) => {
+    if (el.financial_type === "loss") {
+      acc += el.amount;
+    }
+    return acc;
+  }, 0);
+  const totalExpenses = property_financial_history.reduce((acc, el) => {
+    if (el.financial_type === "expense") {
+      acc += el.amount;
+    }
+    return acc;
+  }, 0);
 
   const buildData = (properties) => {
     const propertyFinancialReport = properties?.flatMap(

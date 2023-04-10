@@ -17,7 +17,7 @@ const PropertyListReports = ({ properties }) => {
   const { data, totalProfit, totalLoss, totalExpenses } =
     useGenerateReport(properties);
   return (
-    <Card sx={{ width, height }}>
+    <Card sx={{ width, height, overflow: 'auto' }}>
       <CardContent>
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography variant="h5" component="h2" gutterBottom>
