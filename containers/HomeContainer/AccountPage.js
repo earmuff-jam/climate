@@ -32,7 +32,7 @@ const AccountPage = (props) => {
     const blankUserInfo = {
         full_name: full_name,
         username: username,
-        websiteUrl: website,
+        website: website,
     };
     const [userInfo, setUserInfo] = useState(blankUserInfo);
 
@@ -51,7 +51,7 @@ const AccountPage = (props) => {
         // Code to save the edited information
         await supabaseClient
             .from('profiles')
-            .upsert({ id: user?.id, full_name: userInfo?.full_name, username: userInfo?.username, website: userInfo?.websiteUrl, updated_at: new Date().toISOString() })
+            .upsert({ id: user?.id, full_name: userInfo?.full_name, username: userInfo?.username, website: userInfo?.website, updated_at: new Date().toISOString() })
             .select();
         router.push("/");
         resetFields();
@@ -105,7 +105,7 @@ const AccountPage = (props) => {
                     id="website"
                     name="website"
                     label="Website"
-                    value={userInfo?.websiteUrl}
+                    value={userInfo?.website}
                     onChange={handleChange}
                     fullWidth
                     margin="normal"
