@@ -5,7 +5,6 @@ export const usePropertyConfiguration = () => {
   const supabaseClient = useSupabaseClient();
   const [editMode, setEditMode] = useState(false);
   const [properties, setProperties] = useState([]);
-  const [propertyFinancialHistory, setPropertyFinancialHistory] = useState([]);
 
   const retrieveUserProperties = async () => {
     const { data, error } = await supabaseClient.from("properties").select(`
@@ -56,5 +55,91 @@ export const usePropertyConfiguration = () => {
     properties,
     editMode,
     handleAddProperty,
+  };
+};
+
+export const labels = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sept",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+export const useGenerateReport = (properties) => {
+  const currentYear = new Date().getFullYear();
+  const [data, setData] = useState({});
+
+  const totalProfit = properties.reduce(
+    (total, property) => total + property.profit,
+    0
+  );
+  const totalLoss = properties.reduce(
+    (total, property) => total + property.loss,
+    0
+  );
+  const totalExpenses = properties.reduce(
+    (total, property) => total + property.expenses,
+    0
+  );
+
+  const buildData = (properties) => {
+    const propertyFinancialReport = properties?.flatMap(
+      (el) => el.property_financial_history
+    );
+
+    const filter = (arrayToFilter, filterCategoryOn) => {
+      const amounts = arrayToFilter
+        .filter(
+          (data) =>
+            data.financial_type === filterCategoryOn &&
+            data.date.substring(0, 4) === currentYear.toString()
+        )
+        .map((data) => data.amount);
+      return amounts;
+    };
+    const profitArr = filter(propertyFinancialReport, "profit");
+    const lossArr = filter(propertyFinancialReport, "loss");
+    const expenseArr = filter(propertyFinancialReport, "expense");
+    const generatedData = {};
+    generatedData["labels"] = labels;
+    generatedData["datasets"] = [
+      {
+        label: "Profit",
+        data: [...profitArr],
+        borderColor: "#8884d8",
+        fill: false,
+      },
+      {
+        label: "Loss",
+        data: [...lossArr],
+        borderColor: "#82ca9d",
+        fill: false,
+      },
+      {
+        label: "Expense",
+        data: [...expenseArr],
+        borderColor: "#ffc658",
+        fill: false,
+      },
+    ];
+    setData({ ...generatedData });
+  };
+
+  useEffect(() => {
+    buildData(properties);
+  }, [properties]);
+
+  return {
+    data,
+    totalExpenses,
+    totalLoss,
+    totalProfit,
   };
 };
