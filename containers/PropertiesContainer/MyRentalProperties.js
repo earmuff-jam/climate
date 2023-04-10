@@ -25,11 +25,12 @@ const Body = ({ editMode, properties, maintenanceRequests }) => {
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             {editMode && <AddProperty />}
             {!editMode && (
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
                     <DisplayPropertyList properties={properties} />
-                    <Typography variant='h5'>Maintenance Requests</Typography>
-                    <MaintenanceRequests maintenanceRequests={maintenanceRequests} />
-                    <PropertyListReports width={'70rem'} height={'30rem'} properties={properties} />
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <MaintenanceRequests maintenanceRequests={maintenanceRequests} />
+                        <PropertyListReports width={'70rem'} height={'30rem'} properties={properties} />
+                    </Box>
                 </Box>
             )}
         </Box>

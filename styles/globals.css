@@ -1,8 +1,8 @@
 html,
 body {
-  padding: 0vh 12vh 0vh 12vh;
-  /* padding: 0; */
-  margin: 0;
+  padding: 0vh 0.2vh 0vh 0.2vh;
+  /* padding: 0vh; */
+  margin: 0vh;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   scroll-behavior: smooth;

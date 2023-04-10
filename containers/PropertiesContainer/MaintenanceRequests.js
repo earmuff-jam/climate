@@ -52,6 +52,7 @@ const MaintenanceRequests = ({ requests }) => {
 
   return (
     <Box style={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>
+      <Typography variant='h5'>Maintenance Requests</Typography>
       <AutoResizer>
         {({ width, height }) => (
           <BaseTable

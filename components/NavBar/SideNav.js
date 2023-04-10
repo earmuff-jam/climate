@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 const SideNav = () => {
   const router = useRouter();
@@ -18,7 +18,6 @@ const SideNav = () => {
   };
 
   const handleSignOut = async () => {
-    console.log('hit');
     await supabase.auth.signOut();
   };
 
