@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
-import Link from 'next/link';
 import { Grid } from '@mui/material';
 import PropertyCard from '../../components/PropertiesComponent/PropertyCard';
 const useStyles = makeStyles({
@@ -20,9 +19,7 @@ const DisplayPropertyList = ({ properties }) => {
         <Grid container spacing={2}>
             {properties.map((property, index) => (
                 <Grid item xs={12} md={6} key={property.id}>
-                    <Link href={`/property/${index}`}>
-                        <PropertyCard property={property} />
-                    </Link>
+                        <PropertyCard property={property} index={index}/>
                 </Grid>
             ))}
         </Grid>

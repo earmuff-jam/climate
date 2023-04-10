@@ -46,12 +46,14 @@ const Body = ({ editMode, properties, maintenanceRequests }) => {
   );
 };
 
-const MyRentalProperties = ({
-  editMode,
-  handleAddProperty,
-  properties,
-  maintenanceRequests,
-}) => {
+const MyRentalProperties = (props) => {
+  const {
+    editMode,
+    handleAddProperty,
+    properties,
+    maintenanceRequests,
+  } = props;
+
   return (
     <Box>
       <Header
