@@ -9,7 +9,7 @@ const PropertyCard = ({ property }) => {
         <Card sx={{ display: 'flex' }}>
             <CardMedia
                 alt={property.name}
-                sx={{ width: { xs: 200, md: 300 }, maxHeight: 200, maxWidth: 200, }}
+                sx={{ width: { xs: 100, md: 100 }, maxHeight: 100, maxWidth: 100, }}
             >
                 <div style={{ position: 'relative', width: '100%', height: '100%' }}>
                     {property?.image && <Image
