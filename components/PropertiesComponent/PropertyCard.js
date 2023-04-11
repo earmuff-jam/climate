@@ -24,6 +24,7 @@ const PropertyCard = ({ property, index }) => {
               src={property.image || default_img_property}
               width={"100"}
               height={"100"}
+              alt="a generic image of a property or the specific image of the property that the owner has uploaded"
               style={{
                 objectFit: "cover",
                 width: "100%",

@@ -19,11 +19,8 @@ import { useBuildPropertyDetails } from "../../containers/PropertiesContainer/Pr
 const PropertyDetails = () => {
   const router = useRouter();
   const route_id = router.query.id;
-
-  console.log('original route id ', route_id);
   const { property } = useBuildPropertyDetails(route_id);
 
-  console.log(property);
   return (
     <Box sx={{ flexGrow: 1, p: 2 }}>
       <Card sx={{ display: "flex", flexDirection: "column" }}>
@@ -32,6 +29,7 @@ const PropertyDetails = () => {
             src={property.image || default_img_property}
             width={768}
             height={200}
+            alt="a generic image of a property or the specific image of the property that the owner has uploaded"
             objectFit="contain" // or objectFit="cover"
           />
         </CardMedia>

@@ -4,7 +4,7 @@ import MaintenanceRequests from "./MaintenanceRequests";
 import PropertyListReports from "./PropertyListReports";
 import AddProperty from "./AddProperty";
 import PropertyHeader from "../../components/PropertiesComponent/PropertyHeader";
-import PropertyTitle from "../../components/PropertiesComponent/PropertyTItle";
+import PropertyTitle from "../../components/PropertiesComponent/PropertyTitle";
 
 const Header = ({ editMode, handleAddProperty, properties }) => {
   return (
