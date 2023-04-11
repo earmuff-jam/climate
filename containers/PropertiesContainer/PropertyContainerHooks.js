@@ -1,6 +1,21 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import React, { useState, useEffect } from "react";
 
+export const labels = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sept",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 export const usePropertyConfiguration = () => {
   const supabaseClient = useSupabaseClient();
   const [editMode, setEditMode] = useState(false);
@@ -58,20 +73,6 @@ export const usePropertyConfiguration = () => {
   };
 };
 
-export const labels = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sept",
-  "Oct",
-  "Nov",
-  "Dec",
-];
 export const useGenerateReport = (properties) => {
   const currentYear = new Date().getFullYear();
   const [data, setData] = useState({});
@@ -149,5 +150,46 @@ export const useGenerateReport = (properties) => {
     totalExpenses,
     totalLoss,
     totalProfit,
+    property_financial_history,
+  };
+};
+
+export const useBuildPropertyDetails = (routeId) => {
+  const supabaseClient = useSupabaseClient();
+  const [property, setProperty] = useState({});
+
+  const fetchProperty = async (routeId) => {
+    const { data, error } = await supabaseClient
+      .from("properties")
+      .select(
+        `id,
+        name,
+        city,
+        state,
+        zipcode,
+        sqft,
+        numberofbedrooms,
+        numberofbathrooms,
+        yearbuilt,
+        garage,
+        image,
+        created_at,
+        created_by,
+        updated_by,
+        updated_at,
+        sharable_groups
+      `
+      )
+      .match({ id: routeId });
+
+    if (error) return;
+    setProperty(data[0]);
+  };
+  useEffect(() => {
+    fetchProperty(routeId);
+  }, []);
+
+  return {
+    property,
   };
 };

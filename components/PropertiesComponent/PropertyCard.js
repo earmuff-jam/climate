@@ -40,7 +40,7 @@ const PropertyCard = ({ property, index }) => {
             justifyContent: "space-between",
           }}
         >
-          <Link href={`/property/${index}`}>
+          <Link href={`/property/${property.id}`}>
             <Typography
               variant="h6"
               sx={{ fontWeight: 500, lineHeight: "28px", mb: "8px" }}
@@ -60,7 +60,7 @@ const PropertyCard = ({ property, index }) => {
         </Typography>
         <Typography
           variant="body2"
-          sx={{ fontWeight: 200, lineHeight: "24px", mb: '0.1rem'}}
+          sx={{ fontWeight: 200, lineHeight: "24px", mb: "0.1rem" }}
         >
           {property.sqft} sq ft | {property.numberofbedrooms} bed |{" "}
           {property.numberofbathrooms} bath
