@@ -96,7 +96,7 @@ const EntryForm = ({ supabase, redirectUri }: Iprops) => {
                 <Box sx={imageSx}>
                     <Image
                         alt="image"
-                        src={"/bird.jpeg"}
+                        src={"/images/entry-page.jpg"}
                         width={450}
                         height={450}
                         style={{
