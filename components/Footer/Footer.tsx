@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import Text from "../Typography/Text";
 import styles from "./Footer.module.css";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { Divider, Typography } from "@mui/material";
@@ -45,14 +44,14 @@ const Footer: React.FC<Iprops> = (props: Iprops) => {
       <br />
       <Divider />
       <br />
-      <Text
+      <Typography
         variant={"body2"}
         justifyContent="center"
         color={"textSecondary"}
         textAlign="center"
       >
         Copyright @2022. Earmuff Jam. All rights reserved.
-      </Text>
+      </Typography>
     </footer>
   );
 };

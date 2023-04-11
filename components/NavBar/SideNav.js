@@ -1,18 +1,24 @@
 import { Box, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
-import { AccountCircle, Home, ListAlt, Settings } from '@mui/icons-material';
+import { AccountCircleRounded, Home, ListAlt, Settings } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 const SideNav = () => {
   const router = useRouter();
+  const supabase = useSupabaseClient();
   const [selectedItem, setSelectedItem] = useState('dashboard');
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
     router.push(`/${item}`);
+  };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
   };
 
   const DrawerWrapper = styled('div')(({ theme }) => ({
@@ -38,7 +44,7 @@ const SideNav = () => {
           <Typography variant="h5" sx={{ fontWeight: 'bold', mr: 1 }}>
             PropertyCo
           </Typography>
-          <AccountCircle />
+          <AccountCircleRounded />
         </NavHeader>
         <Divider sx={{ mb: 2 }} />
         <List>
@@ -59,6 +65,12 @@ const SideNav = () => {
               <Settings />
             </ListItemIcon>
             <ListItemText primary="Settings" />
+          </ListItem>
+          <ListItem button onClick={handleSignOut}>
+            <ListItemIcon>
+              <AccountCircleRounded sx={{ mr: 1 }} />
+            </ListItemIcon>
+            <ListItemText primary="Sign out" />
           </ListItem>
         </List>
         <Box sx={{ flexGrow: 1 }} />
