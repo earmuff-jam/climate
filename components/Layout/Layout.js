@@ -1,54 +1,58 @@
-
-import {
-  useUser,
-  useSupabaseClient
-} from "@supabase/auth-helpers-react";
-
 import React from "react";
-
-import { Box } from "@mui/material";
 import Footer from "../Footer/Footer";
-import styles from "./Layout.module.css";
-import EntryForm from "../../containers/HomeContainer/EntryForm";
+import { styled } from "@mui/material";
 import SideNav from "../NavBar/SideNav";
+import EntryForm from "../../containers/HomeContainer/EntryForm";
+import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 
-const layout = {
+const LayoutContainer = styled("div")({
   display: "flex",
   flexDirection: "row",
-};
-const navbar = {
+});
+
+const NavigationContainer = styled("div")({
   flex: "0 0 auto",
   display: "flex",
   flexDirection: "column",
-};
+});
+
+const ContentContainer = styled("div")({
+  flex: 1,
+  display: "flex",
+  flexDirection: "column",
+});
+
+const MainContainer = styled("div")({
+  flex: 1,
+  display: "flex",
+  flexDirection: "column",
+  height: "calc(100% -1rem)",
+});
+
+const FooterContainer = styled("div")({
+  flex: "0 0 auto",
+  marginTop: "0.5rem",
+});
 
 const Layout = ({ children }) => {
-
   const user = useUser();
-  const supabaseClient = useSupabaseClient()
-
+  const supabaseClient = useSupabaseClient();
+  const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI;
   if (!user?.id)
-    return (
-      <EntryForm
-        redirectUri="http://localhost:3000"
-        supabase={supabaseClient}
-      />
-    )
+    return <EntryForm redirectUri={redirectUri} supabase={supabaseClient} />;
 
   return (
-    <Box sx={layout}>
-      <Box sx={navbar}>
+    <LayoutContainer>
+      <NavigationContainer>
         <SideNav />
-      </Box>
-      <Box className={styles.content}>
-        <Box className={styles.header}>
-        </Box>
-        <Box className={styles.main}>{children}</Box>
-        <Box className={styles.footer}>
+      </NavigationContainer>
+      <ContentContainer>
+        <MainContainer>{children}</MainContainer>
+        <FooterContainer>
           <Footer />
-        </Box>
-      </Box>
-    </Box>
+        </FooterContainer>
+      </ContentContainer>
+    </LayoutContainer>
   );
 };
 
