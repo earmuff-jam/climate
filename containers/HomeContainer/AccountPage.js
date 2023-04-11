@@ -21,6 +21,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import LinkIcon from '@mui/icons-material/Link';
 import { useRouter } from 'next/router';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import { CloseRounded } from '@mui/icons-material';
 
 const AccountPage = (props) => {
     const { userDetails } = props;
@@ -61,6 +62,11 @@ const AccountPage = (props) => {
         // Code to delete the user account
     };
 
+    const handleClose = () => {
+        router.back();
+        resetFields();
+    };
+
     useEffect(() => {
         setUserInfo({ ...userDetails });
     }, [userDetails]);
@@ -82,8 +88,8 @@ const AccountPage = (props) => {
                     <Typography variant="h6">{username}</Typography>
                     <Typography variant="subtitle1">{full_name}</Typography>
                 </Box>
-                <IconButton aria-label="Edit Profile" onClick={handleSave}>
-                    <EditIcon />
+                <IconButton aria-label="Edit Profile" onClick={handleClose}>
+                    <CloseRounded />
                 </IconButton>
             </Box>
             <Box sx={{ marginBottom: '1rem' }}>
