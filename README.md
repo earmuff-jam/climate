@@ -1,4 +1,4 @@
-# PropertCo Application
+# PropertyCo Application
 
 ![Build Status](https://travis-ci.org/klugjo/hexo-autolinker.svg?branch=master)
 [![License][license-image]][license]
@@ -12,7 +12,7 @@ width="400px"
 height="400px" 
 />
 
-**PropertCo Application** primary purpose is to allow cross communication between property owners and renters allowing transparency between work and communication. Currently it is still Work in Progress.
+**PropertyCo Application** primary purpose is to allow cross communication between property owners and renters allowing transparency between work and communication. Currently it is still Work in Progress.
 
 ## Installation Guide
 
