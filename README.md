@@ -1,26 +1,43 @@
-# General Introduction
+# PropertyCo Application
 
-Climate is designed to support your items management process. It will allow users to share their item storage to a certain limit and users will also be able to get notification for items that are expired and / or destroyed. One of the fundamental problems that we aim to solve is the ability to share one's inventory. We are also working on steps that would allow them to loan a list of items and let you know when the list expires.
+![Build Status](https://travis-ci.org/klugjo/hexo-autolinker.svg?branch=master)
+[![License][license-image]][license]
 
-## Developer Toolchain
+<img 
+src="https://picsum.photos/400"
+alt=" random generated image for propertyCo" 
+title="Peek-LastWeek" 
+align="right" 
+width="400px" 
+height="400px" 
+/>
 
-1. `yarn add swr` lib for the prisma client
-2. `npx prisma db push` with the correct `env vars` after schema change.
+**PropertyCo Application** primary purpose is to allow cross communication between property owners and renters allowing transparency between work and communication. Currently it is still Work in Progress.
 
-# Developer Getting Started
+## Installation Guide
 
-## Onboarding
+The application runs currently on NextJs Platform with Vercel as its deployment tool. It uses Javascript in the front end to render data and Supabase in the backend to store the application data.
 
-1. `git clone` from github to download the project.
-2. `yarn install` to install the dependencies.
-3. `yarn dev` to start localhost development.
-4. `yarn storybook` to develop UI components.
+Users should not have to install any 3rd party libraries. Users who are using the World Wide Web should simply start the application by entering their email address and password and by pressing `Sign Up`.
 
-# Pain points
+### Note
 
-## `Common Issues`
+The toolkits that are in use are -
 
-Some of the common pain point is yarn failing its dependencies. We can try to resolve that by using the following commands.
+1. supabase
+2. chartjs "^0.3.24"
+3. react "18.2.0"
+4. react-dom "18.2.0"
+5. react-base-table "^.1.13.4"
+6. swr library for nextjs "^1.3.0"
+7. material ui v5.
+8. nextjs "13.0.5"
+9. "chart.js": "^4.2.1"
+
+
+## `Developer Pain Points`
+
+1. Some of the common pain point is yarn failing its dependencies. We can try to resolve that by using the following commands.
 
 ```
 rm -rf node_modules
@@ -28,6 +45,27 @@ yarn cache clean
 yarn
 yarn start
 ```
-yarn add @supabase/supabase-js
-yarn add @supabase/auth-helpers-react @supabase/auth-helpers-nextjs
-yarn add @supabase/auth-ui-react
+
+2. Sometimes the typescript server needs to be refreshed. Follow the following steps.
+
+```
+crtl + shft + p ( windows ) || cmd + shft + p (mac)
+type in `restart ts server`
+
+```
+
+## Copyright and License
+
+Copyright @ 2020.
+
+Licensed under the **[MIT LICENSE][license]**
+you may not use this software except in compliance with the License.
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+[license-image]: http://img.shields.io/badge/license-Apache--2-blue.svg?style=flat
+[license]: https://www.mit.edu/~amini/LICENSE.md
