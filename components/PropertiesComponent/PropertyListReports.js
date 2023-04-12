@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import Chart from "chart.js/auto"; // do not remove
 import { Bar } from "react-chartjs-2";
-import { useGenerateReport } from "./PropertyContainerHooks";
+import { useGenerateReport } from "../../containers/PropertiesContainer/PropertyContainerHooks";
 import PropertyHistory from "../../components/PropertiesComponent/PropertyHistory";
 
 const PropertyListReports = ({ properties }) => {

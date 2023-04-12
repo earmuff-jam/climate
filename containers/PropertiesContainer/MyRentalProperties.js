@@ -1,8 +1,8 @@
 import { Box, Grid } from "@mui/material";
-import DisplayPropertyList from "./DisplayPropertyList";
-import MaintenanceRequests from "./MaintenanceRequests";
-import PropertyListReports from "./PropertyListReports";
-import AddProperty from "./AddProperty";
+import DisplayPropertyList from "../../components/PropertiesComponent/DisplayPropertyList";
+import MaintenanceRequests from "../../components/PropertiesComponent/MaintenanceRequests";
+import PropertyListReports from "../../components/PropertiesComponent/PropertyListReports";
+import AddProperty from "../../components/PropertiesComponent/AddProperty";
 import PropertyHeader from "../../components/PropertiesComponent/PropertyHeader";
 import PropertyTitle from "../../components/PropertiesComponent/PropertyTitle";
 
@@ -20,29 +20,29 @@ const Header = ({ editMode, handleAddProperty, properties }) => {
 
 const Body = ({ editMode, properties, maintenanceRequests }) => {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      {editMode && <AddProperty />}
-      {!editMode && (
+    <Grid container>
+      <Grid item xs={6}>
         <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
           <DisplayPropertyList properties={properties} />
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <MaintenanceRequests maintenanceRequests={maintenanceRequests} />
-            <PropertyListReports
-              width={"70rem"}
-              height={"30rem"}
-              properties={properties}
-            />
-          </Box>
         </Box>
-      )}
-    </Box>
+      </Grid>
+      <Grid item xs={6}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, justifyContent: "center", alignItems: "center" }}>
+          {editMode && <AddProperty />}
+          {!editMode && (
+            <>
+              <MaintenanceRequests maintenanceRequests={maintenanceRequests} />
+              <PropertyListReports
+                width={"70rem"}
+                height={"30rem"}
+                properties={properties}
+              />
+            </>
+          )}
+        </Box>
+      </Grid>
+
+    </Grid>
   );
 };
 

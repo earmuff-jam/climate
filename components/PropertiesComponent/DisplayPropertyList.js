@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Grid } from '@mui/material';
-import PropertyCard from '../../components/PropertiesComponent/PropertyCard';
+import PropertyCard from './PropertyCard';
 const useStyles = makeStyles({
     root: {
         width: '100%',
