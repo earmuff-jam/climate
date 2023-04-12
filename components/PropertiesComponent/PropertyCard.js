@@ -1,24 +1,52 @@
-import {
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
-  IconButton,
-  Box,
-} from "@mui/material";
-import { InfoRounded } from "@mui/icons-material";
-import Image from "next/image";
-import default_img_property from "../../public/default_img_property.jpeg";
 import Link from "next/link";
+import Image from "next/image";
+import { InfoRounded } from "@mui/icons-material";
+import { CardMedia, Typography, IconButton, styled } from "@mui/material";
+import default_img_property from "../../public/default_img_property.jpeg";
+
+const PropertyCardWrapperStyled = styled("card")({
+  display: "flex",
+  flexDirection: "row",
+  border: "0.1rem solid #E5E5E5",
+  borderRadius: "0.2rem",
+  // backgroundColor: "red",
+});
+
+const PropertyImageWrapperStyled = styled("div")({
+  position: "relative",
+  width: "100%",
+  height: "100%",
+});
+const PropertyDetailsContentStyled = styled("div")({
+  flex: "1 0 auto",
+  textAlign: "left",
+});
+const PropertyTitleWrapperStyled = styled("div")({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+});
+
+export const PropertyTitleStyled = styled("typography")({
+  fontVariant: "h6",
+  fontWeight: 500,
+  lineHeight: "28px",
+  mb: "8px",
+});
 
 const PropertyCard = ({ property, index }) => {
   return (
-    <Card sx={{ display: "flex" }}>
+    <PropertyCardWrapperStyled>
       <CardMedia
         alt={property.name}
-        sx={{ width: { xs: 100, md: 100 }, maxHeight: 100, maxWidth: 100 }}
+        sx={{
+          width: { xs: 100, md: 100 },
+          maxHeight: 100,
+          maxWidth: 100,
+          m: 1,
+        }}
       >
-        <div style={{ position: "relative", width: "100%", height: "100%" }}>
+        <PropertyImageWrapperStyled>
           {property?.image && (
             <Image
               src={property.image || default_img_property}
@@ -31,50 +59,49 @@ const PropertyCard = ({ property, index }) => {
               }}
             />
           )}
-        </div>
+        </PropertyImageWrapperStyled>
       </CardMedia>
-      <CardContent sx={{ flex: "1 0 auto", textAlign: "left" }}>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+      <PropertyDetailsContentStyled>
+        <PropertyTitleWrapperStyled>
           <Link href={`/property/${property.id}`}>
-            <Typography
-              variant="h6"
-              sx={{ fontWeight: 500, lineHeight: "28px", mb: "8px" }}
-            >
-              {property.name}
-            </Typography>
+            <PropertyTitleStyled>{property.name}</PropertyTitleStyled>
           </Link>
           <IconButton>
             <InfoRounded />
           </IconButton>
-        </Box>
+        </PropertyTitleWrapperStyled>
         <Typography
-          variant="body1"
-          sx={{ fontWeight: 400, lineHeight: "24px" }}
+          variant="body2"
+          sx={{
+            fontWeight: 300,
+            mr: "1rem",
+            fontStyle: "italic",
+            textAlign: "right",
+          }}
         >
           {property.city}, {property.state} {property.zipcode}
         </Typography>
         <Typography
-          variant="body2"
-          sx={{ fontWeight: 200, lineHeight: "24px", mb: "0.1rem" }}
+          variant="caption"
+          sx={{
+            fontWeight: 200,
+            lineHeight: "24px",
+            mb: "0.1rem",
+          }}
         >
           {property.sqft} sq ft | {property.numberofbedrooms} bed |{" "}
           {property.numberofbathrooms} bath
         </Typography>
+        <br />
         <Typography
-          variant="body2"
+          variant="caption"
           color="text.secondary"
           sx={{ fontWeight: 200, lineHeight: "12px" }}
         >
           Built in {property.yearbuilt} | Garage: {property.garage}
         </Typography>
-      </CardContent>
-    </Card>
+      </PropertyDetailsContentStyled>
+    </PropertyCardWrapperStyled>
   );
 };
 

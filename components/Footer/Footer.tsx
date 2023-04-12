@@ -3,13 +3,29 @@ import Link from "next/link";
 import Image from "next/image";
 import styles from "./Footer.module.css";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import { Divider, Typography } from "@mui/material";
+import { Divider, styled } from "@mui/material";
 import supabaseIcon from "../../public/supabaseIcon.png";
 
 interface Iprops {
   variant?: any;
   color?: string;
 }
+
+const FooterHeadingStyled = styled("div")({
+  variant: "body2",
+  fontWeight: "300",
+  lineHeight: "0.6rem",
+  color: "textSecondary",
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "center",
+});
+
+const FooterContainer = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  gap: "0.5rem",
+});
 
 const Footer: React.FC<Iprops> = (props: Iprops) => {
   const imageProps = {
@@ -18,11 +34,9 @@ const Footer: React.FC<Iprops> = (props: Iprops) => {
     className: styles.footerIcon,
   };
 
-  const { variant = "body2", color = "textSecondary" } = props;
-
   return (
-    <footer id="footer">
-      <Typography variant={variant} color={color} align="center">
+    <FooterContainer id="footer">
+      <FooterHeadingStyled>
         <Link href="https://github.com/earmuff-jam/climate">
           <GitHubIcon className="footerIcon" />
         </Link>
@@ -40,19 +54,12 @@ const Footer: React.FC<Iprops> = (props: Iprops) => {
             {...imageProps}
           />
         </Link>
-      </Typography>
-      <br />
+      </FooterHeadingStyled>
       <Divider />
-      <br />
-      <Typography
-        variant={"body2"}
-        justifyContent="center"
-        color={"textSecondary"}
-        textAlign="center"
-      >
-        Copyright @2022. Earmuff Jam. All rights reserved.
-      </Typography>
-    </footer>
+      <FooterHeadingStyled>
+        © 2023 PropertyCo. All rights reserved.
+      </FooterHeadingStyled>
+    </FooterContainer>
   );
 };
 

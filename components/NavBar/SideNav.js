@@ -1,77 +1,88 @@
-import { Box, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
-import { AccountCircleRounded, Home, ListAlt, Settings } from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import {
+  Box,
+  Divider,
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from "@mui/material";
+import {
+  AccountCircleRounded,
+  Home,
+  ListAlt,
+  Settings,
+} from "@mui/icons-material";
+import { styled } from "@mui/material/styles";
+import { useSideNavigationHooks } from "./SideNavHooks";
 
 const drawerWidth = 280;
 
+const DrawerWrapper = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  height: "100%",
+  padding: theme.spacing(2),
+  backgroundColor: theme.palette.primary.main,
+  color: theme.palette.common.white,
+}));
+
+const NavHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  margin: theme.spacing(2),
+}));
+
 const SideNav = () => {
-  const router = useRouter();
-  const supabase = useSupabaseClient();
-  const [selectedItem, setSelectedItem] = useState('dashboard');
-
-  const handleItemClick = (item) => {
-    setSelectedItem(item);
-    router.push(`/${item}`);
-  };
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-  };
-
-  const DrawerWrapper = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-    padding: theme.spacing(2),
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.common.white,
-  }));
-
-  const NavHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: theme.spacing(2),
-  }));
+  const { selectedItem, handleItemSelection, handleSignOut } =
+    useSideNavigationHooks();
 
   return (
     <Drawer variant="permanent" sx={{ width: drawerWidth }}>
       <DrawerWrapper>
         <NavHeader>
-          <Typography variant="h5" sx={{ fontWeight: 'bold', mr: 1 }}>
+          <Typography variant="h5" sx={{ fontWeight: "bold", mr: 1 }}>
             PropertyCo
           </Typography>
           <AccountCircleRounded />
         </NavHeader>
         <Divider sx={{ mb: 2 }} />
         <List>
-          <ListItem button selected={selectedItem === 'dashboard'} onClick={() => handleItemClick('')}>
+          <ListItemButton
+            selected={selectedItem === "dashboard"}
+            onClick={() => handleItemSelection("")}
+          >
             <ListItemIcon>
               <Home />
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
-          </ListItem>
-          <ListItem button selected={selectedItem === 'properties'} onClick={() => handleItemClick('property')}>
+          </ListItemButton>
+          <ListItemButton
+            selected={selectedItem === "properties"}
+            onClick={() => handleItemSelection("property")}
+          >
             <ListItemIcon>
               <ListAlt />
             </ListItemIcon>
             <ListItemText primary="Properties" />
-          </ListItem>
-          <ListItem button selected={selectedItem === 'settings'} onClick={() => handleItemClick('settings')}>
+          </ListItemButton>
+          <ListItemButton
+            selected={selectedItem === "settings"}
+            onClick={() => handleItemSelection("settings")}
+          >
             <ListItemIcon>
               <Settings />
             </ListItemIcon>
             <ListItemText primary="Settings" />
-          </ListItem>
-          <ListItem button onClick={handleSignOut}>
+          </ListItemButton>
+          <ListItemButton onClick={handleSignOut}>
             <ListItemIcon>
               <AccountCircleRounded sx={{ mr: 1 }} />
             </ListItemIcon>
             <ListItemText primary="Sign out" />
-          </ListItem>
+          </ListItemButton>
         </List>
         <Box sx={{ flexGrow: 1 }} />
         <Typography variant="body2" sx={{ mb: 2 }}>
