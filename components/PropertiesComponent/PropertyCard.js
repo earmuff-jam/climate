@@ -74,7 +74,9 @@ const PropertyCard = ({ property, index }) => {
           variant="body2"
           sx={{
             fontWeight: 300,
+            mr: "1rem",
             fontStyle: "italic",
+            textAlign: "right",
           }}
         >
           {property.city}, {property.state} {property.zipcode}
