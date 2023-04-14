@@ -27,29 +27,27 @@ export const useAddProperty = () => {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    // logic for all form fields submitted
-    if (Object.keys(formData).length) {
-      await supabaseClient.from("properties").insert(
+    Object.values(formData)
+      .map((v) => v.errorMsg)
+      .filter(Boolean).length === 0 &&
+      (await supabaseClient.from("properties").insert(
         {
-          id: formData.id,
-          name: formData.name,
-          city: formData.city,
-          state: formData.state,
-          zipcode: formData.zipCode,
-          sqft: formData.sqft,
-          numberofbedrooms: formData.bedrooms,
-          numberofbathrooms: formData.bathrooms,
-          yearbuilt: formData.yearbuilt,
-          garage: formData.garage,
-          image: formData.image,
+          name: formData.name.value,
+          state: formData.state.value,
+          city: formData.city.value,
+          zipcode: formData.zipCode.value,
+          sqft: formData.sqft.value,
+          numberofbedrooms: formData.bedrooms.value,
+          numberofbathrooms: formData.bathrooms.value,
+          yearbuilt: formData.yearbuilt.value,
+          garage: formData.garage.value,
+          // image: formData.image.value,
           created_at: new Date().toISOString(),
           created_by: user.id,
           sharable_groups: [user.id],
         },
         { upsert: true }
-      );
-    }
+      ));
     resetData();
   };
 

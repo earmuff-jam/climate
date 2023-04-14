@@ -18,7 +18,7 @@ const Header = ({ editMode, handleAddProperty, properties }) => {
   );
 };
 
-const Body = ({ editMode, properties, maintenanceRequests }) => {
+const Body = ({ editMode, setEditMode, properties, maintenanceRequests }) => {
   return (
     <Grid container>
       <Grid item xs={6}>
@@ -42,7 +42,7 @@ const Body = ({ editMode, properties, maintenanceRequests }) => {
             alignItems: "center",
           }}
         >
-          {editMode && <AddProperty />}
+          {editMode && <AddProperty setEditMode={setEditMode} />}
           {!editMode && (
             <>
               <MaintenanceRequests maintenanceRequests={maintenanceRequests} />
@@ -60,8 +60,13 @@ const Body = ({ editMode, properties, maintenanceRequests }) => {
 };
 
 const MyRentalProperties = (props) => {
-  const { editMode, handleAddProperty, properties, maintenanceRequests } =
-    props;
+  const {
+    editMode,
+    setEditMode,
+    handleAddProperty,
+    properties,
+    maintenanceRequests,
+  } = props;
 
   return (
     <Box>
@@ -72,6 +77,7 @@ const MyRentalProperties = (props) => {
       />
       <Body
         editMode={editMode}
+        setEditMode={setEditMode}
         properties={properties}
         maintenanceRequests={maintenanceRequests}
       />

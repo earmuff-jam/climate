@@ -20,8 +20,9 @@ const useStyles = makeStyles({
   },
 });
 
-const AddProperty = () => {
+const AddProperty = (props) => {
   const classes = useStyles();
+  const { setEditMode } = props;
   const { formData, handleInputChange, handleSubmit, resetData } =
     useAddProperty();
 
@@ -31,7 +32,14 @@ const AddProperty = () => {
         <Typography variant="h6" sx={{ fontWeight: 500, textAlign: "center" }}>
           Add Property{" "}
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} className={classes.form}>
+        <Box
+          component="form"
+          onSubmit={() => {
+            handleSubmit();
+            setEditMode(false);
+          }}
+          className={classes.form}
+        >
           <Grid container spacing={2}>
             <Grid item xs={12}>
               {" "}
