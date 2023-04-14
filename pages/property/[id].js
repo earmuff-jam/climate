@@ -7,12 +7,11 @@ import {
   Typography,
 } from "@mui/material";
 import { Share } from "@mui/icons-material";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import default_img_property from "../../public/default_img_property.jpeg";
 import Image from "next/image";
-import PropertyReport from "../../containers/PropertiesContainer/PropertyReport";
-import PaymentHistory from "../../containers/PropertiesContainer/PaymentHistory";
+import PropertyReport from "../../components/PropertiesComponent//PropertyReport";
+import PaymentHistory from "../../components/PropertiesComponent/PaymentHistory";
 import { payments } from "../../containers/HomeContainer/constants";
 import { useBuildPropertyDetails } from "../../containers/PropertiesContainer/PropertyContainerHooks";
 

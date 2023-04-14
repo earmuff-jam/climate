@@ -69,6 +69,7 @@ export const usePropertyConfiguration = () => {
   return {
     properties,
     editMode,
+    setEditMode,
     handleAddProperty,
   };
 };

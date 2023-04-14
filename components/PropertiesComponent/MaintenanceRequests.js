@@ -17,7 +17,7 @@ const MaintenanceRequests = ({ requests }) => {
 
   const theme = useTheme();
   const onlySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const regularAndHigherScreenSx = { width: "100vm", height: "30vh", marginBottom: '2rem' };
+  const regularAndHigherScreenSx = { width: "44rem", height: "30vh", marginBottom: '2rem' };
   const smallScreenSx = { width: '70rem', height: '70rem' };
 
   const [data, setData] = useState([]);
@@ -51,7 +51,7 @@ const MaintenanceRequests = ({ requests }) => {
   }, [requests]);
 
   return (
-    <Box style={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>
+    <Box sx={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>
       <Typography variant='h5'>Maintenance Requests</Typography>
       <AutoResizer>
         {({ width, height }) => (

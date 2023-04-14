@@ -4,7 +4,7 @@ import { InfoRounded } from "@mui/icons-material";
 import { CardMedia, Typography, IconButton, styled } from "@mui/material";
 import default_img_property from "../../public/default_img_property.jpeg";
 
-const PropertyCardWrapperStyled = styled("card")({
+const PropertyCardWrapperStyled = styled("div")({
   display: "flex",
   flexDirection: "row",
   border: "0.1rem solid #E5E5E5",
@@ -27,7 +27,7 @@ const PropertyTitleWrapperStyled = styled("div")({
   justifyContent: "space-between",
 });
 
-export const PropertyTitleStyled = styled("typography")({
+export const PropertyTitleStyled = styled("div")({
   fontVariant: "h6",
   fontWeight: 500,
   lineHeight: "28px",
