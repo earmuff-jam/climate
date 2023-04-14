@@ -13,8 +13,8 @@ import PropertyHistory from "../../components/PropertiesComponent/PropertyHistor
 
 const PropertyListReports = ({ properties }) => {
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-  const width = isSmallScreen ? 300 : 600;
-  const height = isSmallScreen ? 300 : 400;
+  const width = isSmallScreen ? '20rem' : '44rem';
+  const height = isSmallScreen ? '10rem' : '30rem';
   const {
     data,
     totalProfit,
