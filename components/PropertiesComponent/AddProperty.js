@@ -39,7 +39,9 @@ const AddProperty = () => {
                 fullWidth
                 label="Name"
                 name="name"
-                value={formData.name}
+                value={formData.name.value}
+                error={formData.name.errorMsg.length ?? false}
+                helperText={formData.name.errorMsg}
                 onChange={handleInputChange}
                 required
               />
@@ -50,7 +52,9 @@ const AddProperty = () => {
                 fullWidth
                 label="Address"
                 name="address"
-                value={formData.address}
+                value={formData.address.value}
+                error={formData.address.errorMsg.length ?? false}
+                helperText={formData.address.errorMsg}
                 onChange={handleInputChange}
                 required
               />
@@ -61,7 +65,9 @@ const AddProperty = () => {
                 fullWidth
                 label="City"
                 name="city"
-                value={formData.city}
+                value={formData.city.value}
+                error={formData.city.errorMsg.length ?? false}
+                helperText={formData.city.errorMsg}
                 onChange={handleInputChange}
                 required
               />
@@ -72,7 +78,9 @@ const AddProperty = () => {
                 fullWidth
                 label="State"
                 name="state"
-                value={formData.state}
+                value={formData.state.value}
+                error={formData.state.errorMsg.length ?? false}
+                helperText={formData.state.errorMsg}
                 onChange={handleInputChange}
                 required
               />
@@ -83,7 +91,9 @@ const AddProperty = () => {
                 fullWidth
                 label="Zip Code"
                 name="zipCode"
-                value={formData.zipCode}
+                value={formData.zipCode.value}
+                error={formData.zipCode.errorMsg.length ?? false}
+                helperText={formData.zipCode.errorMsg}
                 onChange={handleInputChange}
                 required
               />
@@ -95,7 +105,9 @@ const AddProperty = () => {
                 label="Rent"
                 name="rent"
                 type="number"
-                value={formData.rent}
+                value={formData.rent.value}
+                error={formData.rent.errorMsg.length ?? false}
+                helperText={formData.rent.errorMsg}
                 onChange={handleInputChange}
                 required
               />
@@ -107,7 +119,9 @@ const AddProperty = () => {
                 label="Square Foot"
                 name="sqft"
                 type="number"
-                value={formData.sqft}
+                value={formData.sqft.value}
+                error={formData.sqft.errorMsg.length ?? false}
+                helperText={formData.sqft.errorMsg}
                 onChange={handleInputChange}
                 required
               />
@@ -119,7 +133,9 @@ const AddProperty = () => {
                 label="Year built"
                 name="yearbuilt"
                 type="number"
-                value={formData.yearbuilt}
+                value={formData.yearbuilt.value}
+                error={formData.yearbuilt.errorMsg.length ?? false}
+                helperText={formData.yearbuilt.errorMsg}
                 onChange={handleInputChange}
                 required
               />
@@ -131,7 +147,9 @@ const AddProperty = () => {
                 label="Garage"
                 name="garage"
                 type="number"
-                value={formData.garage}
+                value={formData.garage.value}
+                error={formData.garage.errorMsg.length ?? false}
+                helperText={formData.garage.errorMsg}
                 onChange={handleInputChange}
                 required
               />
@@ -143,7 +161,9 @@ const AddProperty = () => {
                 label="Image of Property"
                 name="image"
                 type="string"
-                value={formData.image}
+                value={formData.image.value}
+                error={formData.image.errorMsg.length ?? false}
+                helperText={formData.image.errorMsg}
                 onChange={handleInputChange}
                 required
               />
@@ -155,7 +175,9 @@ const AddProperty = () => {
                 label="Bedrooms"
                 name="bedrooms"
                 type="number"
-                value={formData.bedrooms}
+                value={formData.bedrooms.value}
+                error={formData.bedrooms.errorMsg.length ?? false}
+                helperText={formData.bedrooms.errorMsg}
                 onChange={handleInputChange}
                 required
               />
@@ -167,7 +189,9 @@ const AddProperty = () => {
                 label="Bathrooms"
                 name="bathrooms"
                 type="number"
-                value={formData.bathrooms}
+                value={formData.bathrooms.value}
+                error={formData.bathrooms.errorMsg.length ?? false}
+                helperText={formData.bathrooms.errorMsg}
                 onChange={handleInputChange}
                 required
               />
