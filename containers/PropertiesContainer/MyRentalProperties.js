@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
 import DisplayPropertyList from "../../components/PropertiesComponent/DisplayPropertyList";
 import MaintenanceRequests from "../../components/PropertiesComponent/MaintenanceRequests";
 import PropertyListReports from "../../components/PropertiesComponent/PropertyListReports";
@@ -19,20 +19,23 @@ const Header = ({ editMode, handleAddProperty, properties }) => {
 };
 
 const Body = ({ editMode, setEditMode, properties, maintenanceRequests }) => {
+  const theme = useTheme();
+  const mdSxLower = useMediaQuery(theme.breakpoints.down("lg"));
+
   return (
     <Grid container>
-      <Grid item xs={6}>
+      <Grid item xs={`${mdSxLower ? 12 : 6}`}>
         {properties.length <= 0 && (
           <Typography sx={{ textAlign: "center" }}>
             {" "}
             Sorry no matching records found.
           </Typography>
         )}
-        <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+        {properties.length > 0 && (
           <DisplayPropertyList properties={properties} />
-        </Box>
+        )}
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={`${mdSxLower ? 12 : 6}`}>
         <Box
           sx={{
             display: "flex",
