@@ -1,31 +1,52 @@
-import {
-  Box,
-  Divider,
-  Drawer,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from "@mui/material";
-import {
-  AccountCircleRounded,
-  Home,
-  ListAlt,
-  Settings,
-} from "@mui/icons-material";
-import { styled } from "@mui/material/styles";
-import { useSideNavigationHooks } from "./SideNavHooks";
+import * as React from "react";
+import { styled, useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import MuiDrawer from "@mui/material/Drawer";
+import MuiAppBar from "@mui/material/AppBar";
+import List from "@mui/material/List";
+import CssBaseline from "@mui/material/CssBaseline";
+import Divider from "@mui/material/Divider";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import { NAV_ROUTES } from "./constants";
+import { useRouter } from "next/router";
+import Image from "next/image";
+import logo from "../../public/images/logo.svg";
 
-const drawerWidth = 280;
+const drawerWidth = 240;
 
-const DrawerWrapper = styled("div")(({ theme }) => ({
+const openedMixin = (theme) => ({
+  width: drawerWidth,
+  transition: theme.transitions.create("width", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflowX: "hidden",
+});
+
+const closedMixin = (theme) => ({
+  transition: theme.transitions.create("width", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  overflowX: "hidden",
+  width: `calc(${theme.spacing(7)} + 1px)`,
+  [theme.breakpoints.up("sm")]: {
+    width: `calc(${theme.spacing(8)} + 1px)`,
+  },
+});
+
+const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
-  flexDirection: "column",
-  height: "100%",
-  padding: theme.spacing(2),
-  backgroundColor: theme.palette.primary.main,
-  color: theme.palette.common.white,
+  alignItems: "center",
+  justifyContent: "flex-end",
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
 }));
 
 const NavHeader = styled("div")(({ theme }) => ({
@@ -35,61 +56,111 @@ const NavHeader = styled("div")(({ theme }) => ({
   margin: theme.spacing(2),
 }));
 
-const SideNav = () => {
-  const { selectedItem, handleItemSelection, handleSignOut } =
-    useSideNavigationHooks();
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  zIndex: theme.zIndex.drawer + 1,
+  transition: theme.transitions.create(["width", "margin"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+}));
 
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: "nowrap",
+  boxSizing: "border-box",
+  ...(open && {
+    ...openedMixin(theme),
+    "& .MuiDrawer-paper": openedMixin(theme),
+  }),
+  ...(!open && {
+    ...closedMixin(theme),
+    "& .MuiDrawer-paper": closedMixin(theme),
+  }),
+}));
+
+const SideNav = ({ open, toggleDrawer }) => {
+  const theme = useTheme();
+  const router = useRouter();
   return (
-    <Drawer variant="permanent" sx={{ width: drawerWidth }}>
-      <DrawerWrapper>
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      <Drawer variant="permanent" open={open}>
         <NavHeader>
-          <Typography variant="h5" sx={{ fontWeight: "bold", mr: 1 }}>
-            PropertyCo
-          </Typography>
-          <AccountCircleRounded />
+          <Image src={logo} width={"100"} height={"100"} alt="logo" />
         </NavHeader>
-        <Divider sx={{ mb: 2 }} />
         <List>
-          <ListItemButton
-            selected={selectedItem === "dashboard"}
-            onClick={() => handleItemSelection("")}
-          >
-            <ListItemIcon>
-              <Home />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItemButton>
-          <ListItemButton
-            selected={selectedItem === "properties"}
-            onClick={() => handleItemSelection("property")}
-          >
-            <ListItemIcon>
-              <ListAlt />
-            </ListItemIcon>
-            <ListItemText primary="Properties" />
-          </ListItemButton>
-          <ListItemButton
-            selected={selectedItem === "settings"}
-            onClick={() => handleItemSelection("settings")}
-          >
-            <ListItemIcon>
-              <Settings />
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
-          </ListItemButton>
-          <ListItemButton onClick={handleSignOut}>
-            <ListItemIcon>
-              <AccountCircleRounded sx={{ mr: 1 }} />
-            </ListItemIcon>
-            <ListItemText primary="Sign out" />
-          </ListItemButton>
+          {NAV_ROUTES.map((route) => {
+            return (
+              <ListItem key={route.id} disablePadding sx={{ display: "block" }}>
+                <ListItemButton
+                  onClick={() => router.push(route.link)}
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {route.icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={route.title}
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
         </List>
-        <Box sx={{ flexGrow: 1 }} />
-        <Typography variant="body2" sx={{ mb: 2 }}>
-          © 2023 PropertyCo All rights reserved.
-        </Typography>
-      </DrawerWrapper>
-    </Drawer>
+        <Divider />
+        <ListItem
+          disablePadding
+          sx={{
+            display: "absolute",
+            bottom: 0,
+          }}
+        >
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
+            }}
+            onClick={() => toggleDrawer()}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : "auto",
+                justifyContent: "center",
+              }}
+            >
+              {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            </ListItemIcon>
+            <ListItemText primary={"Close Me"} sx={{ opacity: open ? 1 : 0 }} />
+          </ListItemButton>
+        </ListItem>
+      </Drawer>
+    </Box>
   );
 };
 

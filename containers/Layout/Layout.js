@@ -1,8 +1,8 @@
-import React from "react";
-import Footer from "../Footer/Footer";
+import React, { useCallback, useState } from "react";
+import Footer from "../../components/Footer/Footer";
 import { styled } from "@mui/material";
-import SideNav from "../NavBar/SideNav";
-import EntryForm from "../../containers/HomeContainer/EntryForm";
+import SideNav from "../../components/NavBar/SideNav";
+import EntryForm from "../HomeContainer/EntryForm";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 
 const LayoutContainer = styled("div")({
@@ -26,6 +26,7 @@ const MainContainer = styled("div")({
   flex: 1,
   display: "flex",
   flexDirection: "column",
+  overflow: "auto",
   height: "calc(100% -1rem)",
 });
 
@@ -35,16 +36,25 @@ const FooterContainer = styled("div")({
 });
 
 const Layout = ({ children }) => {
+
   const user = useUser();
   const supabaseClient = useSupabaseClient();
+
+  const [open, setOpen] = useState(false);
+
   const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI;
+
+  const toggleDrawer = useCallback(() => {
+    setOpen((prev) => !prev);
+  }, []);
+
   if (!user?.id)
     return <EntryForm redirectUri={redirectUri} supabase={supabaseClient} />;
 
   return (
     <LayoutContainer>
       <NavigationContainer>
-        <SideNav />
+        <SideNav open={open} toggleDrawer={toggleDrawer} />
       </NavigationContainer>
       <ContentContainer>
         <MainContainer>{children}</MainContainer>
