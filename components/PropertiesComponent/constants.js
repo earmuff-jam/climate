@@ -28,59 +28,8 @@ export const ADD_PROPERTY_FORM_FIELDS = {
         message: "Address is required",
       },
       {
-        validate: (value) => value.trim().length >= 100,
-        message: "Address should be less than 100 characters",
-      },
-    ],
-  },
-  city: {
-    value: "",
-    label: "City",
-    type: "text",
-    required: true,
-    errorMsg: "",
-    validators: [
-      {
-        validate: (value) => value.trim().length === 0,
-        message: "City is required",
-      },
-      {
-        validate: (value) => value.trim().length >= 50,
-        message: "City should be less than 50 characters",
-      },
-    ],
-  },
-  state: {
-    value: "",
-    label: "State",
-    type: "text",
-    required: true,
-    errorMsg: "",
-    validators: [
-      {
-        validate: (value) => value.trim().length === 0,
-        message: "State is required",
-      },
-      {
-        validate: (value) => value.trim().length != 2,
-        message: "State should be 2 characters",
-      },
-    ],
-  },
-  zipCode: {
-    value: "",
-    label: "Zip Code",
-    type: "text",
-    required: true,
-    errorMsg: "",
-    validators: [
-      {
-        validate: (value) => value.trim().length === 0,
-        message: "Zip Code is required",
-      },
-      {
-        validate: (value) => !/(^\d{5}$)|(^\d{5}-\d{4}$)/.test(value),
-        message: "Zip Code should be 5 digits",
+        validate: (value) => value.trim().length >= 200,
+        message: "Address should be less than 200 characters",
       },
     ],
   },

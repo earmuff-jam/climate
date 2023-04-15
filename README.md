@@ -32,7 +32,17 @@ The toolkits that are in use are -
 6. swr library for nextjs "^1.3.0"
 7. material ui v5.
 8. nextjs "13.0.5"
-9. "chart.js": "^4.2.1"
+9. chart.js "^4.2.1"
+10. memory-cache "^0.2.0",
+11. lodash "^4.17.21",
+
+
+## Note `Cache in Use`
+
+We are currently using `Memory Cache` as a tool to cache memory for a certain duration of time. This is currently being used where - 
+
+1. Property Owners can add new Property. ( Current caching hours - 12)
+
 
 
 ## `Developer Pain Points`

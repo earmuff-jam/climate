@@ -32,7 +32,7 @@ const MainContainer = styled("div")({
 
 const FooterContainer = styled("div")({
   flex: "0 0 auto",
-  marginTop: "0.5rem",
+  marginTop: "3.5rem",
 });
 
 const Layout = ({ children }) => {

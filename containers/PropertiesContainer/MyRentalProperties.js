@@ -31,7 +31,7 @@ const Body = ({ editMode, setEditMode, properties, maintenanceRequests }) => {
         {properties.length <= 0 && (
           <Typography sx={{ textAlign: "center" }}>
             {" "}
-            Sorry no matching records found.
+            Sorry no matching properties found.
           </Typography>
         )}
         {properties.length > 0 && (

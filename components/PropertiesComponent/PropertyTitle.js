@@ -4,6 +4,7 @@ import React from "react";
 
 const PropertyTitle = (props) => {
   const { editMode, handleAddProperty } = props;
+
   return (
     <>
       <Grid item>
