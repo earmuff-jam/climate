@@ -42,7 +42,11 @@ const HomePage = () => {
           </Grid>
           <Grid item xs={12} md={4}>
             <Box sx={{ position: 'relative', height: '100%', display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundImage: 'url(/default_img_property.jpeg)', backgroundSize: 'cover', filter: 'opacity(0.2)' }} />
+              <Box sx={{
+                position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundImage: 'url(/default_img_property.jpeg)',
+                background: 'linear-gradient(0deg, #00000088 30%, #ffffff44 100%)',
+                backgroundSize: 'cover'
+              }} />
               <Box sx={{ position: 'relative', zIndex: 1, p: 1 }}>
                 <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'text.primary', mb: 2 }}>
                   Manage Your Properties

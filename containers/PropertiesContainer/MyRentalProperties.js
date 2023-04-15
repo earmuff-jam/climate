@@ -21,6 +21,9 @@ const Header = ({ editMode, handleAddProperty, properties }) => {
 const Body = ({ editMode, setEditMode, properties, maintenanceRequests }) => {
   const theme = useTheme();
   const mdSxLower = useMediaQuery(theme.breakpoints.down("lg"));
+  const onlySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const regularAndHigherScreenSx = { width: "44rem", height: "30vh", marginBottom: '2rem' };
+  const smallScreenSx = { width: '44rem', height: '30vh' };
 
   return (
     <Grid container>
@@ -48,11 +51,10 @@ const Body = ({ editMode, setEditMode, properties, maintenanceRequests }) => {
           {editMode && <AddProperty setEditMode={setEditMode} />}
           {!editMode && (
             <>
-              <MaintenanceRequests maintenanceRequests={maintenanceRequests} />
+              <MaintenanceRequests maintenanceRequests={maintenanceRequests} onlySmallScreen={onlySmallScreen} smallScreenSx={smallScreenSx} regularAndHigherScreenSx={regularAndHigherScreenSx} />
               <PropertyListReports
-                width={"70rem"}
-                height={"30rem"}
                 properties={properties}
+                onlySmallScreen={onlySmallScreen} smallScreenSx={smallScreenSx} regularAndHigherScreenSx={regularAndHigherScreenSx}
               />
             </>
           )}

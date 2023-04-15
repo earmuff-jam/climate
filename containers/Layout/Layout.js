@@ -26,6 +26,7 @@ const MainContainer = styled("div")({
   flex: 1,
   display: "flex",
   flexDirection: "column",
+  overflow: "auto",
   height: "calc(100% -1rem)",
 });
 
@@ -35,17 +36,20 @@ const FooterContainer = styled("div")({
 });
 
 const Layout = ({ children }) => {
+
   const user = useUser();
   const supabaseClient = useSupabaseClient();
-  const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI;
-  if (!user?.id)
-    return <EntryForm redirectUri={redirectUri} supabase={supabaseClient} />;
 
   const [open, setOpen] = useState(false);
+
+  const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI;
 
   const toggleDrawer = useCallback(() => {
     setOpen((prev) => !prev);
   }, []);
+
+  if (!user?.id)
+    return <EntryForm redirectUri={redirectUri} supabase={supabaseClient} />;
 
   return (
     <LayoutContainer>
