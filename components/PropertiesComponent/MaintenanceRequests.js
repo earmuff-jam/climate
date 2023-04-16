@@ -1,4 +1,5 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/styles';
 import React, { useState, useEffect } from 'react';
 import BaseTable, {
   AutoResizer,
@@ -12,14 +13,12 @@ const defaultSort = {
   order: SortOrder.ASC,
 };
 
-const MaintenanceRequests = (props) => {
+const MaintenanceRequests = ({ requests }) => {
 
-  const {
-    maintenanceRequests,
-    onlySmallScreen,
-    smallScreenSx,
-    regularAndHigherScreenSx,
-  } = props;
+  const theme = useTheme();
+  const onlySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const regularAndHigherScreenSx = { width: "44rem", height: "30vh", marginBottom: '2rem' };
+  const smallScreenSx = { width: '70rem', height: '70rem' };
 
   const [data, setData] = useState([]);
   const [sortBy, setSortBy] = useState(defaultSort);
@@ -48,8 +47,8 @@ const MaintenanceRequests = (props) => {
   ];
 
   useEffect(() => {
-    setData(maintenanceRequests);
-  }, [maintenanceRequests]);
+    setData(requests);
+  }, [requests]);
 
   return (
     <Box sx={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>

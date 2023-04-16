@@ -1,14 +1,6 @@
-import {
-  Box,
-  TextField,
-  Button,
-  Grid,
-  Typography,
-  Autocomplete,
-} from "@mui/material";
+import { Box, TextField, Button, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useAddProperty } from "./Hooks";
-import React from "react";
 
 const useStyles = makeStyles({
   root: {
@@ -31,20 +23,8 @@ const useStyles = makeStyles({
 const AddProperty = (props) => {
   const classes = useStyles();
   const { setEditMode } = props;
-  const {
-    formData,
-    value,
-    setValue,
-    inputValue,
-    setInputValue,
-    addressOptions,
-    loadingAddressOptions,
-    handleInputChange,
-    handleSubmit,
-    resetData,
-  } = useAddProperty();
-
-  console.log(addressOptions, value, inputValue);
+  const { formData, handleInputChange, handleSubmit, resetData } =
+    useAddProperty();
 
   return (
     <Grid container spacing={4} className={classes.root}>
@@ -74,26 +54,56 @@ const AddProperty = (props) => {
                 required
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               {" "}
-              <Autocomplete
-                freeSolo
-                disablePortal
-                filterOptions={(x) => x}
-                loading={loadingAddressOptions}
-                id="combo-box-address"
+              <TextField
+                fullWidth
+                label="Address"
+                name="address"
                 value={formData.address.value}
-                onChange={(event, newValue) => {
-                  setValue(newValue);
-                }}
-                inputValue={inputValue}
-                onInputChange={(event, newInputValue) => {
-                  setInputValue(newInputValue);
-                }}
-                options={addressOptions ?? []}
-                renderInput={(params) => (
-                  <TextField {...params} label="Property Address" />
-                )}
+                error={formData.address.errorMsg.length ?? false}
+                helperText={formData.address.errorMsg}
+                onChange={handleInputChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={6}>
+              {" "}
+              <TextField
+                fullWidth
+                label="City"
+                name="city"
+                value={formData.city.value}
+                error={formData.city.errorMsg.length ?? false}
+                helperText={formData.city.errorMsg}
+                onChange={handleInputChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={6}>
+              {" "}
+              <TextField
+                fullWidth
+                label="State"
+                name="state"
+                value={formData.state.value}
+                error={formData.state.errorMsg.length ?? false}
+                helperText={formData.state.errorMsg}
+                onChange={handleInputChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={6}>
+              {" "}
+              <TextField
+                fullWidth
+                label="Zip Code"
+                name="zipCode"
+                value={formData.zipCode.value}
+                error={formData.zipCode.errorMsg.length ?? false}
+                helperText={formData.zipCode.errorMsg}
+                onChange={handleInputChange}
+                required
               />
             </Grid>
             <Grid item xs={6}>

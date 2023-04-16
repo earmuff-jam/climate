@@ -25,7 +25,9 @@ export const usePropertyConfiguration = () => {
     const { data, error } = await supabaseClient.from("properties").select(`
     id,
     name,
-    address,
+    city,
+    state,
+    zipcode,
     sqft,
     numberofbedrooms,
     numberofbathrooms,
@@ -163,7 +165,9 @@ export const useBuildPropertyDetails = (routeId) => {
       .select(
         `id,
         name,
-        address,
+        city,
+        state,
+        zipcode,
         sqft,
         numberofbedrooms,
         numberofbathrooms,

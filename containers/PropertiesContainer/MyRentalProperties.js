@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import DisplayPropertyList from "../../components/PropertiesComponent/DisplayPropertyList";
 import MaintenanceRequests from "../../components/PropertiesComponent/MaintenanceRequests";
 import PropertyListReports from "../../components/PropertiesComponent/PropertyListReports";
@@ -19,26 +19,20 @@ const Header = ({ editMode, handleAddProperty, properties }) => {
 };
 
 const Body = ({ editMode, setEditMode, properties, maintenanceRequests }) => {
-  const theme = useTheme();
-  const mdSxLower = useMediaQuery(theme.breakpoints.down("lg"));
-  const onlySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const regularAndHigherScreenSx = { width: "44rem", height: "30vh", marginBottom: '2rem' };
-  const smallScreenSx = { width: '44rem', height: '30vh' };
-
   return (
     <Grid container>
-      <Grid item xs={`${mdSxLower ? 12 : 6}`}>
+      <Grid item xs={6}>
         {properties.length <= 0 && (
           <Typography sx={{ textAlign: "center" }}>
             {" "}
-            Sorry no matching properties found.
+            Sorry no matching records found.
           </Typography>
         )}
-        {properties.length > 0 && (
+        <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
           <DisplayPropertyList properties={properties} />
-        )}
+        </Box>
       </Grid>
-      <Grid item xs={`${mdSxLower ? 12 : 6}`}>
+      <Grid item xs={6}>
         <Box
           sx={{
             display: "flex",
@@ -51,10 +45,11 @@ const Body = ({ editMode, setEditMode, properties, maintenanceRequests }) => {
           {editMode && <AddProperty setEditMode={setEditMode} />}
           {!editMode && (
             <>
-              <MaintenanceRequests maintenanceRequests={maintenanceRequests} onlySmallScreen={onlySmallScreen} smallScreenSx={smallScreenSx} regularAndHigherScreenSx={regularAndHigherScreenSx} />
+              <MaintenanceRequests maintenanceRequests={maintenanceRequests} />
               <PropertyListReports
+                width={"70rem"}
+                height={"30rem"}
                 properties={properties}
-                onlySmallScreen={onlySmallScreen} smallScreenSx={smallScreenSx} regularAndHigherScreenSx={regularAndHigherScreenSx}
               />
             </>
           )}
