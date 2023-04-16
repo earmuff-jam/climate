@@ -1,19 +1,16 @@
 import { Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
-import DisplayPropertyList from "../../components/PropertiesComponent/DisplayPropertyList";
+import DisplayPropertyList from "../../components/DisplayList";
 import MaintenanceRequests from "../../components/PropertiesComponent/MaintenanceRequests";
 import PropertyListReports from "../../components/PropertiesComponent/PropertyListReports";
 import AddProperty from "../../components/PropertiesComponent/AddProperty";
-import PropertyHeader from "../../components/PropertiesComponent/PropertyHeader";
-import PropertyTitle from "../../components/PropertiesComponent/PropertyTitle";
-
-const Header = ({ editMode, handleAddProperty, properties }) => {
+import Title from "../../components/Title";
+import Header from "../../components/Header";
+import DisplayList from "../../components/DisplayList";
+const HeaderDetails = ({ editMode, handleAddProperty, properties }) => {
   return (
     <Grid container alignItems="center" justifyContent="space-between" mb={2}>
-      <PropertyTitle
-        editMode={editMode}
-        handleAddProperty={handleAddProperty}
-      />
-      <PropertyHeader properties={properties} />
+      <Title editMode={editMode} handleAddProperty={handleAddProperty} />
+      <Header data={properties} isProperty={true} />
     </Grid>
   );
 };
@@ -22,8 +19,12 @@ const Body = ({ editMode, setEditMode, properties, maintenanceRequests }) => {
   const theme = useTheme();
   const mdSxLower = useMediaQuery(theme.breakpoints.down("lg"));
   const onlySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const regularAndHigherScreenSx = { width: "44rem", height: "30vh", marginBottom: '2rem' };
-  const smallScreenSx = { width: '44rem', height: '30vh' };
+  const regularAndHigherScreenSx = {
+    width: "44rem",
+    height: "30vh",
+    marginBottom: "2rem",
+  };
+  const smallScreenSx = { width: "44rem", height: "30vh" };
 
   return (
     <Grid container>
@@ -35,7 +36,7 @@ const Body = ({ editMode, setEditMode, properties, maintenanceRequests }) => {
           </Typography>
         )}
         {properties.length > 0 && (
-          <DisplayPropertyList properties={properties} />
+          <DisplayList items={properties} type={"properties"} />
         )}
       </Grid>
       <Grid item xs={`${mdSxLower ? 12 : 6}`}>
@@ -51,10 +52,17 @@ const Body = ({ editMode, setEditMode, properties, maintenanceRequests }) => {
           {editMode && <AddProperty setEditMode={setEditMode} />}
           {!editMode && (
             <>
-              <MaintenanceRequests maintenanceRequests={maintenanceRequests} onlySmallScreen={onlySmallScreen} smallScreenSx={smallScreenSx} regularAndHigherScreenSx={regularAndHigherScreenSx} />
+              <MaintenanceRequests
+                maintenanceRequests={maintenanceRequests}
+                onlySmallScreen={onlySmallScreen}
+                smallScreenSx={smallScreenSx}
+                regularAndHigherScreenSx={regularAndHigherScreenSx}
+              />
               <PropertyListReports
                 properties={properties}
-                onlySmallScreen={onlySmallScreen} smallScreenSx={smallScreenSx} regularAndHigherScreenSx={regularAndHigherScreenSx}
+                onlySmallScreen={onlySmallScreen}
+                smallScreenSx={smallScreenSx}
+                regularAndHigherScreenSx={regularAndHigherScreenSx}
               />
             </>
           )}
@@ -75,7 +83,7 @@ const MyRentalProperties = (props) => {
 
   return (
     <Box>
-      <Header
+      <HeaderDetails
         editMode={editMode}
         handleAddProperty={handleAddProperty}
         properties={properties}

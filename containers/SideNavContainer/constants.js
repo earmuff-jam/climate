@@ -1,4 +1,5 @@
 import {
+  AccountCircleRounded,
   HomeRounded,
   SettingsRounded,
   WebStoriesRounded,
@@ -19,6 +20,12 @@ export const NAV_ROUTES = [
   },
   {
     id: "3",
+    title: "Tenants",
+    link: "/tenant",
+    icon: <AccountCircleRounded />,
+  },
+  {
+    id: "4",
     title: "Settings",
     link: "/settings",
     icon: <SettingsRounded />,

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import Footer from "../../components/Footer/Footer";
 import { styled } from "@mui/material";
-import SideNav from "../../components/NavBar/SideNav";
+import SideNav from "../SideNavContainer/SideNavContainer";
 import EntryForm from "../HomeContainer/EntryForm";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 

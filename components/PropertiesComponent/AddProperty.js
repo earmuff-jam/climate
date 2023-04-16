@@ -44,8 +44,6 @@ const AddProperty = (props) => {
     resetData,
   } = useAddProperty();
 
-  console.log(addressOptions, value, inputValue);
-
   return (
     <Grid container spacing={4} className={classes.root}>
       <Grid item xs={12} sm={6}>

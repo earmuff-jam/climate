@@ -19,3 +19,6 @@ Thank you message: After the user submits their feedback, show a thank you messa
 Follow-up: Depending on the type of feedback you receive, it may be useful to follow up with users to get more information or to let them know that their issue has been resolved. Make sure to include a way for users to contact you if they need further assistance or have additional feedback.
 
 Overall, a good feedback page for inventory management should be designed with the user in mind, making it easy for them to provide feedback and ensuring that their feedback is taken seriously and addressed promptly.
+
+
+--- The last worked is on branch = 61-add-buttons
