@@ -54,26 +54,22 @@ export const useAddProperty = () => {
     resetData();
   };
 
-  const fetchUserLocationDebounced = useCallback(
-    debounce((text) => {
-      const data = {
-        url: "https://geocode.maps.co/search?",
-        params: {
-          q: text,
-        },
-      };
-      const completeURI = encodeQuery(data) + "+US";
-      fetchWithCache(completeURI).then((result) => {
-        const formattedResponse = result.map((v) => ({
-          label: v.display_name,
-          value: v.display_name,
-        }));
-        setAddressOptions(formattedResponse);
-      });
-    }, 3000),
-    []
-  );
-
+  const fetchUserLocationDebounced = debounce((text) => {
+    const data = {
+      url: "https://geocode.maps.co/search?",
+      params: {
+        q: text,
+      },
+    };
+    const completeURI = encodeQuery(data) + "+US";
+    fetchWithCache(completeURI).then((result) => {
+      const formattedResponse = result.map((v) => ({
+        label: v.display_name,
+        value: v.display_name,
+      }));
+      setAddressOptions(formattedResponse);
+    });
+  }, 3000);
   useEffect(() => {
     fetchUserLocationDebounced(inputValue);
   }, [formData.address.value, fetchUserLocationDebounced, inputValue]);

@@ -1,23 +1,12 @@
-import React from "react";
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-} from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Card, CardContent, Typography, Paper } from "@mui/material";
 import Chart from "chart.js/auto"; // do not remove
 import { Bar } from "react-chartjs-2";
 import { useGenerateReport } from "../../containers/PropertiesContainer/PropertyContainerHooks";
 import PropertyHistory from "../../components/PropertiesComponent/PropertyHistory";
 
 const PropertyListReports = (props) => {
-
-  const {
-    properties,
-    onlySmallScreen,
-    smallScreenSx,
-    regularAndHigherScreenSx,
-  } = props;
+  const { properties, regularAndHigherScreenSx } = props;
   const {
     data,
     totalProfit,
@@ -26,11 +15,54 @@ const PropertyListReports = (props) => {
     property_financial_history,
   } = useGenerateReport(properties);
 
+  const options = {
+    indexAxis: "y",
+    elements: {
+      bar: {
+        borderWidth: 2,
+      },
+    },
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      datalabels: {
+        display: false,
+      },
+      noDataMessage: {
+        display: false,
+      },
+      title: {
+        display: false,
+        text: "I am a title",
+      },
+    },
+  };
   return (
-    <Box sx={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>
-      <Card>
-        <CardContent>
-          <Box display="flex" alignItems="center" justifyContent="space-between">
+    <Card>
+      <CardContent
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          gap: "1rem",
+          width: "calc(100% - 2rem)",
+          overflow: "auto",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            borderRight: "1px solid #e0e0e0",
+          }}
+        >
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
             <Typography variant="h5" component="h2" gutterBottom>
               Total Properties Overview
             </Typography>
@@ -38,8 +70,19 @@ const PropertyListReports = (props) => {
               Total Profit: ${parseInt(totalProfit).toFixed(2) || 0.0}
             </Typography>
           </Box>
-          {data?.datasets?.length && <Bar data={data} />}
-          <Box display="flex" alignItems="center" justifyContent="space-between">
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            {" "}
+            {data?.datasets?.length && <Bar options={options} data={data} />}
+          </Box>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
             <Typography variant="subtitle1" gutterBottom>
               Total Loss: ${parseInt(totalLoss).toFixed(2) || 0.0}
             </Typography>
@@ -47,15 +90,16 @@ const PropertyListReports = (props) => {
               Total Expenses: ${parseInt(totalExpenses).toFixed(2) || 0.0}
             </Typography>
           </Box>
-          <Box mt={2}>
-            <Typography variant="h5" component="h2" gutterBottom>
-              Property Analytics
-            </Typography>
-            <PropertyHistory pfhData={property_financial_history} />
-          </Box>
-        </CardContent>
-      </Card>
-    </Box>
+        </Box>
+
+        <Box>
+          <Typography variant="h5" component="h2" gutterBottom>
+            Property Analytics
+          </Typography>
+          <PropertyHistory pfhData={property_financial_history} />
+        </Box>
+      </CardContent>
+    </Card>
   );
 };
 

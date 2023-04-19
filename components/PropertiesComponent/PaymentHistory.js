@@ -14,11 +14,6 @@ const defaultSort = {
 
 const PaymentHistory = ({ payments }) => {
 
-  const theme = useTheme();
-  const onlySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const regularAndHigherScreenSx = { width: "100vm", height: "30vh", marginBottom: '2rem' };
-  const smallScreenSx = { width: '70rem', height: '70rem' };
-
   const [data, setData] = useState([]);
   const [sortBy, setSortBy] = useState(defaultSort);
   const onColumnSort = (sortBy) => {
@@ -53,7 +48,7 @@ const PaymentHistory = ({ payments }) => {
   }, []);
 
   return (
-    <Box style={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>
+    <Box>
       <Typography variant='h5'>Payment History</Typography>
       <AutoResizer>
         {({ width, height }) => (

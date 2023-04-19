@@ -34,7 +34,7 @@ const LeaseInformationTable = ({ datasets }) => {
 
   useEffect(() => {
     setData(datasets);
-  }, []);
+  }, [datasets]);
   return (
     <>
       <AutoResizer>
