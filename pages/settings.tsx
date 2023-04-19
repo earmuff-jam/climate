@@ -20,7 +20,7 @@ const Settings = () => {
 
     useEffect(() => {
         fetchProfile();
-    }, [user]);
+    }, [user, fetchProfile]);
 
     return (
         <AccountPage userDetails={userDetails} />

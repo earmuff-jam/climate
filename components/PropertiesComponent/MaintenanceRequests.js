@@ -224,9 +224,7 @@ function AddRowModal({
   deleteRow,
   deletingRow,
 }) {
-  if (!(addingRow || editingRow || deletingRow)) {
-    return null;
-  }
+
   const defaultValues = {
     property: "",
     issue: "",
