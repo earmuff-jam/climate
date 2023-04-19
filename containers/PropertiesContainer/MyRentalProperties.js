@@ -1,5 +1,5 @@
-import { Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
-import DisplayPropertyList from "../../components/DisplayList";
+import { Box, Grid, Typography, useMediaQuery, useTheme, Container } from "@mui/material";
+import DisplayPropertyList from "../../components/PropertiesComponent/DisplayPropertyList";
 import MaintenanceRequests from "../../components/PropertiesComponent/MaintenanceRequests";
 import PropertyListReports from "../../components/PropertiesComponent/PropertyListReports";
 import AddProperty from "../../components/PropertiesComponent/AddProperty";
@@ -18,57 +18,58 @@ const HeaderDetails = ({ editMode, handleAddProperty, properties }) => {
 const Body = ({ editMode, setEditMode, properties, maintenanceRequests }) => {
   const theme = useTheme();
   const mdSxLower = useMediaQuery(theme.breakpoints.down("lg"));
-  const onlySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const regularAndHigherScreenSx = {
-    width: "44rem",
-    height: "30vh",
-    marginBottom: "2rem",
-  };
-  const smallScreenSx = { width: "44rem", height: "30vh" };
 
   return (
-    <Grid container>
-      <Grid item xs={`${mdSxLower ? 12 : 6}`}>
-        {properties.length <= 0 && (
-          <Typography sx={{ textAlign: "center" }}>
-            {" "}
-            Sorry no matching properties found.
-          </Typography>
-        )}
-        {properties.length > 0 && (
-          <DisplayList items={properties} type={"properties"} />
-        )}
+    <Container>
+      <Grid container spacing={2} maxWidth="lg">
+        <Grid item xs={`${mdSxLower ? 12 : 6}`}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+            }}
+          >
+            {properties.length <= 0 && (
+              <Typography sx={{ textAlign: "center" }}>
+                {" "}
+                Sorry no matching properties found.
+              </Typography>
+            )}
+            {properties.length > 0 && (
+              <DisplayPropertyList properties={properties} />
+            )}
+          </Box>
+        </Grid>
+        <Grid item xs={`${mdSxLower ? 12 : 6}`}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              height: "100rem",
+            }}
+          >
+            {editMode && <AddProperty setEditMode={setEditMode} />}
+            {!editMode && (
+              <Box sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                flexGrow: 1,
+              }}>
+                <PropertyListReports
+                  properties={properties}
+                />
+                <MaintenanceRequests
+                  maintenanceRequests={maintenanceRequests}
+                />
+              </Box>
+            )}
+          </Box>
+        </Grid>
       </Grid>
-      <Grid item xs={`${mdSxLower ? 12 : 6}`}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {editMode && <AddProperty setEditMode={setEditMode} />}
-          {!editMode && (
-            <>
-              <MaintenanceRequests
-                maintenanceRequests={maintenanceRequests}
-                onlySmallScreen={onlySmallScreen}
-                smallScreenSx={smallScreenSx}
-                regularAndHigherScreenSx={regularAndHigherScreenSx}
-              />
-              <PropertyListReports
-                properties={properties}
-                onlySmallScreen={onlySmallScreen}
-                smallScreenSx={smallScreenSx}
-                regularAndHigherScreenSx={regularAndHigherScreenSx}
-              />
-            </>
-          )}
-        </Box>
-      </Grid>
-    </Grid>
+    </Container>
   );
 };
 

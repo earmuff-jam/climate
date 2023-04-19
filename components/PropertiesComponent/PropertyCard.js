@@ -9,7 +9,6 @@ const PropertyCardWrapperStyled = styled("div")({
   flexDirection: "row",
   border: "0.1rem solid #E5E5E5",
   borderRadius: "0.2rem",
-  // backgroundColor: "red",
 });
 
 const PropertyImageWrapperStyled = styled("div")({

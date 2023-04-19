@@ -47,9 +47,6 @@ const tableRef = React.createRef();
 const MaintenanceRequests = (props) => {
   const {
     maintenanceRequests,
-    onlySmallScreen,
-    smallScreenSx,
-    regularAndHigherScreenSx,
   } = props;
 
   const [data, setData] = useState([]);
@@ -164,7 +161,11 @@ const MaintenanceRequests = (props) => {
     []
   );
   return (
-    <Box sx={onlySmallScreen ? smallScreenSx : regularAndHigherScreenSx}>
+    <Box sx={{
+      display: "flex",
+      width: "100%",
+      flexGrow: 1,
+    }}>
       <AutoResizer>
         {({ width, height }) => (
           <>

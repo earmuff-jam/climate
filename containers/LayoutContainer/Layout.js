@@ -20,19 +20,19 @@ const ContentContainer = styled("div")({
   flex: 1,
   display: "flex",
   flexDirection: "column",
+  height: "calc(100vh + 4rem)",
 });
 
 const MainContainer = styled("div")({
   flex: 1,
   display: "flex",
   flexDirection: "column",
-  overflow: "auto",
-  height: "calc(100% -1rem)",
+  overflow: "hidden",
+  height: "calc(100% -0.5rem)",
 });
 
 const FooterContainer = styled("div")({
   flex: "0 0 auto",
-  marginTop: "3.5rem",
 });
 
 const Layout = ({ children }) => {
