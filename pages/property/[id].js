@@ -19,7 +19,6 @@ const PropertyDetails = () => {
   const router = useRouter();
   const route_id = router.query.id;
   const { property } = useBuildPropertyDetails(route_id);
-
   return (
     <Box sx={{ flexGrow: 1, p: 2 }}>
       <Card sx={{ display: "flex", flexDirection: "column" }}>
@@ -37,7 +36,7 @@ const PropertyDetails = () => {
             {property.name}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {`${property.city}, ${property.state} ${property.zipcode}`}
+            {`${property.address}`}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {`${property.sqft} sq. ft. | ${property.numberofbedrooms} beds | ${property.numberofbathrooms} baths`}
@@ -56,13 +55,14 @@ const PropertyDetails = () => {
           }}
         >
           <Typography variant="caption" color="text.secondary">
-            {`${property.city}, ${property.state}`}
+            {`${property.address}`}
           </Typography>
           <Button variant="contained" color="primary" startIcon={<Share />}>
             Share with Friends
           </Button>
         </Box>
       </Card>
+      <>tenant details and history </>
       <PaymentHistory payments={payments} />
       <PropertyReport property={property} />
     </Box>

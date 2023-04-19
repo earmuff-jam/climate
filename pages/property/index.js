@@ -4,8 +4,14 @@ import MyRentalProperties from "../../containers/PropertiesContainer/MyRentalPro
 import { usePropertyConfiguration } from "../../containers/PropertiesContainer/PropertyContainerHooks";
 
 const Property = () => {
-  const { properties, editMode, setEditMode, handleAddProperty } =
-    usePropertyConfiguration();
+  const {
+    properties,
+    editMode,
+    setEditMode,
+    handleAddProperty,
+    addTenant,
+    handleAddTenant,
+  } = usePropertyConfiguration();
   return (
     <MyRentalProperties
       editMode={editMode}
@@ -13,6 +19,8 @@ const Property = () => {
       handleAddProperty={handleAddProperty}
       properties={properties}
       maintenanceRequests={maintenanceRequests}
+      addTenant={addTenant}
+      handleAddTenant={handleAddTenant}
     />
   );
 };

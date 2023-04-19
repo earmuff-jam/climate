@@ -70,17 +70,25 @@ const PropertyCard = ({ property, index }) => {
             <InfoRounded />
           </IconButton>
         </PropertyTitleWrapperStyled>
-        <Typography
-          variant="body2"
-          sx={{
-            fontWeight: 300,
-            mr: "1rem",
-            fontStyle: "italic",
-            textAlign: "right",
+        <div
+          style={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            width: "11rem",
           }}
         >
-          {property.city}, {property.state} {property.zipcode}
-        </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              fontWeight: 300,
+              mr: "1rem",
+              fontStyle: "italic",
+            }}
+            noWrap
+          >
+            {property.address}
+          </Typography>
+        </div>
         <Typography
           variant="caption"
           sx={{

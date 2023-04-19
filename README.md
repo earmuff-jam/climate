@@ -35,6 +35,7 @@ The toolkits that are in use are -
 9. chart.js "^4.2.1"
 10. memory-cache "^0.2.0",
 11. lodash "^4.17.21",
+12. "uuidv4": "^6.2.13"
 
 
 ## Note `Cache in Use`
@@ -45,7 +46,10 @@ We are currently using `Memory Cache` as a tool to cache memory for a certain du
 
 
 
-## `Developer Pain Points`
+## `Developer Mode`
+
+
+### Pain Points
 
 1. Some of the common pain point is yarn failing its dependencies. We can try to resolve that by using the following commands.
 
