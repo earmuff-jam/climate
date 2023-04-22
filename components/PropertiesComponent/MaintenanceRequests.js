@@ -23,6 +23,7 @@ import {
   DeleteForeverRounded,
   EditRounded,
 } from "@mui/icons-material";
+import { useCallback } from "react";
 
 const GlobalStyle = createGlobalStyle`
   .BaseTable.active-col-0 [data-col-idx="0"],
@@ -42,6 +43,7 @@ const defaultSort = {
   key: "name",
   order: SortOrder.ASC,
 };
+const factor = 12;
 
 const tableRef = React.createRef();
 
@@ -100,22 +102,24 @@ const MaintenanceRequests = (props) => {
     );
   };
 
+  const makeWidth = useCallback((num = 0) => (factor * num), [factor]); 
+
   const columns = [
-    { key: "id", dataKey: "id", title: "ID", width: "2.5rem" },
-    { key: "property", dataKey: "property", title: "Property", width: "10rem" },
-    { key: "issue", dataKey: "issue", title: "Issue", width: "10rem" },
-    { key: "status", dataKey: "status", title: "Status", width: "10rem" },
+    { key: "id", dataKey: "id", title: "ID", width: makeWidth(2.5) },
+    { key: "property", dataKey: "property", title: "Property", width: makeWidth(10) },
+    { key: "issue", dataKey: "issue", title: "Issue", width: makeWidth(10) },
+    { key: "status", dataKey: "status", title: "Status", width: makeWidth(10) },
     {
       key: "submittedDate",
       dataKey: "submittedDate",
       title: "Submitted",
-      width: "10rem",
+      width: makeWidth(10),
     },
     {
       key: "action",
       dataKey: "action",
       title: "Action",
-      width: "10rem",
+      width: makeWidth(10),
       frozen: "right",
       cellRenderer: ({ rowData, rowIndex }) => (
         <>
@@ -273,7 +277,7 @@ function AddRowModal({
 
   return (
     <Dialog
-      open={addingRow || editingRow || deletingRow}
+      open={(addingRow || editingRow || deletingRow) ?? false}
       onClose={handleCancel}
     >
       <DialogTitle>{`${addingRow ? "Add" : "Edit"} Row`}</DialogTitle>

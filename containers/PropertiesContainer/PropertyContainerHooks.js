@@ -1,5 +1,5 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export const labels = [
   "Jan",
@@ -157,34 +157,44 @@ export const useBuildPropertyDetails = (routeId) => {
   const supabaseClient = useSupabaseClient();
   const [property, setProperty] = useState({});
 
-  const fetchProperty = async (routeId) => {
+  const fetchProperty = useCallback(async (routeId) => {
     const { data, error } = await supabaseClient
       .from("properties")
       .select(
-        `id,
+        `
+      id,
+      name,
+      sqft,
+      numberofbedrooms,
+      numberofbathrooms,
+      yearbuilt,
+      garage,
+      image,
+      created_at,
+      created_by,
+      updated_by,
+      updated_at,
+      sharable_groups,
+      postal_address_id,
+      postal_address(
         name,
-        address,
-        sqft,
-        numberofbedrooms,
-        numberofbathrooms,
-        yearbuilt,
-        garage,
-        image,
-        created_at,
-        created_by,
-        updated_by,
-        updated_at,
-        sharable_groups
-      `
+        address_street_address,
+        address_locality,
+        address_region,
+        postal_code,
+        address_country,
+        post_office_box_number
       )
-      .match({ id: routeId });
+    `
+      )
+      .eq("id", routeId);
 
     if (error) return;
     setProperty(data[0]);
-  };
+  }, []);
   useEffect(() => {
     fetchProperty(routeId);
-  }, []);
+  }, [fetchProperty, routeId]);
 
   return {
     property,

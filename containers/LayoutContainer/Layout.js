@@ -50,7 +50,6 @@ const Layout = ({ children }) => {
 
   if (!user?.id)
     return <EntryForm redirectUri={redirectUri} supabase={supabaseClient} />;
-
   return (
     <LayoutContainer>
       <NavigationContainer>

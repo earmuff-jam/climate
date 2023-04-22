@@ -12,7 +12,8 @@ import PropertyListReports from "../../components/PropertiesComponent/PropertyLi
 import AddProperty from "../../components/PropertiesComponent/AddProperty";
 import Title from "../../components/Title";
 import Header from "../../components/Header";
-
+import DisplayList from "../../components/DisplayList";
+import { useMemo } from "react";
 const HeaderDetails = ({ editMode, handleAddProperty, properties }) => {
   return (
     <Grid container alignItems="center" justifyContent="space-between" mb={2}>
@@ -26,47 +27,58 @@ const Body = ({ editMode, setEditMode, properties, maintenanceRequests }) => {
   const theme = useTheme();
   const smallerThanLarge = useMediaQuery(theme.breakpoints.down("lg"));
 
+  const gridSize = useMemo(() => smallerThanLarge ? 12 : 6, [smallerThanLarge]);
+
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={`${smallerThanLarge ? 12 : 6}`}>
-        {properties.length <= 0 && (
-          <Typography sx={{ textAlign: "center" }}>
-            {" "}
-            Sorry no matching properties found.
-          </Typography>
-        )}
-        {properties.length > 0 && (
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <DisplayPropertyList properties={properties} />
+
+
+    <Container>
+      <Grid container spacing={2} maxWidth="lg">
+        <Grid item xs={gridSize}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+            }}
+          >
+            {properties.length <= 0 && (
+              <Typography sx={{ textAlign: "center" }}>
+                {" "}
+                Sorry no matching properties found.
+              </Typography>
+            )}
+            {properties.length > 0 && (
+              <DisplayPropertyList properties={properties} />
+            )}
           </Box>
-        )}
-      </Grid>
-      <Grid item xs={`${smallerThanLarge ? 12 : 6}`}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            height: "100rem",
-          }}
-        >
-          {editMode && <AddProperty setEditMode={setEditMode} />}
-          {!editMode && (
-            <Box
-              sx={{
+        </Grid>
+        <Grid item xs={gridSize}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              height: "100rem",
+            }}
+          >
+            {editMode && <AddProperty setEditMode={setEditMode} />}
+            {!editMode && (
+              <Box sx={{
                 display: "flex",
                 flexDirection: "column",
                 gap: 2,
                 flexGrow: 1,
               }}
-            >
-              <PropertyListReports properties={properties} />
-              <MaintenanceRequests maintenanceRequests={maintenanceRequests} />
-            </Box>
-          )}
-        </Box>
+              >
+                <PropertyListReports properties={properties} />
+                <MaintenanceRequests maintenanceRequests={maintenanceRequests} />
+              </Box>
+            )}
+          </Box>
+        </Grid>
       </Grid>
-    </Grid>
+    </ Container>
   );
 };
 
