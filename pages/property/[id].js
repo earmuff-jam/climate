@@ -6,7 +6,8 @@ import PropertyReport from "../../components/PropertiesComponent//PropertyReport
 import PaymentHistory from "../../components/PropertiesComponent/PaymentHistory";
 import { payments } from "../../containers/HomeContainer/constants";
 import { useBuildPropertyDetails } from "../../containers/PropertiesContainer/PropertyContainerHooks";
-import BasicImageCoverArt from "../../components/ImageCoverArt/BasicImageCoverArt";
+import PropertyDetailsAndImages from "../../components/PropertyDetailsAndImages/PropertyDetailsAndImages";
+import PropertyLocation from "../../components/PropertyLocation/PropertyLocation";
 
 const PropertyDetails = () => {
   const router = useRouter();
@@ -14,13 +15,19 @@ const PropertyDetails = () => {
   const { property } = useBuildPropertyDetails(route_id);
   return (
     <Box>
-      <BasicImageCoverArt
-        property={property}
-        imageProps={{
-          src: property.image || default_img_property,
-          alt: "a generic image of a property or the specific image of the property that the owner has uploaded",
-        }}
-      />
+
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        mb: 2
+      }}>
+        <PropertyDetailsAndImages 
+          property={property}
+        />
+        <PropertyLocation property={property} />
+      </Box>
+
       <>tenant details and history </>
       <PaymentHistory payments={payments} />
       <PropertyReport property={property} />
