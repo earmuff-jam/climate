@@ -50,8 +50,8 @@ const MaintenanceRequests = (props) => {
 
   const [data, setData] = useState([]);
   const [addingRow, setAddingRow] = useState(false);
-  const [editingRow, setEditingRow] = useState(null);
-  const [deletingRow, setDeletingRow] = useState(null);
+  const [editingRow, setEditingRow] = useState(false);
+  const [deletingRow, setDeletingRow] = useState(false);
 
   const deleteRow = (id) => {
     setData((prev) => prev.filter((item) => item.id !== id));
@@ -242,7 +242,12 @@ function AddRowModal({
     if (editingRow) {
       return { ...editingRow };
     }
+    return { ...defaultValues };
   });
+
+  const resetRow = () => {
+    setNewRow({ ...defaultValues });
+  };
 
   const handleSave = () => {
     if (addingRow) {
@@ -252,6 +257,7 @@ function AddRowModal({
     } else if (deletingRow) {
       deleteRow(deletingRow);
     }
+    resetRow();
   };
 
   const handleCancel = () => {
@@ -262,7 +268,9 @@ function AddRowModal({
     } else if (deletingRow) {
       cancelDelete(deletingRow);
     }
+    resetRow();
   };
+
   return (
     <Dialog
       open={addingRow || editingRow || deletingRow}
@@ -281,7 +289,7 @@ function AddRowModal({
               label="Issue"
               type="text"
               fullWidth
-              value={newRow.issue}
+              value={newRow.issue || editingRow.issue}
               onChange={(e) => setNewRow({ ...newRow, issue: e.target.value })}
             />
             <TextField
@@ -289,7 +297,7 @@ function AddRowModal({
               label="Property"
               type="text"
               fullWidth
-              value={newRow.property}
+              value={newRow.property || editingRow.property}
               onChange={(e) =>
                 setNewRow({ ...newRow, property: e.target.value })
               }
@@ -299,15 +307,14 @@ function AddRowModal({
               label="Status"
               type="text"
               fullWidth
-              value={newRow.status}
+              value={newRow.status || editingRow.status}
               onChange={(e) => setNewRow({ ...newRow, status: e.target.value })}
             />
             <TextField
               margin="dense"
-              label="Submitted Date"
               type="date"
               fullWidth
-              value={newRow.submittedDate}
+              value={newRow.submittedDate || editingRow.submittedDate}
               onChange={(e) =>
                 setNewRow({ ...newRow, submittedDate: e.target.value })
               }
@@ -317,7 +324,7 @@ function AddRowModal({
               label="Tenant"
               type="text"
               fullWidth
-              value={newRow.tenant}
+              value={newRow.tenant || editingRow.tenant}
               onChange={(e) => setNewRow({ ...newRow, tenant: e.target.value })}
             />
           </>
