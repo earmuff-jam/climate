@@ -1,3 +1,7 @@
+import React, { useState, useEffect } from "react";
+import { createGlobalStyle } from "styled-components";
+import "react-base-table/styles.css";
+import { v4 as uuid } from "uuid";
 import {
   Box,
   IconButton,
@@ -9,19 +13,16 @@ import {
   DialogActions,
   TextField,
 } from "@mui/material";
-import { createGlobalStyle } from "styled-components";
-import React, { useState, useEffect, useCallback } from "react";
+
 import BaseTable, {
   AutoResizer,
   SortOrder, // do not remove
 } from "react-base-table";
-import "react-base-table/styles.css";
 import {
   AddCircleOutlineRounded,
-  DeleteForeverOutlined,
+  DeleteForeverRounded,
+  EditRounded,
 } from "@mui/icons-material";
-import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import { v4 as uuid } from "uuid";
 
 const GlobalStyle = createGlobalStyle`
   .BaseTable.active-col-0 [data-col-idx="0"],
@@ -45,9 +46,7 @@ const defaultSort = {
 const tableRef = React.createRef();
 
 const MaintenanceRequests = (props) => {
-  const {
-    maintenanceRequests,
-  } = props;
+  const { maintenanceRequests } = props;
 
   const [data, setData] = useState([]);
   const [addingRow, setAddingRow] = useState(false);
@@ -125,14 +124,14 @@ const MaintenanceRequests = (props) => {
             color="primary"
             onClick={() => setEditingRow(rowData)}
           >
-            <EditRoundedIcon />
+            <EditRounded />
           </IconButton>
           <IconButton
             variant="outlined"
             color="error"
             onClick={() => setDeletingRow(rowData.id)}
           >
-            <DeleteForeverOutlined />
+            <DeleteForeverRounded />
           </IconButton>
         </>
       ),
@@ -161,11 +160,13 @@ const MaintenanceRequests = (props) => {
     []
   );
   return (
-    <Box sx={{
-      display: "flex",
-      width: "100%",
-      flexGrow: 1,
-    }}>
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        flexGrow: 1,
+      }}
+    >
       <AutoResizer>
         {({ width, height }) => (
           <>
@@ -224,7 +225,6 @@ function AddRowModal({
   deleteRow,
   deletingRow,
 }) {
-
   const defaultValues = {
     property: "",
     issue: "",

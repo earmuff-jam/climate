@@ -1,9 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { Box, Card, CardContent, Typography, Paper } from "@mui/material";
+import React from "react";
+import { Box, Card, CardContent, styled } from "@mui/material";
 import Chart from "chart.js/auto"; // do not remove
 import { Bar } from "react-chartjs-2";
-import { useGenerateReport } from "../../containers/PropertiesContainer/PropertyContainerHooks";
+
+import {
+  ArrowDownwardRounded,
+  ArrowUpwardRounded,
+  AttachMoneyRounded,
+} from "@mui/icons-material";
+
 import PropertyHistory from "../../components/PropertiesComponent/PropertyHistory";
+import { useGenerateReport } from "../../containers/PropertiesContainer/PropertyContainerHooks";
+
+const IconWithTextStyled = styled("div")({
+  display: "flex",
+  alignItems: "center",
+  justifyItems: "center",
+  fontSize: "0.7rem",
+});
+
+const HeadingStyled = styled("div")({
+  fontSize: "1rem",
+  fontWeight: 400,
+});
 
 const PropertyListReports = (props) => {
   const { properties, regularAndHigherScreenSx } = props;
@@ -27,16 +46,6 @@ const PropertyListReports = (props) => {
       legend: {
         position: "top",
       },
-      datalabels: {
-        display: false,
-      },
-      noDataMessage: {
-        display: false,
-      },
-      title: {
-        display: false,
-        text: "I am a title",
-      },
     },
   };
   return (
@@ -46,7 +55,6 @@ const PropertyListReports = (props) => {
           display: "flex",
           flexDirection: "row",
           gap: "1rem",
-          width: "calc(100% - 2rem)",
           overflow: "auto",
         }}
       >
@@ -54,8 +62,8 @@ const PropertyListReports = (props) => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: 2,
             borderRight: "1px solid #e0e0e0",
+            pr: "1rem",
           }}
         >
           <Box
@@ -63,12 +71,11 @@ const PropertyListReports = (props) => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Typography variant="h5" component="h2" gutterBottom>
-              Total Properties Overview
-            </Typography>
-            <Typography variant="subtitle1" gutterBottom>
-              Total Profit: ${parseInt(totalProfit).toFixed(2) || 0.0}
-            </Typography>
+            <HeadingStyled>Total Properties Overview</HeadingStyled>
+            <IconWithTextStyled>
+              <AttachMoneyRounded color="primary" />
+              Profit: ${parseInt(totalProfit).toFixed(2) || 0.0}
+            </IconWithTextStyled>
           </Box>
           <Box
             display="flex"
@@ -83,19 +90,19 @@ const PropertyListReports = (props) => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Typography variant="subtitle1" gutterBottom>
-              Total Loss: ${parseInt(totalLoss).toFixed(2) || 0.0}
-            </Typography>
-            <Typography variant="subtitle1" gutterBottom>
-              Total Expenses: ${parseInt(totalExpenses).toFixed(2) || 0.0}
-            </Typography>
+            <IconWithTextStyled>
+              <ArrowDownwardRounded color="error" />
+              Loss: ${parseInt(totalLoss).toFixed(2) || 0.0}
+            </IconWithTextStyled>
+            <IconWithTextStyled>
+              <ArrowUpwardRounded color="info" />
+              Expenses: ${parseInt(totalExpenses).toFixed(2) || 0.0}
+            </IconWithTextStyled>
           </Box>
         </Box>
 
         <Box>
-          <Typography variant="h5" component="h2" gutterBottom>
-            Property Analytics
-          </Typography>
+          <HeadingStyled>Property Analytics</HeadingStyled>
           <PropertyHistory pfhData={property_financial_history} />
         </Box>
       </CardContent>

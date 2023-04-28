@@ -6,6 +6,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 
 function PropertyHistory({ pfhData }) {
@@ -21,6 +22,13 @@ function PropertyHistory({ pfhData }) {
           </TableRow>
         </TableHead>
         <TableBody>
+          {pfhData.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={6} sx={{ textAlign: "center" }}>
+                Sorry no matching records found
+              </TableCell>
+            </TableRow>
+          )}
           {pfhData?.map((pfh) => (
             <TableRow key={pfh.property_id}>
               <TableCell>{pfh.property_id}</TableCell>
