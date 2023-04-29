@@ -68,6 +68,24 @@ type in `restart ts server`
 
 ```
 
+3. Connecting Supabase Locally to develop.
+
+```
+1. Install docker for your appropriate system.
+2. Run command `docker ps` to view list of running programs.
+3. Run command `supabase init` if its a new project.
+4. Run command `supabase start` to start supabase. This command should init docker container and start the supabase automatically.
+5. After all initial migrations are complete, the cli displays studio url and other urls.
+6. Use them to configure your local db ( go land ) if that is what you use.
+7. View installed supabase version with command - `supabase -version`.
+8. Run command `supabase stop` and `supabase start`.
+9. Ensure that the port is not used by the local db tool so that chrome is able to view the studio.
+10. Verified installation working on `"@supabase/supabase-js": "^2.21.0"`
+11. Configure config.toml to accept major_version ( default is 14 ) and port to the port of your choice. ( 54329 )
+12. To connect locally the url for db is - jdbc:postgresql://localhost:54322/postgres and port is - 54322
+
+```
+
 ## Copyright and License
 
 Copyright @ 2020.

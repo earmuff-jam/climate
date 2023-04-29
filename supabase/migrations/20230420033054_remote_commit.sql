@@ -1,5 +1,20 @@
+drop type if exists "auth"."code_challenge_method" cascade;
 create type "auth"."code_challenge_method" as enum ('s256', 'plain');
 
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+begin
+  insert into public.profiles (id, full_name, avatar_url)
+  values (new.id, new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'avatar_url');
+  return new;
+end;
+$function$
+;
+
+drop table if exists "auth"."flow_state" cascade;
 create table "auth"."flow_state" (
     "id" uuid not null,
     "user_id" uuid,
@@ -26,19 +41,6 @@ CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXEC
 create type "public"."type_category_enum" as enum ('0', '1');
 
 set check_function_bodies = off;
-
-CREATE OR REPLACE FUNCTION public.handle_new_user()
- RETURNS trigger
- LANGUAGE plpgsql
- SECURITY DEFINER
-AS $function$
-begin
-  insert into public.profiles (id, full_name, avatar_url)
-  values (new.id, new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'avatar_url');
-  return new;
-end;
-$function$
-;
 
 create policy "Public profiles are viewable by everyone."
 on "public"."profiles"

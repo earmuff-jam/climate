@@ -19,11 +19,11 @@ max_rows = 1000
 port = 54322
 # The database major version to use. This has to be the same as your remote database's. Run `SHOW
 # server_version;` on the remote database to check.
-major_version = 15
+major_version = 14
 
 [studio]
 # Port to use for Supabase Studio.
-port = 54323
+port = 54329
 
 # Email testing server. Emails sent with the local dev setup are not actually sent - rather, they
 # are monitored, and you can view the emails that would have been sent from the web interface.
