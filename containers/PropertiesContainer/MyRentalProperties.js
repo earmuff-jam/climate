@@ -1,11 +1,18 @@
-import { Box, Grid, Typography, useMediaQuery, useTheme, Container } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Typography,
+  useMediaQuery,
+  useTheme,
+  Container,
+} from "@mui/material";
 import DisplayPropertyList from "../../components/PropertiesComponent/DisplayPropertyList";
 import MaintenanceRequests from "../../components/PropertiesComponent/MaintenanceRequests";
 import PropertyListReports from "../../components/PropertiesComponent/PropertyListReports";
 import AddProperty from "../../components/PropertiesComponent/AddProperty";
 import Title from "../../components/Title";
 import Header from "../../components/Header";
-import DisplayList from "../../components/DisplayList";
+
 const HeaderDetails = ({ editMode, handleAddProperty, properties }) => {
   return (
     <Grid container alignItems="center" justifyContent="space-between" mb={2}>
@@ -17,59 +24,49 @@ const HeaderDetails = ({ editMode, handleAddProperty, properties }) => {
 
 const Body = ({ editMode, setEditMode, properties, maintenanceRequests }) => {
   const theme = useTheme();
-  const mdSxLower = useMediaQuery(theme.breakpoints.down("lg"));
+  const smallerThanLarge = useMediaQuery(theme.breakpoints.down("lg"));
 
   return (
-    <Container>
-      <Grid container spacing={2} maxWidth="lg">
-        <Grid item xs={`${mdSxLower ? 12 : 6}`}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-            }}
-          >
-            {properties.length <= 0 && (
-              <Typography sx={{ textAlign: "center" }}>
-                {" "}
-                Sorry no matching properties found.
-              </Typography>
-            )}
-            {properties.length > 0 && (
-              <DisplayPropertyList properties={properties} />
-            )}
+    <Grid container spacing={2}>
+      <Grid item xs={`${smallerThanLarge ? 12 : 6}`}>
+        {properties.length <= 0 && (
+          <Typography sx={{ textAlign: "center" }}>
+            {" "}
+            Sorry no matching properties found.
+          </Typography>
+        )}
+        {properties.length > 0 && (
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <DisplayPropertyList properties={properties} />
           </Box>
-        </Grid>
-        <Grid item xs={`${mdSxLower ? 12 : 6}`}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              height: "100rem",
-            }}
-          >
-            {editMode && <AddProperty setEditMode={setEditMode} />}
-            {!editMode && (
-              <Box sx={{
+        )}
+      </Grid>
+      <Grid item xs={`${smallerThanLarge ? 12 : 6}`}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            height: "100rem",
+          }}
+        >
+          {editMode && <AddProperty setEditMode={setEditMode} />}
+          {!editMode && (
+            <Box
+              sx={{
                 display: "flex",
                 flexDirection: "column",
                 gap: 2,
                 flexGrow: 1,
-              }}>
-                <PropertyListReports
-                  properties={properties}
-                />
-                <MaintenanceRequests
-                  maintenanceRequests={maintenanceRequests}
-                />
-              </Box>
-            )}
-          </Box>
-        </Grid>
+              }}
+            >
+              <PropertyListReports properties={properties} />
+              <MaintenanceRequests maintenanceRequests={maintenanceRequests} />
+            </Box>
+          )}
+        </Box>
       </Grid>
-    </Container>
+    </Grid>
   );
 };
 
