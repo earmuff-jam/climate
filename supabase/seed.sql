@@ -1,20 +1,21 @@
 BEGIN;
-SET ROLE mohitpaudyal;
+-- SET ROLE mohitpaudyal;
 SET SEARCH_PATH = public, properties;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" schema properties;
 
 -- INSERT STATEMENT FOR PROFILE AND TENANT TABLES --
-TRUNCATE TABLE profiles CASCADE;
-INSERT INTO profiles(id, username, first_name, last_name, created_on)
-VALUES (uuid_generate_v4(), 'test_user', 'john', 'doe', now());
+TRUNCATE TABLE public.profiles CASCADE;
+INSERT INTO public.profiles(id, username, first_name, last_name, created_on)
+VALUES ('3f3d2e2d-7c07-461a-bd8c-0ca13e690816', 'test_user', 'john', 'doe', now());
 
 -- SEED STATEMENTS --
 WITH previous_profile AS (SELECT id
-                          FROM profiles
-                          WHERE profiles.username = 'test_user'
+                          FROM public.profiles
+                          WHERE username = 'test_user'
                           ORDER BY created_on DESC
                           LIMIT 1)
 INSERT
-INTO properties (id, title, description, property_type, address, bedrooms, bathrooms, square_footage, amenities,
+INTO properties.properties (id, title, description, property_type, address, bedrooms, bathrooms, square_footage, amenities,
                  pet_policy, availability_dates, rent_amount, security_deposit, lease_term, owner_id, contact_name,
                  contact_phone, contact_email, location_point, nearby_locations, photos, floor_plan)
 VALUES ('bb2a68a7-0546-4c03-8ec1-35421c7d05a5', 'Spacious Condo in Downtown',
@@ -27,12 +28,12 @@ VALUES ('bb2a68a7-0546-4c03-8ec1-35421c7d05a5', 'Spacious Condo in Downtown',
         '{"https://example.com/floor_plans/floor_plan1.pdf"}');
 
 WITH previous_profile AS (SELECT id
-                          FROM profiles
-                          WHERE profiles.username = 'test_user'
+                          FROM public.profiles
+                          WHERE username = 'test_user'
                           ORDER BY created_on DESC
                           LIMIT 1)
 INSERT
-INTO properties (id, title, description, property_type, address, bedrooms, bathrooms, square_footage, amenities,
+INTO properties.properties (id, title, description, property_type, address, bedrooms, bathrooms, square_footage, amenities,
                  pet_policy, availability_dates, rent_amount, security_deposit, lease_term, owner_id, contact_name,
                  contact_phone, contact_email, location_point, nearby_locations, photos, floor_plan)
 VALUES ('6c9042b2-c7b3-4e3d-9203-f2d3582b9c90', 'Cozy Cottage in the Woods',
@@ -44,12 +45,12 @@ VALUES ('6c9042b2-c7b3-4e3d-9203-f2d3582b9c90', 'Cozy Cottage in the Woods',
         '{"https://example.com/floor_plans/floor_plan2.pdf"}');
 
 WITH previous_profile AS (SELECT id
-                          FROM profiles
-                          WHERE profiles.username = 'test_user'
+                          FROM public.profiles
+                          WHERE username = 'test_user'
                           ORDER BY created_on DESC
                           LIMIT 1)
 INSERT
-INTO properties (id, title, description, property_type, address, bedrooms, bathrooms, square_footage, amenities,
+INTO properties.properties (id, title, description, property_type, address, bedrooms, bathrooms, square_footage, amenities,
                  pet_policy, availability_dates, rent_amount, security_deposit, lease_term, owner_id, contact_name,
                  contact_phone, contact_email, location_point, nearby_locations, photos, floor_plan)
 VALUES ('e201b7a5-5e5b-4ed8-a35d-5c5d9793203e', 'Luxury Penthouse with Panoramic Views',
@@ -69,7 +70,7 @@ VALUES ('e201b7a5-5e5b-4ed8-a35d-5c5d9793203e', 'Luxury Penthouse with Panoramic
 --               SELECT 1 FROM properties
 --           )
 -- LIMIT 1;
-INSERT INTO reviews(property_id, renter_id, review_text, cleanliness_rating, responsiveness_rating, overall_rating,
+INSERT INTO properties.reviews(property_id, renter_id, review_text, cleanliness_rating, responsiveness_rating, overall_rating,
                     created_at, created_by, updated_by, updated_at)
 VALUES ((SELECT p.id
          FROM properties p
@@ -78,22 +79,22 @@ VALUES ((SELECT p.id
                    )
          LIMIT 1),
         (SELECT t.id
-         FROM tenants t
-         WHERE EXISTS(SELECT 1 FROM tenants)
+         FROM properties.tenants t
+         WHERE EXISTS(SELECT 1 FROM properties.tenants)
          LIMIT 1),
         'This apartment was fantastic. Clean, modern, and spacious. The location was also very convenient for getting around the city. Highly recommend!',
         5, 5, 5, '2023-05-05 10:00:00',
         (SELECT t.id
-         FROM tenants t
-         WHERE EXISTS(SELECT 1 FROM tenants)
+         FROM properties.tenants t
+         WHERE EXISTS(SELECT 1 FROM properties.tenants)
          LIMIT 1),
         (SELECT t.id
-         FROM tenants t
-         WHERE EXISTS(SELECT 1 FROM tenants)
+         FROM properties.tenants t
+         WHERE EXISTS(SELECT 1 FROM properties.tenants)
          LIMIT 1), '2023-05-05 12:00:00');
 
 -- UPDATE THE REVIEW TABLE -- THIS SHOULD TRIGGER THE HISTORY TO AUTO POPULATE.
-INSERT INTO reviews(property_id, renter_id, review_text, cleanliness_rating, responsiveness_rating, overall_rating,
+INSERT INTO properties.reviews(property_id, renter_id, review_text, cleanliness_rating, responsiveness_rating, overall_rating,
                     created_at, created_by, updated_by, updated_at)
 VALUES ((SELECT p.id
          FROM properties p
@@ -121,23 +122,23 @@ ON CONFLICT
 
 -- TO NOTICE CHANGES IN THE HISTORY TABLE RUN THE ABOVE INSERT + UPDATE STATEMENT WITH A DIFFERENT TEXT. --
 
-SELECT *
-FROM profiles;
-select *
-from properties;
-TRUNCATE TABLE properties.reviews;
-TRUNCATE TABLE properties.reviews_history;
-TRUNCATE TABLE properties.properties CASCADE;
+-- SELECT *
+-- FROM public.profiles;
+-- select *
+-- from properties;
+-- TRUNCATE TABLE properties.reviews;
+-- TRUNCATE TABLE properties.reviews_history;
+-- TRUNCATE TABLE properties.properties CASCADE;
 
 
-WITH prev_profile AS (SELECT id
-                      FROM public.profiles
-                      WHERE profiles.username = 'test_user'
-                      ORDER BY created_on DESC
-                      LIMIT 1)
-DELETE
-FROM properties.properties
-WHERE owner_id = (SELECT id FROM prev_profile);
-END;
+-- WITH prev_profile AS (SELECT id
+--                       FROM public.profiles
+--                       WHERE profiles.username = 'test_user'
+--                       ORDER BY created_on DESC
+--                       LIMIT 1)
+-- DELETE
+-- FROM properties.properties
+-- WHERE owner_id = (SELECT id FROM prev_profile);
+-- END;
 
 -- THE TRIGGERS ARE NOT WORKING FOR DELETING A PROPERTY --

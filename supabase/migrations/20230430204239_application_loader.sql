@@ -1,7 +1,5 @@
 BEGIN;
 
-DROP EXTENSION IF EXISTS "uuid-ossp";
-
 -- REMOVE ALL SEQUENCES IN PROPERTIES RECORDS --
 DO
 $$
@@ -48,66 +46,66 @@ $$;
 
 
 
--- REMOVE ALL SEQUENCES IN PUBLIC RECORDS --
-DO
-$$
-    DECLARE
-        r RECORD;
-    BEGIN
-        SET SCHEMA 'public';
-        FOR r IN (SELECT sequence_name FROM information_schema.sequences WHERE sequence_schema = 'public')
-            LOOP
-                EXECUTE 'DROP SEQUENCE IF EXISTS public.' || quote_ident(r.sequence_name) || ' CASCADE ;';
-            END LOOP;
-    END
-$$;
+-- -- REMOVE ALL SEQUENCES IN PUBLIC RECORDS --
+-- DO
+-- $$
+--     DECLARE
+--         r RECORD;
+--     BEGIN
+--         SET SCHEMA 'public';
+--         FOR r IN (SELECT sequence_name FROM information_schema.sequences WHERE sequence_schema = 'public')
+--             LOOP
+--                 EXECUTE 'DROP SEQUENCE IF EXISTS public.' || quote_ident(r.sequence_name) || ' CASCADE ;';
+--             END LOOP;
+--     END
+-- $$;
 
 -- REMOVE ALL FUNCTIONS IN PUBLIC RECORDS --
-DO
-$$
-    DECLARE
-        r RECORD;
-    BEGIN
-        FOR r IN (SELECT routine_name
-                  FROM information_schema.routines
-                  WHERE specific_schema = 'public'
-                    AND routine_type = 'FUNCTION')
-            LOOP
-                EXECUTE 'DROP FUNCTION IF EXISTS public.' || quote_ident(r.routine_name) || ' CASCADE ;';
-            END LOOP;
-    END;
-$$;
+-- DO
+-- $$
+--     DECLARE
+--         r RECORD;
+--     BEGIN
+--         FOR r IN (SELECT routine_name
+--                   FROM information_schema.routines
+--                   WHERE specific_schema = 'public'
+--                     AND routine_type = 'FUNCTION')
+--             LOOP
+--                 EXECUTE 'DROP FUNCTION IF EXISTS public.' || quote_ident(r.routine_name) || ' CASCADE ;';
+--             END LOOP;
+--     END;
+-- $$;
 
 
 -- REMOVE ALL TABLES IN PUBLIC RECORDS --
-DO
-$$
-    DECLARE
-        r RECORD;
-    BEGIN
-        FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public')
-            LOOP
-                EXECUTE 'TRUNCATE TABLE public.' || quote_ident(r.tablename) || ' CASCADE;';
-                EXECUTE 'DROP TABLE public.' || quote_ident(r.tablename) || ' CASCADE;';
-            END LOOP;
-    END
-$$;
+-- DO
+-- $$
+--     DECLARE
+--         r RECORD;
+--     BEGIN
+--         FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public')
+--             LOOP
+--                 EXECUTE 'TRUNCATE TABLE public.' || quote_ident(r.tablename) || ' CASCADE;';
+--                 EXECUTE 'DROP TABLE public.' || quote_ident(r.tablename) || ' CASCADE;';
+--             END LOOP;
+--     END
+-- $$;
 
 -- ROLES AND PERMISSIONS --
-DO
-$$
-    BEGIN
-        IF EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = 'public') THEN
-            REVOKE ALL PRIVILEGES ON SCHEMA public FROM tenant;
-        END IF;
-        IF EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = 'properties') THEN
-            REVOKE ALL PRIVILEGES ON SCHEMA properties FROM admin;
-        END IF;
-        IF EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = 'properties') THEN
-            REVOKE ALL PRIVILEGES ON SCHEMA properties FROM manager;
-        END IF;
-    END
-$$;
+-- DO
+-- $$
+--     BEGIN
+--         IF EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = 'public') THEN
+--             REVOKE ALL PRIVILEGES ON SCHEMA public FROM tenant;
+--         END IF;
+--         IF EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = 'properties') THEN
+--             REVOKE ALL PRIVILEGES ON SCHEMA properties FROM admin;
+--         END IF;
+--         IF EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = 'properties') THEN
+--             REVOKE ALL PRIVILEGES ON SCHEMA properties FROM manager;
+--         END IF;
+--     END
+-- $$;
 
 DROP ROLE IF EXISTS tenant;
 DROP ROLE IF EXISTS admin;
@@ -119,9 +117,9 @@ CREATE ROLE manager LOGIN;
 
 
 -- SCHEMA GRANTS AND PERMISSIONS --
-CREATE SCHEMA IF NOT EXISTS public;
+-- CREATE SCHEMA IF NOT EXISTS public;
 CREATE SCHEMA IF NOT EXISTS properties;
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO admin, manager, tenant;
+-- GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO admin, manager, tenant;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA properties TO admin, manager;
 
 

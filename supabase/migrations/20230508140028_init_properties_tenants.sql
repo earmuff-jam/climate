@@ -23,7 +23,7 @@ CREATE
     REPLACE FUNCTION auto_create_tenant() RETURNS TRIGGER AS
 $$
 BEGIN
-    INSERT INTO tenants(id, username, first_name, last_name, created_on, updated_by, updated_on)
+    INSERT INTO properties.tenants(id, username, first_name, last_name, created_on, updated_by, updated_on)
     VALUES (new.id, new.username, new.first_name, new.last_name, new.created_on, new.updated_by,
             new.updated_on);
     RETURN new;
@@ -96,7 +96,7 @@ BEGIN
     CASE type_function
         WHEN 'INSERT' THEN UPDATE public.profiles
                            SET user_role  = CASE
-                                                WHEN (SELECT COUNT(*) FROM properties WHERE owner_id = property_owner_id) = 0
+                                                WHEN (SELECT COUNT(*) FROM properties.properties WHERE owner_id = property_owner_id) = 0
                                                     THEN '1204'
                                                 ELSE '7543'
                                END,
@@ -105,7 +105,7 @@ BEGIN
                            WHERE public.profiles.id = property_owner_id;
         WHEN 'UPDATE' THEN UPDATE public.profiles
                            SET user_role  = CASE
-                                                WHEN (SELECT COUNT(*) FROM properties WHERE owner_id = property_owner_id) = 0
+                                                WHEN (SELECT COUNT(*) FROM properties.properties WHERE owner_id = property_owner_id) = 0
                                                     THEN '1204'
                                                 ELSE '7543'
                                END,
@@ -114,7 +114,7 @@ BEGIN
                            WHERE public.profiles.id = property_owner_id;
         WHEN 'DELETE' THEN UPDATE public.profiles
                            SET user_role  = CASE
-                                                WHEN (SELECT COUNT(*) FROM properties WHERE owner_id = property_owner_id) = 0
+                                                WHEN (SELECT COUNT(*) FROM properties.properties WHERE owner_id = property_owner_id) = 0
                                                     THEN '1204'
                                                 ELSE '7543'
                                END,

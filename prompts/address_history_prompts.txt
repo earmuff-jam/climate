@@ -1,0 +1,300 @@
+So I have this table 
+CREATE TABLE IF NOT EXISTS postal_address (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    address_street_address VARCHAR(255),
+    address_locality VARCHAR(255),
+    address_region VARCHAR(255),
+    address_country VARCHAR(255),
+    post_office_box_number VARCHAR(20),
+    postal_code VARCHAR(20),
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_by VARCHAR(255)
+);
+Lets create a jsonb schema validator that validates the inserts or updates like this one does as a point of reference. So, lets create a migrate that looks for the corresponding datatype 
+CREATE TABLE example (id serial PRIMARY KEY, data jsonb);
+ALTER TABLE example ADD CONSTRAINT data_is_valid CHECK (
+  validate_json_schema($$
+    {
+      "type": "array", 
+      "items": {
+        "anyOf": [
+          {"type": "integer"},
+          {"type": "string"}
+        ]
+      }
+    }
+  $$, data)
+);
+
+====>
+
+ALTER TABLE postal_address ADD CONSTRAINT data_is_valid CHECK (
+  validate_json_schema($$
+    {
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "address_street_address": {"type": "string"},
+        "address_locality": {"type": "string"},
+        "address_region": {"type": "string"},
+        "address_country": {"type": "string"},
+        "post_office_box_number": {"type": "string"},
+        "postal_code": {"type": "string"}
+      },
+      "required": ["name", "address_street_address", "address_locality", "address_region", "address_country", "post_office_box_number", "postal_code"]
+    }
+  $$, data)
+);
++++
+Using the above CONSTRAINT data_is_valid check,  I want to insert one jsonb per validation pattern. 
+So the idea is to have a row of jsonbschema as validator. Then from that point onwards the column will follow the afformentioned validation pattern. This should be able to be chunkable with each validation pattern. It is ok to have one extra column in the table to mark a prerequisite changes to the jsonb schema. 
+
+CREATE TABLE postal_address_history (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    postal_address_id INTEGER NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    deleted BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_by TEXT,
+    change_type TEXT,
+    history_data JSONB,
+    CONSTRAINT postal_address_history_pkey PRIMARY KEY (id, updated_at)
+);
+
+CREATE TRIGGER postal_address_history_updated_by_trigger
+    BEFORE INSERT OR UPDATE ON postal_address_history
+    FOR EACH ROW
+    EXECUTE FUNCTION set_postal_address_updated_by();
+
+CREATE OR REPLACE FUNCTION postal_address_history_trigger_function()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF (TG_OP = 'UPDATE' OR TG_OP = 'DELETE') THEN
+    NEW.history_data := jsonb_build_object(
+      'postal_address_id', OLD.postal_address_id,
+      'deleted', OLD.deleted,
+      'created_at', OLD.created_at,
+      'updated_by', current_user,
+      'change_type', TG_OP
+    );
+  END IF;
+
+  IF (TG_OP = 'UPDATE' OR TG_OP = 'INSERT') THEN
+    NEW.history_data := jsonb_build_object(
+      'postal_address_id', NEW.postal_address_id,
+      'deleted', NEW.deleted,
+      'created_at', NEW.created_at,
+      'updated_by', current_user,
+      'change_type', TG_OP
+    );
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER postal_address_history_trigger
+    AFTER INSERT OR UPDATE OR DELETE ON postal_address
+    FOR EACH ROW
+    EXECUTE FUNCTION postal_address_history_trigger_function();
+    
++++
+CREATE TABLE jsonb_schema_validator_xref (
+    id SERIAL PRIMARY KEY,
+    validation_pattern TEXT NOT NULL,
+    jsonb_schema JSONB NOT NULL
+);
+
+CREATE OR REPLACE FUNCTION postal_address_history_trigger_function()
+RETURNS TRIGGER AS $$
+DECLARE
+    schema_record jsonb_schema_validator_xref%ROWTYPE;
+    validation_pattern TEXT;
+BEGIN
+    IF (TG_OP = 'UPDATE' OR TG_OP = 'DELETE') THEN
+        validation_pattern := (SELECT validation_pattern FROM jsonb_schema_validator_xref WHERE id = OLD.jsonb_schema);
+        schema_record := (SELECT * FROM jsonb_schema_validator_xref WHERE validation_pattern = validation_pattern);
+        NEW.history_data := jsonb_build_object(
+            'postal_address_id', OLD.postal_address_id,
+            'deleted', OLD.deleted,
+            'created_at', OLD.created_at,
+            'updated_by', current_user,
+            'change_type', TG_OP,
+            'jsonb_schema', schema_record.jsonb_schema
+        );
+    END IF;
+
+    IF (TG_OP = 'UPDATE' OR TG_OP = 'INSERT') THEN
+        validation_pattern := (SELECT validation_pattern FROM jsonb_schema_validator_xref WHERE id = NEW.jsonb_schema);
+        schema_record := (SELECT * FROM jsonb_schema_validator_xref WHERE validation_pattern = validation_pattern);
+        NEW.history_data := jsonb_build_object(
+            'postal_address_id', NEW.postal_address_id,
+            'deleted', NEW.deleted,
+            'created_at', NEW.created_at,
+            'updated_by', current_user,
+            'change_type', TG_OP,
+            'jsonb_schema', schema_record.jsonb_schema
+        );
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+==>
+Now Lets try to create a function to insert into a this table with jsonb schema so I can run this before the migration runs and migrate to the new cluster with this xref table. I will handle the rest of the logic to save the fallbacks and rollback later. !!!Hint start reading up. 
+CREATE TABLE jsonb_schema_validator_xref (
+    id SERIAL PRIMARY KEY,
+    validation_pattern TEXT NOT NULL,
+    jsonb_schema JSONB NOT NULL
+);
+
++++
+CREATE OR REPLACE FUNCTION insert_jsonb_schema_validator(
+    p_validation_pattern TEXT,
+    p_jsonb_schema JSONB
+)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO jsonb_schema_validator_xref (validation_pattern, jsonb_schema)
+    VALUES (p_validation_pattern, p_jsonb_schema);
+END;
+$$ LANGUAGE plpgsql;
+
+      
+SELECT insert_jsonb_schema_validator('pattern1', '{"type": "object", "properties": {"name": {"type": "string"}}}');
+
+==> 
+ALTER TABLE postal_address ADD CONSTRAINT data_is_valid CHECK (
+  validate_json_schema($$
+    {
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "address_street_address": {"type": "string"},
+        "address_locality": {"type": "string"},
+        "address_region": {"type": "string"},
+        "address_country": {"type": "string"},
+        "post_office_box_number": {"type": "string"},
+        "postal_code": {"type": "string"}
+      },
+      "required": ["name", "address_street_address", "address_locality", "address_region", "address_country", "post_office_box_number", "postal_code"]
+    }
+  $$, data)
+);
+CREATE TABLE jsonb_schema_validator_xref (
+    id SERIAL PRIMARY KEY,
+    validation_pattern TEXT NOT NULL,
+    jsonb_schema JSONB NOT NULL
+);
+CREATE OR REPLACE FUNCTION insert_jsonb_schema_validator(
+    p_validation_pattern TEXT,
+    p_jsonb_schema JSONB
+)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO jsonb_schema_validator_xref (validation_pattern, jsonb_schema)
+    VALUES (p_validation_pattern, p_jsonb_schema);
+END;
+$$ LANGUAGE plpgsql;
+Now run the data_is_valid with the the xref table's jsonb schema
+
++++
+-- Retrieve the JSONB schema from the jsonb_schema_validator_xref table
+DECLARE
+    v_jsonb_schema JSONB;
+BEGIN
+    SELECT jsonb_schema INTO v_jsonb_schema
+    FROM jsonb_schema_validator_xref;
+
+    -- Execute the ALTER TABLE statement with the updated constraint
+    EXECUTE '
+        ALTER TABLE postal_address ADD CONSTRAINT data_is_valid CHECK (
+            validate_json_schema(' || quote_literal(v_jsonb_schema) || ', data)
+        )
+    ';
+END;
+
+==> 
+CREATE OR REPLACE FUNCTION insert_jsonb_schema_validator(
+    p_validation_pattern TEXT,
+    p_jsonb_schema JSONB
+)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO jsonb_schema_validator_xref (validation_pattern, jsonb_schema)
+    VALUES (p_validation_pattern, p_jsonb_schema);
+END;
+$$ LANGUAGE plpgsql;
+Add a trigger to this so that 
+-- Retrieve the JSONB schema from the jsonb_schema_validator_xref table
+DECLARE
+    v_jsonb_schema JSONB;
+BEGIN
+    SELECT jsonb_schema INTO v_jsonb_schema
+    FROM jsonb_schema_validator_xref;
+
+    -- Execute the ALTER TABLE statement with the updated constraint
+    EXECUTE '
+        ALTER TABLE postal_address ADD CONSTRAINT data_is_valid CHECK (
+            validate_json_schema(' || quote_literal(v_jsonb_schema) || ', data)
+        )
+    ';
+END;
+executes on each insert.
++++
+CREATE OR REPLACE FUNCTION insert_jsonb_schema_validator(
+    p_validation_pattern TEXT,
+    p_jsonb_schema JSONB
+)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO jsonb_schema_validator_xref (validation_pattern, jsonb_schema)
+    VALUES (p_validation_pattern, p_jsonb_schema);
+
+    -- Create the trigger to execute the ALTER TABLE statement on each insert
+    EXECUTE '
+        CREATE OR REPLACE FUNCTION data_is_valid_trigger_function()
+        RETURNS TRIGGER AS $$
+        DECLARE
+            v_jsonb_schema JSONB;
+        BEGIN
+            SELECT jsonb_schema INTO v_jsonb_schema
+            FROM jsonb_schema_validator_xref;
+        
+            EXECUTE
+                ''ALTER TABLE postal_address ADD CONSTRAINT data_is_valid CHECK (
+                    validate_json_schema('''' || v_jsonb_schema || '''', NEW.data)
+                )'';
+        
+            RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+        
+        CREATE TRIGGER data_is_valid_trigger
+        AFTER INSERT ON jsonb_schema_validator_xref
+        FOR EACH ROW
+        EXECUTE FUNCTION data_is_valid_trigger_function()
+    ';
+END;
+$$ LANGUAGE plpgsql;
+
+==> 
+insert_jsonb_schema_validator how do i run this after migrations
++++
+-- Run your migration scripts here
+
+-- Execute the insert_jsonb_schema_validator function
+SELECT insert_jsonb_schema_validator(
+    'your_validation_pattern',
+    '{"your": "json_schema"}'
+);
+
+
+
+
+
+    
+
