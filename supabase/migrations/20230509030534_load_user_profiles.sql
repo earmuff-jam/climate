@@ -1,6 +1,6 @@
 BEGIN;
 -- CREATE SCHEMA PUBLIC --
-DROP SCHEMA IF EXISTS public;
+DROP SCHEMA IF EXISTS public CASCADE;
 CREATE SCHEMA IF NOT EXISTS public;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp" SCHEMA public;
 
@@ -56,4 +56,24 @@ CREATE TRIGGER on_auth_user_created
     ON auth.users
     FOR EACH ROW
 EXECUTE PROCEDURE public.handle_new_user();
+
+select "current_user"();
+grant usage on schema public to postgres, anon, authenticated, service_role;
+grant usage on schema extensions to postgres, anon, authenticated, service_role;
+-- alter user supabase_admin SET search_path TO properties, extensions; -- don't include the "auth" schema
+
+grant all privileges on all tables in schema public to postgres, anon, authenticated, service_role, supabase_admin;
+grant all privileges on all functions in schema public to postgres, anon, authenticated, service_role, supabase_admin;
+grant all privileges on all sequences in schema public to postgres, anon, authenticated, service_role, supabase_admin;
+
+alter default privileges in schema public grant all on tables to postgres, anon, authenticated, service_role;
+alter default privileges in schema public grant all on functions to postgres, anon, authenticated, service_role;
+alter default privileges in schema public grant all on sequences to postgres, anon, authenticated, service_role;
+
+-- alter default privileges for user supabase_admin in schema public grant all on sequences to postgres, anon, authenticated, service_role;
+-- alter default privileges for user supabase_admin in schema public grant all on tables to postgres, anon, authenticated, service_role;
+-- alter default privileges for user supabase_admin in schema public grant all on functions to postgres, anon, authenticated, service_role;
+
+alter role anon set statement_timeout = '3s';
+alter role authenticated set statement_timeout = '8s';
 END;

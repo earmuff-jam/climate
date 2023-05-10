@@ -165,6 +165,26 @@ CREATE
     FOR EACH ROW
 EXECUTE FUNCTION update_user_role_tr();
 
+grant usage on schema properties to authenticated, service_role;
+grant usage on schema extensions to anon, authenticated, service_role;
+-- alter user supabase_admin SET search_path TO properties, extensions, public; -- don't include the "auth" schema
+
+grant all privileges on all tables in schema properties to postgres, anon, authenticated, service_role, supabase_admin;
+grant all privileges on all functions in schema properties to postgres, anon, authenticated, service_role, supabase_admin;
+grant all privileges on all sequences in schema properties to postgres, anon, authenticated, service_role, supabase_admin;
+
+alter default privileges in schema properties grant all on tables to postgres, anon, authenticated, service_role;
+alter default privileges in schema properties grant all on functions to postgres, anon, authenticated, service_role;
+alter default privileges in schema properties grant all on sequences to postgres, anon, authenticated, service_role;
+
+-- alter default privileges for user supabase_admin in schema properties grant all on sequences to postgres, anon, authenticated, service_role;
+-- alter default privileges for user supabase_admin in schema properties grant all on tables to postgres, anon, authenticated, service_role;
+-- alter default privileges for user supabase_admin in schema properties grant all on functions to postgres, anon, authenticated, service_role;
+
+alter role anon set statement_timeout = '3s';
+alter role authenticated set statement_timeout = '8s';
+
+
 -- -- -- TABLE REVIEWS --
 -- -- DROP TABLE IF EXISTS reviews;
 -- -- CREATE TABLE reviews
