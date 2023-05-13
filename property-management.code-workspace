@@ -7,6 +7,10 @@
     {
       "name": "supabase-functions",
       "path": "supabase/functions"
+    },
+    {
+      "name": "supabase-migrations",
+      "path": "supabase/migrations"
     }
   ],
   "settings": {
