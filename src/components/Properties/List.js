@@ -17,11 +17,11 @@ export default function List({ handleClick, handleDrawerClick, data }) {
             </p>
           ) : (
             <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-              {data?.map((el) => (
+              {data?.map((el, index) => (
                 <div key={el.id} className="group relative">
                   <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                     <img
-                      src={`/images/${el.id}.jpg`}
+                      src={`/images/${(index)}.jpg`}
                       alt={"image of property"}
                       className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                     />

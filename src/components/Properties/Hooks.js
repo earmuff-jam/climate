@@ -13,7 +13,7 @@ export const usePropertyConfig = () => {
     square_footage,
     amenities,
     pet_policy,
-    availability_dates,
+    availability_dates_jsonb,
     rent_amount,
     security_deposit,
     lease_term,

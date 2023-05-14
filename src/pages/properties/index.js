@@ -15,6 +15,7 @@ const Properties = () => {
 
     const handleClick = () => setOpen(!open);
     const handleDrawerClick = (el) => {
+        console.log("drawer " , el);
         setDrawerOpen(!drawerOpen);
         if (el) {
             setProperty(el);
