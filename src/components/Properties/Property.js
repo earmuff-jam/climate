@@ -1,19 +1,21 @@
 import React from "react";
 
 const Property = ({ property }) => {
-  console.log(property);
   return (
     <>
       <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
         <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
           <div className="flex flex-col items-start justify-between">
-            <h2 classNameName="text-lg font-medium text-gray-900" id="slide-over-title">
+            <h2
+              className="text-lg font-medium text-gray-900"
+              id="slide-over-title"
+            >
               {property?.title}
             </h2>
             <img
-              src={"/images/" + `${property?.id}` + ".jpg"}
+              src={"/images/" + `0` + ".jpg"}
               alt="Image of property"
-              classNameName="h-full w-full object-cover object-center"
+              className="h-full w-full object-cover object-center"
             />
           </div>
 
@@ -89,11 +91,11 @@ const Property = ({ property }) => {
             <p>Amenities</p>
           </div>
           <p className="mt-0.5 text-sm text-gray-500">
-            {property?.amenities}
+            {property?.amenities[0]}
             <br />
-            {property?.pet_policy}
+            {property?.pet_policy[0]}
             <br />
-            {property?.nearby_locations}
+            {property?.nearby_locations[0]}
           </p>
           <div className="mt-6">
             <a

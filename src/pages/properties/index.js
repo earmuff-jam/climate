@@ -1,270 +1,239 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import SimpleModal from "@/util/SimpleModal";
 import List from "@/components/Properties/List";
-import {Input} from "@material-tailwind/react";
+import { Input } from "@material-tailwind/react";
 import Collection from "@/components/Properties/Collection";
-import {usePropertyConfig} from "@/components/Properties/Hooks";
+import { usePropertyConfig } from "@/components/Properties/Hooks";
 import Drawer from "@/util/Drawer";
 import Property from "@/components/Properties/Property";
 
+const blankPropertiesForm = {
+  id: "",
+  title: "",
+  description: "",
+  property_type: "",
+  address: "",
+  bedrooms: "",
+  bathrooms: "",
+  square_footage: "",
+  amenities: "",
+  pet_policy: "",
+  availability_dates_jsonb: "",
+  rent_amount: "",
+  security_deposit: "",
+  lease_term: "",
+  owner_id: "",
+  contact_name: "",
+  contact_phone: "",
+  contact_email: "",
+  location_point: "",
+  nearby_locations: "",
+  photos: "",
+  floor_plan: "",
+  created_by: "",
+  created_on: "",
+  updated_by: "",
+  updated_on: "",
+  sharable_groups: "",
+};
+
 const Properties = () => {
-    const [open, setOpen] = useState(false);
-    const [property, setProperty] = useState({});
-    const [drawerOpen, setDrawerOpen] = useState(false);
-    const {isLoading, isError, error, data} = usePropertyConfig();
+  const [open, setOpen] = useState(false);
+  const [property, setProperty] = useState({});
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const { isLoading, isError, error, data, processtoDb } = usePropertyConfig();
 
-    const handleClick = () => setOpen(!open);
-    const handleDrawerClick = (el) => {
-        console.log("drawer " , el);
-        setDrawerOpen(!drawerOpen);
-        if (el) {
-            setProperty(el);
-            return;
-        }
-        setProperty(null);
-    };
-
-    const [formData, setFormData] = useState({
-        title: "",
-        description: "",
-        propertyType: "",
-        address: "",
-        bedrooms: "",
-        bathrooms: "",
-        squareFootage: "",
-        amenities: "",
-        petPolicy: "",
-        availabilityDates: "",
-        rentAmount: "",
-        securityDeposit: "",
-        leaseTerm: "",
-        contactName: "",
-        contactPhone: "",
-        contactEmail: "",
-        locationPoint: "",
-        nearbyLocations: "",
-        photos: "",
-        floorPlan: "",
-    });
-    const handleInputChange = (event) => {
-        const {name, value} = event.target;
-        setFormData({...formData, [name]: value});
-    };
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        // handle form submission
-        alert("Said worked ");
-    };
-
-    if (isLoading) {
-        return <span>Loading ...</span>;
+  const handleClick = () => {
+    setOpen(!open);
+  };
+  const handleDrawerClick = (el) => {
+    if (el) {
+      setProperty(el);
+      setDrawerOpen(el);
+      return;
     }
-    if (isError) {
-        return <span>Error: {error.message}</span>;
-    }
+    setProperty(null);
+    setDrawerOpen(false);
+    return;
+  };
 
-    return (
-        <>
-            <List
-                handleClick={handleClick}
-                handleDrawerClick={handleDrawerClick}
-                data={data}
-            />
-            {data?.length > 0 &&
-                (
-                    <Drawer isOpen={drawerOpen} setIsOpen={handleDrawerClick}>
-                        <Property property={property}/>
-                    </Drawer>
-                )
-            }
-            {open && (
-                <SimpleModal handleClick={handleClick} handleSubmit={handleSubmit}>
-                    <div className="flex justify-center">
-                        <form onSubmit={handleSubmit} className="max-w-lg w-full">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <Input
-                                        id="title"
-                                        label="Title"
-                                        value={formData.title}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                    />
-                                </div>
-                                <div>
-                                    <Input
-                                        id="description"
-                                        label="Description"
-                                        value={formData.description}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                    />
-                                </div>
-                                <div className="mt-4">
-                                    <Input
-                                        id="propertyType"
-                                        label="Property Type"
-                                        value={formData.propertyType}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                    />
-                                </div>
+  const [formData, setFormData] = useState({ ...blankPropertiesForm });
+  const handleInputChange = (event) => {
+    const { id, value } = event.target;
+    console.log("change here");
+    setFormData({ ...formData, [id]: value });
+  };
 
-                                <div className="mt-4">
-                                    <Input
-                                        id="address"
-                                        label="Address"
-                                        value={formData.address}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                    />
-                                </div>
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    processtoDb(formData);
+    setFormData({ ...blankPropertiesForm });
+  };
 
-                                <div className="mt-4">
-                                    <Input
-                                        id="bedrooms"
-                                        label="Bedrooms"
-                                        value={formData.bedrooms}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                    />
-                                </div>
+  if (isLoading) {
+    return <span>Loading ...</span>;
+  }
+  if (isError) {
+    return <span>Error: {error.message}</span>;
+  }
 
-                                <div className="mt-4">
-                                    <Input
-                                        id="bathrooms"
-                                        label="Bathrooms"
-                                        value={formData.bathrooms}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                    />
-                                </div>
+  return (
+    <>
+      <List
+        handleClick={handleClick}
+        handleDrawerClick={handleDrawerClick}
+        data={data}
+      />
+      {data?.length > 0 && drawerOpen && (
+        <Drawer isOpen={drawerOpen} setIsOpen={handleDrawerClick}>
+          <Property property={property} />
+        </Drawer>
+      )}
+      {open && (
+        <SimpleModal handleClick={handleClick} handleSubmit={handleSubmit}>
+          <div className="flex justify-center">
+            <form onSubmit={handleSubmit} className="max-w-lg w-full">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Input
+                    id="title"
+                    label="Title"
+                    value={formData.title}
+                    onChange={handleInputChange}
+                    fullWidth
+                  />
+                </div>
+                <div>
+                  <Input
+                    id="description"
+                    label="Description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    fullWidth
+                  />
+                </div>
+                <div className="mt-4">
+                  <Input
+                    id="property_type"
+                    label="Property Type"
+                    value={formData.propertyType}
+                    onChange={handleInputChange}
+                    fullWidth
+                  />
+                </div>
 
-                                <div className="mt-4">
-                                    <Input
-                                        id="squareFootage"
-                                        label="Square Footage"
-                                        value={formData.squareFootage}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                    />
-                                </div>
+                <div className="mt-4">
+                  <Input
+                    id="address"
+                    label="Address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    fullWidth
+                  />
+                </div>
 
-                                <div className="mt-4">
-                                    <Input
-                                        id="amenities"
-                                        label="Amenities"
-                                        value={formData.amenities}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                        multiline
-                                        rows={3}
-                                    />
-                                </div>
+                <div className="mt-4">
+                  <Input
+                    id="bedrooms"
+                    label="Bedrooms"
+                    value={formData.bedrooms}
+                    onChange={handleInputChange}
+                    fullWidth
+                  />
+                </div>
 
-                                <div className="mt-4">
-                                    <Input
-                                        id="petPolicy"
-                                        label="Pet Policy"
-                                        value={formData.petPolicy}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                        multiline
-                                        rows={3}
-                                    />
-                                </div>
-                                <div className="mt-4">
-                                    <Input
-                                        id="availabilityDates"
-                                        label="Availability Dates"
-                                        value={formData.availabilityDates}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                        multiline
-                                        rows={3}
-                                    />
-                                </div>
-                                <div className="mt-4">
-                                    <Input
-                                        id="rentAmount"
-                                        label="Rent Amount"
-                                        value={formData.rentAmount}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                    />
-                                </div>
-                                <div className="mt-4">
-                                    <Input
-                                        id="securityDeposit"
-                                        label="Security Deposit"
-                                        value={formData.securityDeposit}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                    />
-                                </div>
-                                <div className="mt-4">
-                                    <Input
-                                        id="leaseTerm"
-                                        label="Lease Term"
-                                        value={formData.leaseTerm}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                    />
-                                </div>
-                                <div className="mt-4">
-                                    <Input
-                                        id="contactName"
-                                        label="Contact Name"
-                                        value={formData.contactName}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                    />
-                                </div>
-                                <div className="mt-4">
-                                    <Input
-                                        id="contactPhone"
-                                        label="Contact Phone"
-                                        value={formData.contactPhone}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                    />
-                                </div>
-                                <div className="mt-4">
-                                    <Input
-                                        id="contactEmail"
-                                        label="Contact Email"
-                                        value={formData.contactEmail}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                    />
-                                </div>
-                                <div className="mt-4">
-                                    <Input
-                                        id="photos"
-                                        label="Photos"
-                                        value={formData.photos}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                    />
-                                </div>
-                                <div className="mt-4">
-                                    <Input
-                                        id="floorPlan"
-                                        label="Floor Plan"
-                                        value={formData.floorPlan}
-                                        onChange={handleInputChange}
-                                        fullWidth
-                                    />
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </SimpleModal>
-            )}
-            <Collection/>
-        </>
-    );
+                <div className="mt-4">
+                  <Input
+                    id="bathrooms"
+                    label="Bathrooms"
+                    value={formData.bathrooms}
+                    onChange={handleInputChange}
+                    fullWidth
+                  />
+                </div>
+
+                <div className="mt-4">
+                  <Input
+                    id="square_footage"
+                    label="Square Footage"
+                    value={formData.squareFootage}
+                    onChange={handleInputChange}
+                    fullWidth
+                  />
+                </div>
+                <div className="mt-4">
+                  <Input
+                    id="pet_policy"
+                    label="Pet Policy"
+                    value={formData.petPolicy}
+                    onChange={handleInputChange}
+                    fullWidth
+                    multiline
+                    rows={3}
+                  />
+                </div>
+                <div className="mt-4">
+                  <Input
+                    id="rent_amount"
+                    label="Rent Amount"
+                    value={formData.rentAmount}
+                    onChange={handleInputChange}
+                    fullWidth
+                  />
+                </div>
+                <div className="mt-4">
+                  <Input
+                    id="security_deposit"
+                    label="Security Deposit"
+                    value={formData.securityDeposit}
+                    onChange={handleInputChange}
+                    fullWidth
+                  />
+                </div>
+                <div className="mt-4">
+                  <Input
+                    id="lease_term"
+                    label="Lease Term"
+                    value={formData.leaseTerm}
+                    onChange={handleInputChange}
+                    fullWidth
+                  />
+                </div>
+                <div className="mt-4">
+                  <Input
+                    id="contact_name"
+                    label="Contact Name"
+                    value={formData.contactName}
+                    onChange={handleInputChange}
+                    fullWidth
+                  />
+                </div>
+                <div className="mt-4">
+                  <Input
+                    id="contact_phone"
+                    label="Contact Phone"
+                    value={formData.contactPhone}
+                    onChange={handleInputChange}
+                    fullWidth
+                  />
+                </div>
+                <div className="mt-4">
+                  <Input
+                    id="contact_email"
+                    label="Contact Email"
+                    value={formData.contactEmail}
+                    onChange={handleInputChange}
+                    fullWidth
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+        </SimpleModal>
+      )}
+      <Collection />
+    </>
+  );
 };
 
 export default Properties;

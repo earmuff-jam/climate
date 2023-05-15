@@ -1,8 +1,10 @@
+
+BEGIN;
 -- Create a table for public profiles
 -- 9043 :: ADMIN,  7543 :: PROPERTY_OWNER, 1204 :: TENANT
 DROP TYPE IF EXISTS df_role_value CASCADE;
 CREATE TYPE df_role_value AS ENUM ('9043', '7543', '1204');
-
+DROP TABLE IF EXISTS profiles CASCADE ;
 create table profiles
 (
     id         uuid references auth.users ON DELETE CASCADE ON UPDATE CASCADE NOT NULL PRIMARY KEY,
@@ -27,7 +29,7 @@ create policy "Users can insert their own profile." on profiles
 create policy "Users can update own profile." on profiles
     for update using (auth.uid() = id);
 
-create function public.handle_new_user()
+create or replace function public.handle_new_user()
     returns trigger as
 $$
 begin
@@ -36,8 +38,11 @@ begin
     return new;
 end;
 $$ language plpgsql security definer;
+drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
     after insert
     on auth.users
     for each row
 execute procedure public.handle_new_user();
+
+END;

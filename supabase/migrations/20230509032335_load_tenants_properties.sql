@@ -1,15 +1,12 @@
 BEGIN;
 
-DROP -- DROP DEFAULT NOTIFICATIONS IF EXISTS FOR SUBSCRIPTION --
-    TYPE IF EXISTS default_notifications_enum CASCADE;
-CREATE
-    TYPE default_notifications_enum AS ENUM ('PRODUCTS','NEWS', 'FEATURES');
-
+DROP EXTENSION IF EXISTS "uuid-ossp" CASCADE;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- TABLE PROPERTIES --
 DROP TABLE IF EXISTS properties CASCADE;
 CREATE TABLE IF NOT EXISTS properties
 (
-    id                       UUID PRIMARY KEY         NOT NULL,
+    id                       UUID PRIMARY KEY         NOT NULL DEFAULT uuid_generate_v4(),
     title                    TEXT                     NOT NULL,
     description              TEXT                     NOT NULL,
     property_type            TEXT                     NOT NULL,
@@ -17,24 +14,25 @@ CREATE TABLE IF NOT EXISTS properties
     bedrooms                 INTEGER                  NOT NULL,
     bathrooms                INTEGER                  NOT NULL,
     square_footage           INTEGER                  NOT NULL,
-    amenities                JSONB                    NOT NULL,
-    pet_policy               JSONB                    NOT NULL,
-    availability_dates_jsonb JSONB                    NOT NULL,
+    amenities                JSONB,
+    pet_policy               JSONB,
+    availability_dates_jsonb JSONB,
     rent_amount              NUMERIC(10, 2)           NOT NULL,
     security_deposit         NUMERIC(10, 2)           NOT NULL,
     lease_term               INTEGER                  NOT NULL,
     owner_id                 UUID REFERENCES public.profiles (id),
     contact_name             TEXT                     NOT NULL,
-    contact_phone            TEXT                     NOT NULL,
+    contact_phone            TEXT,
     contact_email            TEXT                     NOT NULL,
-    location_point           POINT                    NOT NULL,
-    nearby_locations         TEXT                     NOT NULL,
-    photos                   TEXT[]                   NOT NULL,
-    floor_plan               TEXT[]                   NOT NULL,
+    location_point           POINT,
+    nearby_locations         TEXT,
+    photos                   TEXT[],
+    floor_plan               TEXT[],
     created_by               UUID                     NOT NULL REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    created_on               TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_on               TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     updated_by               UUID,
-    updated_on               TIMESTAMP WITH TIME ZONE
+    updated_on               TIMESTAMP WITH TIME ZONE,
+    sharable_groups          UUID[]
 );
 COMMENT
     ON TABLE properties IS 'PROPERTY TABLE IS USED FOR PROPERTY DETAILS';
@@ -42,6 +40,12 @@ COMMENT
     ON COLUMN properties.created_by IS 'PROPERTY OWNER OF THE SAID PROPERTY.';
 DROP INDEX IF EXISTS properties_location_idx;
 CREATE INDEX IF NOT EXISTS properties_location_idx ON properties (id);
+
+ALTER TABLE properties
+    ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Authorized users can only manipulate properties" ON properties FOR ALL USING (
+    auth.uid() = ANY (properties.sharable_groups)
+    );
 
 -- AUTO UPDATE USER ROLE --
 -- LIFT USER ID TO PROPERTY OWNER IF PROFILES.ID HAS PROPERTY --
@@ -129,7 +133,8 @@ CREATE TABLE reviews
     created_by            UUID                     NOT NULL REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE,
     created_on            TIMESTAMP WITH TIME ZONE NOT NULL,
     updated_by            UUID,
-    updated_on            TIMESTAMP WITH TIME ZONE
+    updated_on            TIMESTAMP WITH TIME ZONE,
+    sharable_groups       UUID[]
 );
 COMMENT
     ON TABLE reviews IS 'REVIEWS TABLE IS USED TO REVIEW EACH PROPERTY';
@@ -148,7 +153,8 @@ CREATE TABLE reviews_history
     responsiveness_rating INTEGER            NOT NULL,
     overall_rating        INTEGER            NOT NULL,
     updated_by            UUID,
-    updated_at            TIMESTAMP WITH TIME ZONE
+    updated_at            TIMESTAMP WITH TIME ZONE,
+    sharable_groups       UUID[]
 );
 
 COMMENT
