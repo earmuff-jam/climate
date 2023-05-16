@@ -1,18 +1,18 @@
 
 const callouts = [
     {
-      name: 'Maintenance Request',
-      description: 'Periodic evaluation of properties',
+      name: 'Create Maintenance Request',
+      description: 'Create Periodic evaluation of properties',
       imageSrc: 'images/6.jpg',
       imageAlt: 'default image',
-      href: '/maintenance',
+      href: '/properties/maintenance',
     },
     {
       name: 'Income and Expense Forecast',
       description: 'Visualize real time growth',
       imageSrc: 'images/7.jpg',
       imageAlt: 'default image',
-      href: '/forecast',
+      href: '/properties/forecast',
     },
     {
       name: 'In-sync yourself with your property',
