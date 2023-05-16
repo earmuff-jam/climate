@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
 import {ADD_MAINTENANCE_FORM} from "@/components/Properties/Maintenance/constants";
-import {useSupabaseClient, useUser} from "@supabase/auth-helpers-react";
 import {Button, Input, Option, Select, Typography} from "@material-tailwind/react";
 import {InformationCircleIcon} from "@heroicons/react/20/solid";
 import MaintenanceList from "@/components/Properties/Maintenance/MaintenanceList";
+import {useMaintenanceConfig} from "@/components/Properties/Maintenance/Hooks";
+import MaintenanceDetail from "@/components/Properties/Maintenance/MaintenanceDetail";
 
 const MaintenanceForm = () => {
-    const user = useUser();
-    const supabaseClient = useSupabaseClient();
+
     const [form, setForm] = useState(ADD_MAINTENANCE_FORM);
+    const {isLoading, isError, error, data, upsert, existingInspections, setSelectedDataSheet, dataSheet} = useMaintenanceConfig();
 
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -42,23 +43,9 @@ const MaintenanceForm = () => {
     };
 
     const handleSubmit = async () => {
-        console.log(form);
         Object.values(form)
             .map((v) => v.errorMsg)
-            .filter(Boolean).length === 0 &&
-        // (await supabaseClient.from("properties").insert(
-        //     {
-        //         name: form.name.value,
-        //         inspection_date: form.inspection_date.value,
-        //         inspection_type: form.inspection_type.value,
-        //         general_comments: form.general_comments.value,
-        //         signature: form.signature.value,
-        //         created_at: new Date().toISOString(),
-        //         created_by: user.id,
-        //         sharable_groups: [user.id],
-        //     },
-        //     {upsert: true}
-        // ));
+            .filter(Boolean).length === 0 && await upsert(form);
         resetData();
     };
 
@@ -185,7 +172,10 @@ const MaintenanceForm = () => {
                 </form>
             </div>
             <div className="col-span-2 bg-white rounded-md shadow-md p-6 w-full ">
-                <MaintenanceList data={[]}/>
+                <MaintenanceList data={existingInspections} setSelectedDataSheet={setSelectedDataSheet} />
+            </div>
+            <div className="col-span-6 bg-white rounded-md shadow-md p-6 w-full ">
+                <MaintenanceDetail data={dataSheet}/>
             </div>
         </div>
     );

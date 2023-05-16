@@ -22,7 +22,7 @@ export const ADD_MAINTENANCE_FORM = {
         name: "inspection_date",
         value: "",
         label: "Start inspection on",
-        type: "date",
+        type: "datetime-local",
         variant: "static",
         required: true,
         errorMsg: "",
