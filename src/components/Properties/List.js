@@ -11,7 +11,7 @@ const List = (props) => {
         <h2 className="text-2xl font-bold tracking-tight text-gray-900 inline-flex items-center">
           Your property collection
           <button className="ml-2" onClick={() => handleClick()}>
-            <AddCircleRounded />
+            <AddCircleRounded Ï/>
           </button>
           
         </h2>
