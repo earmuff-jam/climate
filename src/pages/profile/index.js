@@ -90,10 +90,10 @@ export default function Profile() {
 
                     <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                         <dt className="text-sm font-medium leading-6 text-gray-900">
-                            {profileData.updated_on === null ? 'Created' : 'Updated'}
+                            {(profileData?.updated_on === null) ? 'Created' : 'Updated'}
                         </dt>
                         <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                            {profileData.updated_on === null ? moment(profileData?.created_on).fromNow() : moment(profileData?.updated_on).fromNow()}
+                            {profileData?.updated_on === null ? moment(profileData?.created_on).fromNow() : moment(profileData?.updated_on).fromNow()}
                         </dd>
                     </div>
                 </dl>
