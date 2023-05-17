@@ -35,9 +35,31 @@ sb stop --backup <stops without reseting local changes>
 
 4. Add the `NEXT_PUBLIC_SUPABASE_URL` key to your env file.
 
-#### Working with Migrations
+## Working with Migrations
 
-** CREATING MIGRATIONS **
+**DEVELOPING LOCALLY**
+
+To develop locally, the following steps should suffice.
+1. Run `supabase start` to start the docker container for the supabase application.
+2. After initialization, the project settings is visible. Use it to configure the database. You can view the database from any database tool locally.
+3. Copy these settings to your `.env.local` file. This is how you setup local development.
+4. Open another terminal window and run `yarn dev`. This should run your database locally. Ensure that your `supabase` is running smoothly in container from step 1.
+
+### Issues during local development
+
+1. One of the most common issues that happens is running `supabase create migration <name>` and running an error on the file name.
+   To solve this, simply rename to the correct pattern. No other work is required.
+2. If you have already made some changes and you ran command `supabase remote db commit`, you will see that it will pull remote migration to your local instance. **This is not correct**. You should only run this command once - when you initialize the project for the first time.
+   You should now see an error with migrations when you `supabase db push`. To solve this issue, you should simply -
+
+    - Delete the migration folder in your local instance.
+    - Delete the migration from your supabase cli. `drop table schema.migrations`
+    - At this point, your local is missing migrations folder. `git pull` to stay in sync with your remote commit from github.
+    - After you bring your migrations in, run command `supabase db reset` to reset your db.
+    - Running `supabase db push` should not be a problem anymore.
+    - Add `user` and start testing + building the application.
+
+**CREATING MIGRATIONS**
 
 ```
 alias sb=supabase
@@ -46,13 +68,13 @@ sb db reset <will add your changes in psql>
 
 ```
 
-** DEPLOYING YOUR CHANGES **
+**DEPLOYING YOUR CHANGES**
 
 ```
 alias sb=supabase
-<!-- only run if its the first time -->
+<!-- only run both of these if its the first time -->
 <!-- sb link --project-ref <project_id> -->
-sb db remote commit
+sb db remote commit <!-- One time use only -->
 ```
 
 `Note`:
@@ -60,3 +82,9 @@ sb db remote commit
 1. The general consensus is to create a new migration instead of trying to fix the existing script. This way, we can ensure a clean run every time.
 
 2. Deploy your changes to supabase is not in sync with your project at the time. We plan to fix it soon, but for now we have to run these commands seperately. 😵‍💫😵‍💫
+
+**HANDLING ERRORS DURING MIGRATIONS**
+
+The common practice should be to develop locally.
+Push your changes and then view it in the developmental instance of the application in supabase.
+If you are unaware of how to develop locally, instruction are written above.
