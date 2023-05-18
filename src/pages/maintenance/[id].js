@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ADD_MAINTENANCE_FORM } from "@/components/Maintenance/constants";
 import {
   Button,
@@ -7,6 +7,7 @@ import {
   Select,
   Typography,
 } from "@material-tailwind/react";
+import { useRouter } from "next/router";
 import { InformationCircleIcon } from "@heroicons/react/20/solid";
 import MaintenanceList from "@/components/Maintenance/MaintenanceList";
 import MaintenanceTabs from "@/components/Maintenance/MaintenanceTabs";
@@ -14,7 +15,9 @@ import { useMaintenanceConfig } from "@/components/Maintenance/Hooks";
 import MaintenanceDetail from "@/components/Maintenance/MaintenanceDetail";
 import SimpleModal from "@/util/SimpleModal";
 
-const MaintenanceForm = () => {
+const MaintenanceForm = (props) => {
+  const router = useRouter();
+  const { id: propertyId } = router.query;
   const [openModal, setOpenModal] = useState(false);
   const [form, setForm] = useState(ADD_MAINTENANCE_FORM);
   const {
@@ -26,7 +29,7 @@ const MaintenanceForm = () => {
     existingInspections,
     setSelectedDataSheet,
     dataSheet,
-  } = useMaintenanceConfig();
+  } = useMaintenanceConfig(propertyId);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -116,7 +119,6 @@ const MaintenanceForm = () => {
       },
     }));
   };
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div className="col-span-1 md:block hidden bg-white rounded-md shadow-md p-6 w-full ">
@@ -223,6 +225,14 @@ const MaintenanceForm = () => {
 };
 
 export default MaintenanceForm;
+
+// nextjs fix for refresh 
+// https://nextjs.org/docs/pages/building-your-application/rendering/automatic-static-optimization
+// https://nextjs.org/docs/pages/api-reference/functions/get-initial-props
+MaintenanceForm.getInitialProps = async (ctx) => {
+  return {};
+};
+ 
 
 // const [form, setForm] = useState({
 //     name: '',
