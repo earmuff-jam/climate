@@ -62,7 +62,6 @@ export const useMaintenanceConfig = () => {
         setDataSheet(selectedInspection);
     }, [selectedDataSheet]);
 
-    console.log(dataSheet);
     return {
         isLoading,
         isError,

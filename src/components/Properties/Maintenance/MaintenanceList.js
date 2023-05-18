@@ -1,5 +1,5 @@
 const MaintenanceList = (props) => {
-    const {data, setSelectedDataSheet} = props;
+    const {data, setSelectedDataSheet, setOpenModal} = props;
     const isEmpty = data?.length === 0;
     return (
         <>
@@ -30,7 +30,12 @@ const MaintenanceList = (props) => {
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200 text-xs">
                                 {data.map((item, index) => (
-                                    <tr key={index} onClick={() => setSelectedDataSheet(index)}>
+                                    <tr 
+                                    key={index} 
+                                    onClick={() => {
+                                        setSelectedDataSheet(index);
+                                        setOpenModal(true);
+                                    }}>
                                         <td className="px-6 py-2 md:py-4 whitespace-nowrap">{item.name}</td>
                                         <td className="px-6 py-2 md:py-4 whitespace-nowrap">{item.inspection_date}</td>
                                         <td className="px-6 py-2 md:py-4 whitespace-nowrap">{item.inspection_type}</td>

@@ -51,7 +51,7 @@ export const useProfileConfig = () => {
                 updated_by: user.id
             })
             .select();
-        await router.push("/");
+        await router.reload();
     };
 
     const {isLoading, isError, error} = useQuery("profileData", fetchUserList);
