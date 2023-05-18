@@ -7,10 +7,11 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 
-const SimpleModal = ({ handleClick, children, handleSubmit }) => {
+const SimpleModal = (props) => {
+  const { title, handleClick, children, showSubmit, handleSubmit } = props;
   return (
-    <Dialog open={open} handler={handleClick} size="xl xs:xxl">
-      <DialogHeader> Add property for tenants to rent</DialogHeader>
+    <Dialog open={open} handler={handleClick} size="xxl">
+      <DialogHeader>{title}</DialogHeader>
       <DialogBody divider>{children}</DialogBody>
       <DialogFooter>
         <Button
@@ -21,16 +22,18 @@ const SimpleModal = ({ handleClick, children, handleSubmit }) => {
         >
           <span>Cancel</span>
         </Button>
-        <Button
-          variant="gradient"
-          color="green"
-          onClick={(ev) => {
-            handleClick();
-            handleSubmit(ev);
-          }}
-        >
-          <span>Confirm</span>
-        </Button>
+        {showSubmit && (
+          <Button
+            variant="gradient"
+            color="green"
+            onClick={(ev) => {
+              handleClick();
+              handleSubmit(ev);
+            }}
+          >
+            <span>Confirm</span>
+          </Button>
+        )}
       </DialogFooter>
     </Dialog>
   );

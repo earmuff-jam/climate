@@ -5,14 +5,14 @@ const callouts = [
       description: 'Create Periodic evaluation of properties',
       imageSrc: 'images/6.jpg',
       imageAlt: 'default image',
-      href: '/properties/maintenance',
+      href: '/maintenance',
     },
     {
       name: 'Income and Expense Forecast',
       description: 'Visualize real time growth',
       imageSrc: 'images/7.jpg',
       imageAlt: 'default image',
-      href: '/properties/forecast',
+      href: '/forecast',
     },
     {
       name: 'In-sync yourself with your property',

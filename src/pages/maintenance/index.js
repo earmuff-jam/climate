@@ -1,6 +1,6 @@
 import {usePropertyConfig} from "@/components/Properties/Hooks";
-import EmptyMaintenance from "@/components/Properties/Maintenance/EmptyMaintenance";
-import List from "@/components/Properties/Maintenance/List";
+import EmptyMaintenance from "@/components/Maintenance/EmptyMaintenance";
+import List from "@/components/Maintenance/List";
 
 const Maintenance = () => {
     const {isLoading, data} = usePropertyConfig();

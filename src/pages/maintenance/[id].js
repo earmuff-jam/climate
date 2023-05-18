@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ADD_MAINTENANCE_FORM } from "@/components/Properties/Maintenance/constants";
+import { ADD_MAINTENANCE_FORM } from "@/components/Maintenance/constants";
 import {
   Button,
   Input,
@@ -8,12 +8,14 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { InformationCircleIcon } from "@heroicons/react/20/solid";
-import MaintenanceList from "@/components/Properties/Maintenance/MaintenanceList";
-import { useMaintenanceConfig } from "@/components/Properties/Maintenance/Hooks";
-import MaintenanceDetail from "@/components/Properties/Maintenance/MaintenanceDetail";
+import MaintenanceList from "@/components/Maintenance/MaintenanceList";
+import MaintenanceTabs from "@/components/Maintenance/MaintenanceTabs";
+import { useMaintenanceConfig } from "@/components/Maintenance/Hooks";
+import MaintenanceDetail from "@/components/Maintenance/MaintenanceDetail";
 import SimpleModal from "@/util/SimpleModal";
 
 const MaintenanceForm = () => {
+  const [openModal, setOpenModal] = useState(false);
   const [form, setForm] = useState(ADD_MAINTENANCE_FORM);
   const {
     isLoading,
@@ -52,6 +54,9 @@ const MaintenanceForm = () => {
     );
     setForm({ ...newForm });
   };
+
+  const handleModalClick = () => setOpenModal(!openModal);
+  const handleModalSubmit = () => {};
 
   const resetData = () => {
     setForm({ ...ADD_MAINTENANCE_FORM });
@@ -111,11 +116,6 @@ const MaintenanceForm = () => {
       },
     }));
   };
-
-  const [openModal, setOpenModal] = useState(false);
-
-  const handleModalClick = () => setOpenModal(!openModal);
-  const handleModalSubmit = () => {};
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -207,14 +207,16 @@ const MaintenanceForm = () => {
       </div>
       {openModal && (
         <SimpleModal
+          title={`Inspection for Property`}
           handleClick={handleModalClick}
           handleSubmit={handleModalSubmit}
+          showSubmit={false}
         >
-          Show maintenance detail here
+          <MaintenanceDetail data={dataSheet} />
         </SimpleModal>
       )}
       <div className="col-span-6 bg-white rounded-md shadow-md p-6 w-full ">
-        <MaintenanceDetail data={dataSheet} />
+        <MaintenanceTabs />
       </div>
     </div>
   );

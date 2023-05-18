@@ -46,7 +46,7 @@ const BoxItem = ({
         onClick={() => createMaintenance(id)}
       >
         <p className="text-sm font-semibold mb-2">{title}</p>
-        <div className="flex flex-row justify-between">
+        <div className="flex flex-row justify-between gap-2">
           <p className="text-sm text-gray-600">{property_type}</p>
           <p className="text-sm text-gray-600">{lease_term} months </p>
         </div>
