@@ -90,7 +90,12 @@ const Properties = () => {
         </Drawer>
       )}
       {open && (
-        <SimpleModal handleClick={handleClick} handleSubmit={handleSubmit}>
+        <SimpleModal
+          title={"Add Property"}
+          handleClick={handleClick}
+          handleSubmit={handleSubmit}
+          showSubmit={true}
+        >
           <div className="flex justify-center">
             <form onSubmit={handleSubmit} className="max-w-lg w-full">
               <div className="grid grid-cols-2 gap-4">
