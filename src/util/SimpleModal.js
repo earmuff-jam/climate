@@ -12,7 +12,7 @@ const SimpleModal = (props) => {
   return (
     <Dialog open={open} handler={handleClick} size="xxl">
       <DialogHeader>{title}</DialogHeader>
-      <DialogBody divider>{children}</DialogBody>
+      <DialogBody divider className="h-[40rem] overflow-scroll">{children}</DialogBody>
       <DialogFooter>
         <Button
           variant="text"

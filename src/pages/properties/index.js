@@ -60,7 +60,6 @@ const Properties = () => {
   const [formData, setFormData] = useState({ ...blankPropertiesForm });
   const handleInputChange = (event) => {
     const { id, value } = event.target;
-    console.log("change here");
     setFormData({ ...formData, [id]: value });
   };
 
