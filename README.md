@@ -1,7 +1,7 @@
 
 # Proprietatem administratio🍩🍩
 
-We make property management easy.
+We make property management easy. Like real easy.
 
 Our experienced team takes care of everything from maintenance to tenant management, using the latest technology and industry best practices to ensure your investment is protected and your tenants are happy. We work closely with our clients to tailor our services to their unique needs and goals, building long-lasting relationships along the way. We bridge the gap between property owners and tenants. **magis congregare eos** 😁😁
 

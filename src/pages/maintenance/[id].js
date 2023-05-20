@@ -1,119 +1,31 @@
-import React, {useState} from "react";
-import {ADD_MAINTENANCE_FORM} from "@/components/Maintenance/constants";
-import {IconButton, Input, Option, Select, Typography,} from "@material-tailwind/react";
-import {useRouter} from "next/router";
+import React from "react";
+import {IconButton, Input, Option, Select, Tooltip, Typography,} from "@material-tailwind/react";
 import {InformationCircleIcon} from "@heroicons/react/20/solid";
 import MaintenanceList from "@/components/Maintenance/MaintenanceList";
 import MaintenanceTabs from "@/components/Maintenance/MaintenanceTabs";
-import {useMaintenanceConfig, useMaintenanceDetails} from "@/components/Maintenance/Hooks";
+import {useCreateInspectionChecklist, useMaintenanceDetails} from "@/components/Maintenance/Hooks";
 import MaintenanceDetail from "@/components/Maintenance/MaintenanceDetail";
 import SimpleModal from "@/util/SimpleModal";
 import {LinkIcon} from "@heroicons/react/24/outline";
 import AddCircleRounded from "@/util/AddCircleRounded";
 
 const MaintenanceForm = (props) => {
-    const router = useRouter();
-    const {id: propertyId} = router.query;
-    const [openModal, setOpenModal] = useState(false);
-    const [form, setForm] = useState(ADD_MAINTENANCE_FORM);
     const {
         isLoading,
         isError,
         error,
         data,
-        upsert,
+        form,
         existingInspections,
         setSelectedDataSheet,
         dataSheet,
-    } = useMaintenanceConfig(propertyId);
-
-    const handleChange = (event) => {
-        const {name, value} = event.target;
-        const newForm = {...form};
-        newForm[name].value = value;
-        newForm[name].errorMsg = newForm[name]?.validators?.reduce(
-            (acc, el, index, arr) => {
-                el.validate(value) ? (acc = el.message) : null;
-                return acc;
-            },
-            ""
-        );
-        setForm({...newForm});
-    };
-
-    const handleSelect = (item, type) => {
-        const newForm = {...form};
-        newForm[type].value = item;
-        newForm[type].errorMsg = newForm[type].validators.reduce(
-            (acc, el, index, arr) => {
-                el.validate(item) ? (acc = el.message) : null;
-                return acc;
-            },
-            ""
-        );
-        setForm({...newForm});
-    };
-
-    const handleModalClick = () => setOpenModal(!openModal);
-
-    const resetData = () => {
-        setForm({...ADD_MAINTENANCE_FORM});
-    };
-
-    const handleSubmit = async () => {
-        Object.values(form)
-            .map((v) => v.errorMsg)
-            .filter(Boolean).length === 0 && (await upsert(form));
-        resetData();
-    };
-
-    const handleRoomChange = (index, field, value) => {
-        setForm((prevForm) => {
-            const updatedRooms = [...prevForm.rooms];
-            updatedRooms[index] = {
-                ...updatedRooms[index],
-                [field]: value,
-            };
-            return {
-                ...prevForm,
-                rooms: updatedRooms,
-            };
-        });
-    };
-
-    const handleApplianceChange = (index, field, value) => {
-        setForm((prevForm) => {
-            const updatedAppliances = [...prevForm.appliances];
-            updatedAppliances[index] = {
-                ...updatedAppliances[index],
-                [field]: value,
-            };
-            return {
-                ...prevForm,
-                appliances: updatedAppliances,
-            };
-        });
-    };
-
-    const handlePlumbingChange = (field, value) => {
-        setForm((prevForm) => ({
-            ...prevForm,
-            plumbing: {
-                ...prevForm.plumbing,
-                [field]: value,
-            },
-        }));
-    };
-
-    const handleElectricalChange = (field, value) => {
-        setForm((prevForm) => ({
-            ...prevForm,
-            electrical: {
-                ...prevForm.electrical,
-                [field]: value,
-            },
-        }));
-    };
+        openModal,
+        setOpenModal,
+        handleChangeInspection,
+        handleSelectInspection,
+        handleModalClick,
+        handleSubmit,
+    } = useCreateInspectionChecklist();
 
     const {
         form: detailForm,
@@ -131,7 +43,7 @@ const MaintenanceForm = (props) => {
                         label={form.name.label}
                         name={form.name.name}
                         error={form.name.errorMsg.length ?? false}
-                        onChange={handleChange}
+                        onChange={handleChangeInspection}
                     />
                     {form.name.errorMsg && (
                         <Typography
@@ -149,7 +61,7 @@ const MaintenanceForm = (props) => {
                         label={form.inspection_date.label}
                         error={form.inspection_date.errorMsg.length ?? false}
                         type={form.inspection_date.type}
-                        onChange={handleChange}
+                        onChange={handleChangeInspection}
                     />
                     {form.inspection_date.errorMsg && (
                         <Typography
@@ -165,7 +77,7 @@ const MaintenanceForm = (props) => {
                         name={form.inspection_type.name}
                         variant={form.inspection_type.variant}
                         label={form.inspection_type.label}
-                        onChange={(e) => handleSelect(e, form.inspection_type.name)}
+                        onChange={(e) => handleSelectInspection(e, form.inspection_type.name)}
                     >
                         {form.inspection_type?.options.map((el, index) => (
                             <Option key={index} value={el}>
@@ -178,7 +90,7 @@ const MaintenanceForm = (props) => {
                         variant={form.general_comments.variant}
                         label={form.general_comments.label}
                         type={form.general_comments.type}
-                        onChange={handleChange}
+                        onChange={handleChangeInspection}
                     />
                     <Input
                         name={form.signature.name}
@@ -186,7 +98,7 @@ const MaintenanceForm = (props) => {
                         label={form.signature.label}
                         type={form.signature.type}
                         error={form.signature.errorMsg.length ?? false}
-                        onChange={handleChange}
+                        onChange={handleChangeInspection}
                     />
                     {form.signature.errorMsg && (
                         <Typography
@@ -199,17 +111,21 @@ const MaintenanceForm = (props) => {
                         </Typography>
                     )}
                     <div className="flex flex-row justify-between">
-                        <IconButton variant="text" color="blue-gray" size="sm">
-                            <LinkIcon strokeWidth={2} className="w-4 h-4"/>
-                        </IconButton>
-                        <IconButton
-                            variant="text"
-                            color="blue-gray"
-                            size="sm"
-                            onClick={handleSubmit}
-                        >
-                            <AddCircleRounded strokeWidth={2} className="w-4 h-4"/>
-                        </IconButton>
+                        <Tooltip content={"Add attachment"}>
+                            <IconButton variant="text" color="blue-gray" size="sm">
+                                <LinkIcon strokeWidth={2} className="w-4 h-4"/>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip content={"Create Inspection"}>
+                            <IconButton
+                                variant="text"
+                                color="blue-gray"
+                                size="sm"
+                                onClick={handleSubmit}
+                            >
+                                <AddCircleRounded strokeWidth={2} className="w-4 h-4"/>
+                            </IconButton>
+                        </Tooltip>
                     </div>
                 </form>
             </div>

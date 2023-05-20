@@ -3,7 +3,7 @@ import EmptyMaintenance from "@/components/Maintenance/EmptyMaintenance";
 import List from "@/components/Maintenance/List";
 
 const Maintenance = () => {
-    const {isLoading, data} = usePropertyConfig();
+    const  {data} = usePropertyConfig();
 
     return (
         <div className="flex flex-col items-center justify-center h-screen gap-2">
