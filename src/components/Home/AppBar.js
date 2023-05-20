@@ -49,16 +49,8 @@ export default function AppBar() {
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
                   <img
-                    className="block h-8 w-auto lg:hidden cursor-pointer"
-                    src="/images/logo.svg"
-                    alt="Property Co Parent Image"
-                    onClick={() => {
-                      router.push("/");
-                    }}
-                  />
-                  <img
                     className="hidden h-8 w-auto lg:block cursor-pointer"
-                    src="images/logo.svg"
+                    src="/images/logo.svg"
                     alt="Property Co Parent Image"
                     onClick={() => {
                       router.push("/");
