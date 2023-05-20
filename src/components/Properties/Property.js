@@ -1,6 +1,7 @@
 import React from "react";
 
-const Property = ({property}) => {
+const Property = (props) => {
+    const {property} = props;
     return (
         <>
             <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
