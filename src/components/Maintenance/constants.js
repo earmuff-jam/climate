@@ -2,7 +2,6 @@ export const GENERIC_FORM_FIELDS = {
     type: "text",
     variant: "static",
 };
-
 export const ADD_MAINTENANCE_FORM = {
     name: {
         value: "",
@@ -84,8 +83,6 @@ export const ADD_MAINTENANCE_FORM = {
         ],
     },
 };
-
-
 export const ADD_ISSUE_DETAILS_FORM = {
     issue_details: {
         label: "Issue Details",
@@ -144,7 +141,6 @@ export const ADD_MAINTENANCE_LOG_FORM = {
         ...GENERIC_FORM_FIELDS,
     },
 };
-
 export const ADD_WORK_ORDER_FORM = {
     work_order_details: {
         label: "Work Order Details",
@@ -172,7 +168,6 @@ export const ADD_WORK_ORDER_FORM = {
         ...GENERIC_FORM_FIELDS,
     },
 };
-
 export const OVERALL_MAINTENANCE_STATUS = {
     overall_maintenance_status: {
         name: "overall_maintenance_status",
@@ -187,4 +182,21 @@ export const OVERALL_MAINTENANCE_STATUS = {
         ],
         ...GENERIC_FORM_FIELDS,
     },
-}
+};
+export const OVERALL_FORMATTED_MAINTENANCE_DETAILS = [
+    {
+        id: 1,
+        label: "issue_details",
+        data: [],
+    },
+    {
+        id: 2,
+        label: "maintenance_logs",
+        data: [],
+    },
+    {
+        id: 3,
+        label: "work_orders",
+        data: [],
+    },
+];
