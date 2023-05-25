@@ -1,7 +1,7 @@
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import React from "react";
 import EntryForm from "./EntryForm";
 import AppBar from "../Home/AppBar";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 
 const LayoutWrapper = ({ children }) => {
   const user = useUser();

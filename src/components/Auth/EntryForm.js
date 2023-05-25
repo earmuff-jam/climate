@@ -1,5 +1,30 @@
-import { Auth } from "@supabase/auth-ui-react";
 import React from "react";
+import { Auth } from "@supabase/auth-ui-react";
+
+const EntryForm = (props) => {
+  const { redirectUri, supabase } = props;
+  return (
+    <div className="grid space-y-40 mt-10 place-items-center text-black">
+      <div>
+        <span className="text-3xl"> Welcome to Property Co </span>
+        <div className="text-md mt-6">
+          {" "}
+          Join the journey to learn property management as you go.{" "}
+        </div>
+      </div>
+      <Auth
+        supabaseClient={supabase}
+        redirectTo={redirectUri}
+        providers={[]}
+        appearance={{
+          style: loginStyleSx(),
+        }}
+      />
+    </div>
+  );
+};
+
+export default EntryForm;
 
 const loginStyleSx = () => {
   return {
@@ -28,27 +53,3 @@ const loginStyleSx = () => {
     },
   };
 };
-
-const EntryForm = ({ redirectUri, supabase }) => {
-  return (
-    <div className="grid space-y-40 mt-10 place-items-center text-black">
-      <div>
-        <span className="text-3xl"> Welcome to Property Co </span>
-        <div className="text-md mt-6">
-          {" "}
-          Join the journey to learn property management as you go.{" "}
-        </div>
-      </div>
-      <Auth
-        supabaseClient={supabase}
-        redirectTo={redirectUri}
-        providers={[]}
-        appearance={{
-          style: loginStyleSx(),
-        }}
-      />
-    </div>
-  );
-};
-
-export default EntryForm;
