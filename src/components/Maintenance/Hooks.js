@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+
 import {
   ADD_ISSUE_DETAILS_FORM,
   ADD_MAINTENANCE_FORM,
@@ -9,6 +10,7 @@ import {
   OVERALL_FORMATTED_MAINTENANCE_DETAILS,
   OVERALL_MAINTENANCE_STATUS,
 } from "@/components/Maintenance/constants";
+
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 
 /**
@@ -21,9 +23,10 @@ export const useCreateInspectionChecklist = () => {
   const supabaseClient = useSupabaseClient();
 
   const { id: propertyId } = router.query;
-  const [form, setForm] = useState(ADD_MAINTENANCE_FORM);
+
   const [dataSheet, setDataSheet] = useState({});
   const [openModal, setOpenModal] = useState(false);
+  const [form, setForm] = useState(ADD_MAINTENANCE_FORM);
   const [selectedDataSheet, setSelectedDataSheet] = useState(-1);
   const [existingInspections, setExistingInspections] = useState([]);
 
@@ -260,5 +263,39 @@ export const useMaintenanceDetails = () => {
     handleChange,
     handleSelect,
     handleModalSubmit,
+  };
+};
+
+/**
+ * this hook is used to display and operate the three main form branches of the maintenance section.
+ * @requires form parameter for the various input stages of maintenance request
+ */
+export const useDetailsTagConfig = () => {
+  const [selected, setSelected] = useState("");
+  const [details, setDetails] = useState([
+    {
+      id: 1,
+      label: "issue",
+      title: "Issue",
+      data: ADD_ISSUE_DETAILS_FORM,
+    },
+    {
+      id: 2,
+      label: "maintenance_logs",
+      title: "Logs",
+      data: ADD_MAINTENANCE_LOG_FORM,
+    },
+    {
+      id: 3,
+      label: "work_order",
+      title: "Work Order",
+      data: ADD_WORK_ORDER_FORM,
+    },
+  ]);
+
+  return {
+    details,
+    selected,
+    setSelected,
   };
 };

@@ -145,7 +145,6 @@ const MaintenanceForm = (props) => {
                 >
                     <MaintenanceDetail
                         data={dataSheet}
-                        form={detailForm}
                         handleChange={handleDetailChange}
                         handleSelect={handleDetailSelect}
                     />
