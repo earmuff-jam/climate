@@ -42,6 +42,8 @@ const MaintenanceForm = (props) => {
     handleChange: handleDetailChange,
     handleSelect: handleDetailSelect,
     handleModalSubmit,
+    selected,
+    setSelected,
   } = useMaintenanceDetails();
 
   return (
@@ -157,8 +159,11 @@ const MaintenanceForm = (props) => {
         >
           <MaintenanceDetail
             data={dataSheet}
+            form={detailForm}
             handleChange={handleDetailChange}
             handleSelect={handleDetailSelect}
+            selected={selected}
+            setSelected={setSelected}
           />
         </SimpleModal>
       )}
