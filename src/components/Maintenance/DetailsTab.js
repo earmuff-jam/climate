@@ -10,8 +10,6 @@ import {
 
 const DetailsTab = (props) => {
   const { form, handleChange, selected, setSelected } = props;
-
-  console.log(form);
   return (
     <Tabs value={selected} className="flex w-full flex-col">
       <TabsHeader className="flex flex-row gap-2 justify-center align-center px-10">

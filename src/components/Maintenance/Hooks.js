@@ -222,10 +222,18 @@ export const useMaintenanceDetails = () => {
             },
             ""
           );
+        } else if (updatedData.description.name === name) {
+          updatedData.description.value = value;
+          updatedData.description.errorMsg =
+            updatedData.description.validators.reduce((acc, el) => {
+              if (el.validate(value)) {
+                acc = el.message;
+              }
+              return acc;
+            }, "");
         }
         return { ...item, data: updatedData };
       });
-
       setForm(newForm);
       return;
     }
@@ -250,22 +258,8 @@ export const useMaintenanceDetails = () => {
   };
 
   const handleModalSubmit = () => {
-    const maintenanceDetails = form;
-    const maintenanceDetailForm = maintenanceDetails
-      .map((v) => v.data)
-      .map((v) => v.details.value)
-      .filter(Boolean);
-    const maintenanceDescriptionForm = maintenanceDetails
-      .map((v) => v.data)
-      .map((v) => v.description.value)
-      .filter(Boolean);
-    // if the form is empty do not submit the details
-    if (
-      maintenanceDetailForm.length === 0 ||
-      maintenanceDescriptionForm === 0
-    ) {
-      return null;
-    }
+    // handle modal submit button
+    // this allows users to submit the issue details and / or work logs as well.
   };
 
   return {
