@@ -15,6 +15,10 @@ Built with [Next.js](https://nextjs.org/).
 
 Current Deployment on [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
 
+### Have something to add ?
+
+If you have something to add, or something you wish you would be able to use please allow yourself to create a isssue requesting said workflow into our [Issue Board](https://github.com/earmuff-jam/climate/issues).
+
 ## Developer Guidance
 
 ### Working with the database
