@@ -45,7 +45,7 @@ const MaintenanceDetail = (props) => {
                       <tr key={index}>
                         <td className="border px-4 py-2">{item.label}</td>
                         <td className="border px-4 py-2">
-                          {isDateType
+                          {item.value != null && isDateType
                             ? moment(item.value).fromNow()
                             : item.value}
                         </td>
