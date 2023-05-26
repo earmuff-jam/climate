@@ -6,6 +6,7 @@ import {
   TabPanel,
   Input,
   Textarea,
+  Typography,
 } from "@material-tailwind/react";
 
 const DetailsTab = (props) => {
@@ -33,6 +34,15 @@ const DetailsTab = (props) => {
                   error={details.errorMsg.length ?? false}
                   onChange={handleChange}
                 />
+                {details.errorMsg && (
+                  <Typography
+                    variant="small"
+                    color="gray"
+                    className="flex flex-row gap-2 align-center text-xs"
+                  >
+                    {details.errorMsg}
+                  </Typography>
+                )}
                 <Textarea
                   variant={description.variant}
                   label={description.label}

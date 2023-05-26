@@ -253,13 +253,49 @@ export const useMaintenanceDetails = () => {
       });
       return { ...item, data: updatedData };
     });
-
     setForm(newForm);
+  };
+
+  const validator = (formFields) => {
+    const isValid = formFields.map((formField) => {
+      let formFieldValid = true;
+      // only check against err msg because fields can be empty
+      // if (formField.required && !formField.value) {
+      //   formFieldValid = false;
+      // }
+      if (formField.errorMsg) {
+        formFieldValid = false;
+      }
+      return formFieldValid;
+    });
+    return isValid.reduce((acc, el) => {
+      if (el === true) {
+        acc = true;
+      }
+      return acc;
+    }, false);
   };
 
   const handleModalSubmit = () => {
     // handle modal submit button
     // this allows users to submit the issue details and / or work logs as well.
+    const issueDetails = form
+      .filter((v) => v.label === "issue")
+      .map((v) => v.data.details);
+    const maintenanceLogDetails = form
+      .filter((v) => v.label === "maintenance_logs")
+      .map((v) => v.data.details);
+    const workOrderDetails = form
+      .filter((v) => v.label === "work_order")
+      .map((v) => v.data.details);
+    const issueIsValid = validator(issueDetails);
+    const maintenanceLogIsValid = validator(maintenanceLogDetails);
+    const workOrderDetailsIsValid = validator(workOrderDetails);
+    if (!issueIsValid || !maintenanceLogIsValid || !workOrderDetailsIsValid) {
+      return false;
+    } else {
+      // submit to supabase
+    }
   };
 
   return {
