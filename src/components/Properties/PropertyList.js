@@ -1,7 +1,7 @@
 import { usePropertyConfig } from "./Hooks";
 
 const PropertyList = () => {
-  const { isLoading, isError, erorr, data, navigate } = usePropertyConfig();
+  const { allPropertiesList, navigate } = usePropertyConfig();
 
   return (
     <>
@@ -10,13 +10,13 @@ const PropertyList = () => {
           View available properties to rent{" "}
         </h2>
         <div>
-          {data === null || data?.length === 0 ? (
+          {allPropertiesList === null || allPropertiesList?.length === 0 ? (
             <p className="text-black flex flex-row justify-center sm:grid-cols-2 lg:grid-cols-4 mt-6">
               Sorry no matching records found.
             </p>
           ) : (
             <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-              {data?.map((el, index) => (
+              {allPropertiesList?.map((el, index) => (
                 <div
                   key={el.id}
                   className="group relative"

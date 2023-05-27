@@ -141,9 +141,48 @@ export const usePropertyConfig = () => {
       .eq("owner_id", user.id);
     return data;
   };
+
+  const fetchAllPropertiesList = async () => {
+    const { data, error } = await supabaseClient.from("properties").select(
+      `
+      id,
+      title,
+      description,
+      property_type,
+      address,
+      bedrooms,
+      bathrooms,
+      square_footage,
+      amenities,
+      pet_policy,
+      availability_dates_jsonb,
+      rent_amount,
+      security_deposit,
+      lease_term,
+      owner_id,
+      contact_name,
+      contact_phone,
+      contact_email,
+      location_point,
+      nearby_locations,
+      photos,
+      floor_plan,
+      created_by,
+      created_on,
+      updated_by,
+      updated_on,
+      sharable_groups
+    `
+    );
+    return data;
+  };
   const { isLoading, isError, error, data } = useQuery(
     "repoData",
     fetchPropertyList
+  );
+  const { data: allPropertiesList } = useQuery(
+    "allPropertyList",
+    fetchAllPropertiesList
   );
 
   return {
@@ -151,6 +190,7 @@ export const usePropertyConfig = () => {
     isError,
     error,
     data,
+    allPropertiesList,
     formData,
     open,
     property,
