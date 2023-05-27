@@ -105,7 +105,10 @@ export const usePropertyConfig = () => {
   };
 
   const fetchPropertyList = async () => {
-    const { data, error } = await supabaseClient.from("properties").select(`
+    const { data, error } = await supabaseClient
+      .from("properties")
+      .select(
+        `
       id,
       title,
       description,
@@ -133,7 +136,9 @@ export const usePropertyConfig = () => {
       updated_by,
       updated_on,
       sharable_groups
-    `);
+    `
+      )
+      .eq("owner_id", user.id);
     return data;
   };
   const { isLoading, isError, error, data } = useQuery(
