@@ -18,6 +18,7 @@ import MaintenanceDetail from "@/components/Maintenance/MaintenanceDetail";
 import SimpleModal from "@/util/SimpleModal";
 import { LinkIcon } from "@heroicons/react/24/outline";
 import AddCircleRounded from "@/util/AddCircleRounded";
+import PrivateLayout from "@/components/Auth/PrivateLayout";
 
 const MaintenanceForm = (props) => {
   const {
@@ -181,6 +182,10 @@ export default MaintenanceForm;
 // https://nextjs.org/docs/pages/api-reference/functions/get-initial-props
 MaintenanceForm.getInitialProps = async (ctx) => {
   return {};
+};
+
+MaintenanceForm.getLayout = function getLayout(page) {
+  return <PrivateLayout>{page}</PrivateLayout>;
 };
 
 // const [form, setForm] = useState({

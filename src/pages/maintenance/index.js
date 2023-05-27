@@ -1,6 +1,7 @@
 import {usePropertyConfig} from "@/components/Properties/Hooks";
 import EmptyMaintenance from "@/components/Maintenance/EmptyMaintenance";
 import List from "@/components/Maintenance/List";
+import PrivateLayout from "@/components/Auth/PrivateLayout";
 
 const Maintenance = () => {
     const  {data} = usePropertyConfig();
@@ -13,3 +14,7 @@ const Maintenance = () => {
 };
 
 export default Maintenance;
+
+Maintenance.getLayout = function getLayout(page) {
+    return <PrivateLayout>{page}</PrivateLayout>;
+  };

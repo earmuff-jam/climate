@@ -6,6 +6,7 @@ import Property from "@/components/Properties/Property";
 import Collection from "@/components/Properties/Collection";
 import { usePropertyConfig } from "@/components/Properties/Hooks";
 import AddProperty from "@/components/Properties/AddProperty";
+import PrivateLayout from "@/components/Auth/PrivateLayout";
 
 const Properties = () => {
   const {
@@ -62,3 +63,7 @@ const Properties = () => {
 };
 
 export default Properties;
+
+Properties.getLayout = function getLayout(page) {
+  return <PrivateLayout>{page}</PrivateLayout>;
+};

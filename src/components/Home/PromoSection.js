@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 
-export default function Example() {
+export default function   Example() {
   const router = useRouter();
 
   return (
@@ -101,7 +101,7 @@ export default function Example() {
 
               <a
                 onClick={() => {
-                  router.push("/login");
+                  router.push("/properties");
                 }}
                 className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-center font-medium text-white hover:bg-indigo-700"
               >

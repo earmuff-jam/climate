@@ -3,7 +3,7 @@ import EntryForm from "./EntryForm";
 import AppBar from "../Home/AppBar";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 
-const LayoutWrapper = ({ children }) => {
+const PrivateLayout = ({ children }) => {
   const user = useUser();
   const supabaseClient = useSupabaseClient();
   const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI;
@@ -19,4 +19,4 @@ const LayoutWrapper = ({ children }) => {
   );
 };
 
-export default LayoutWrapper;
+export default PrivateLayout;
