@@ -1,6 +1,7 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useQuery } from "react-query";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 export const BLANK_PROPERTIES_FORM = {
   id: "",
@@ -32,14 +33,26 @@ export const BLANK_PROPERTIES_FORM = {
   sharable_groups: "",
 };
 
+/**
+ * this hook is used to tabulate data and field values in the property form.
+ *
+ */
 export const usePropertyConfig = () => {
   const user = useUser();
+  const router = useRouter();
   const supabaseClient = useSupabaseClient();
 
   const [open, setOpen] = useState(false);
   const [property, setProperty] = useState({});
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [formData, setFormData] = useState({ ...BLANK_PROPERTIES_FORM });
+
+  const navigate = (pId) => {
+    router.push({
+      pathname: "/properties/[pId]",
+      query: { pId },
+    });
+  };
 
   const processtoDb = async (formData) => {
     const { resp, err } = await supabaseClient
@@ -141,5 +154,6 @@ export const usePropertyConfig = () => {
     handleDrawerClick,
     handleInputChange,
     handleSubmit,
+    navigate,
   };
 };

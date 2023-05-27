@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS properties
     sharable_groups          UUID[]
 );
 COMMENT
-    ON TABLE properties IS 'PROPERTY TABLE IS USED FOR PROPERTY DETAILS';
+    ON TABLE properties IS 'PROPERTY TABLE IS USED FOR PROPERTY DETAILS.';
 COMMENT
     ON COLUMN properties.created_by IS 'PROPERTY OWNER OF THE SAID PROPERTY.';
 DROP INDEX IF EXISTS properties_location_idx;
@@ -43,7 +43,18 @@ CREATE INDEX IF NOT EXISTS properties_location_idx ON properties (id);
 
 ALTER TABLE properties
     ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Authorized users can only manipulate properties" ON properties FOR ALL USING (
+
+CREATE POLICY "properties_can_be_viewed_by_everyone_rls_policy " ON properties
+    FOR SELECT
+    USING (TRUE);
+
+CREATE POLICY "properties_can_be_created_by_current_owner_rls_policy" ON properties
+    FOR INSERT WITH CHECK (
+    auth.uid() = ANY (properties.sharable_groups)
+    );
+
+CREATE POLICY "properties_can_be_updated_by_current_owner_rls_policy" ON properties
+    FOR UPDATE WITH CHECK (
     auth.uid() = ANY (properties.sharable_groups)
     );
 
