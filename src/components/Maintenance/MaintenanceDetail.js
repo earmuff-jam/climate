@@ -3,7 +3,8 @@ import moment from "moment";
 import DetailsTab from "./DetailsTab";
 
 const MaintenanceDetail = (props) => {
-  const { data, form, handleChange, handleSelect } = props;
+  const { data, form, handleChange, handleSelect, selected, setSelected } =
+    props;
   const isEmpty = data?.length === 0;
   const convertedArray =
     !isEmpty &&
@@ -24,7 +25,7 @@ const MaintenanceDetail = (props) => {
       {!isEmpty && (
         <div className="flex flex-col gap-1 ">
           <div className="flex flex-col gap-1 lg:flex-row">
-            <div className="flex w-full">
+            <div className="flex w-full lg:w-1/3">
               <table className="table-auto w-full text-sm">
                 <thead>
                   <tr>
@@ -44,7 +45,7 @@ const MaintenanceDetail = (props) => {
                       <tr key={index}>
                         <td className="border px-4 py-2">{item.label}</td>
                         <td className="border px-4 py-2">
-                          {isDateType
+                          {item.value != null && isDateType
                             ? moment(item.value).fromNow()
                             : item.value}
                         </td>
@@ -54,8 +55,14 @@ const MaintenanceDetail = (props) => {
                 </tbody>
               </table>
             </div>
-            <div className="flex mt-4">
-              <DetailsTab />
+            <div className="flex lg:w-2/3">
+              <DetailsTab
+                form={form}
+                handleChange={handleChange}
+                handleSelect={handleSelect}
+                selected={selected}
+                setSelected={setSelected}
+              />
             </div>
           </div>
         </div>

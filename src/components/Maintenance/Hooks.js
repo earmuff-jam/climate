@@ -1,17 +1,9 @@
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
-import {
-  ADD_ISSUE_DETAILS_FORM,
-  ADD_MAINTENANCE_FORM,
-  ADD_MAINTENANCE_LOG_FORM,
-  ADD_WORK_ORDER_FORM,
-  OVERALL_FORMATTED_MAINTENANCE_DETAILS,
-  OVERALL_MAINTENANCE_STATUS,
-} from "@/components/Maintenance/constants";
-
+import { ADD_MAINTENANCE_FORM } from "@/components/Maintenance/constants";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { DEFAULT_DETAILS_TAB_FORM } from "@/components/Maintenance/constants";
 
 /**
  * this hook is used to create inspection checklist forms.
@@ -200,101 +192,116 @@ export const useCreateInspectionChecklist = () => {
 };
 
 /**
- * this hook is used to update or add more details to the inspection details form. the inspection details form is a derivative of the inspection checklist created above
+ * this hook is used to add more details like issues, work orders or even maintenance logs for the maintenance form of each property.
  *
  */
 export const useMaintenanceDetails = () => {
   const user = useUser();
   const supabaseClient = useSupabaseClient();
 
-  const [form, setForm] = useState({
-    ...ADD_ISSUE_DETAILS_FORM,
-    ...ADD_MAINTENANCE_LOG_FORM,
-    ...ADD_WORK_ORDER_FORM,
-    ...OVERALL_MAINTENANCE_STATUS,
-  });
+  const [selected, setSelected] = useState("");
+  const [form, setForm] = useState(DEFAULT_DETAILS_TAB_FORM);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    const newForm = { ...form };
-    newForm[name].value = value;
-    newForm[name].errorMsg = newForm[name]?.validators?.reduce(
-      (acc, el, index, arr) => {
-        el.validate(value) ? (acc = el.message) : null;
-        return acc;
-      },
-      ""
+    const topLevelNames = form.flatMap((item) =>
+      Object.values(item.data).map((nestedItem) => nestedItem.name)
     );
-    setForm({ ...newForm });
+
+    if (topLevelNames.includes(name)) {
+      const newForm = form.map((item) => {
+        const updatedData = { ...item.data };
+        if (updatedData.details.name === name) {
+          updatedData.details.value = value;
+          updatedData.details.errorMsg = updatedData.details.validators.reduce(
+            (acc, el) => {
+              if (el.validate(value)) {
+                acc = el.message;
+              }
+              return acc;
+            },
+            ""
+          );
+        } else if (updatedData.description.name === name) {
+          updatedData.description.value = value;
+          updatedData.description.errorMsg =
+            updatedData.description.validators.reduce((acc, el) => {
+              if (el.validate(value)) {
+                acc = el.message;
+              }
+              return acc;
+            }, "");
+        }
+        return { ...item, data: updatedData };
+      });
+      setForm(newForm);
+      return;
+    }
+
+    const newForm = form.map((item) => {
+      const updatedData = { ...item.data };
+      Object.values(updatedData).forEach((nestedItem) => {
+        if (nestedItem.name === name) {
+          nestedItem.value = value;
+          nestedItem.errorMsg = nestedItem.validators.reduce((acc, el) => {
+            if (el.validate(value)) {
+              acc = el.message;
+            }
+            return acc;
+          }, "");
+        }
+      });
+      return { ...item, data: updatedData };
+    });
+    setForm(newForm);
   };
 
-  const handleSelect = (item, type) => {
-    const newForm = { ...form };
-    newForm[type].value = item;
-    newForm[type].errorMsg = newForm[type].validators?.reduce(
-      (acc, el, index, arr) => {
-        el.validate(item) ? (acc = el.message) : null;
-        return acc;
-      },
-      ""
-    );
-    setForm({ ...newForm });
+  const validator = (formFields) => {
+    const isValid = formFields.map((formField) => {
+      let formFieldValid = true;
+      // only check against err msg because fields can be empty
+      // if (formField.required && !formField.value) {
+      //   formFieldValid = false;
+      // }
+      if (formField.errorMsg) {
+        formFieldValid = false;
+      }
+      return formFieldValid;
+    });
+    return isValid.reduce((acc, el) => {
+      if (el === true) {
+        acc = true;
+      }
+      return acc;
+    }, false);
   };
 
   const handleModalSubmit = () => {
-    const maintenanceDetails = OVERALL_FORMATTED_MAINTENANCE_DETAILS;
-    maintenanceDetails.map((item, index) => {
-      if (item.label === "issue_details") {
-        item.data.push(form.issue_details.value);
-        item.data.push(form.issue_description.value);
-      } else if (item.label === "maintenance_logs") {
-        item.data.push(form.maintenance_log_details.value);
-        item.data.push(form.maintenance_log_description.value);
-      } else if (item.label === "work_orders") {
-        item.data.push(form.work_order_details.value);
-        item.data.push(form.work_order_description.value);
-      }
-      console.log(maintenanceDetails);
-    });
+    // handle modal submit button
+    // this allows users to submit the issue details and / or work logs as well.
+    const issueDetails = form
+      .filter((v) => v.label === "issue")
+      .map((v) => v.data.details);
+    const maintenanceLogDetails = form
+      .filter((v) => v.label === "maintenance_logs")
+      .map((v) => v.data.details);
+    const workOrderDetails = form
+      .filter((v) => v.label === "work_order")
+      .map((v) => v.data.details);
+    const issueIsValid = validator(issueDetails);
+    const maintenanceLogIsValid = validator(maintenanceLogDetails);
+    const workOrderDetailsIsValid = validator(workOrderDetails);
+    if (!issueIsValid || !maintenanceLogIsValid || !workOrderDetailsIsValid) {
+      return false;
+    } else {
+      // submit to supabase
+    }
   };
 
   return {
     form,
     handleChange,
-    handleSelect,
     handleModalSubmit,
-  };
-};
-
-/**
- * this hook is used to display and operate the three main form branches of the maintenance section.
- * @requires form parameter for the various input stages of maintenance request
- */
-export const useDetailsTagConfig = () => {
-  const [selected, setSelected] = useState("");
-  const [details, setDetails] = useState([
-    {
-      id: 1,
-      label: "issue",
-      title: "Issue",
-      data: ADD_ISSUE_DETAILS_FORM,
-    },
-    {
-      id: 2,
-      label: "maintenance_logs",
-      title: "Logs",
-      data: ADD_MAINTENANCE_LOG_FORM,
-    },
-    {
-      id: 3,
-      label: "work_order",
-      title: "Work Order",
-      data: ADD_WORK_ORDER_FORM,
-    },
-  ]);
-
-  return {
-    details,
     selected,
     setSelected,
   };
