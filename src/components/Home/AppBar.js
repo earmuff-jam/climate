@@ -21,7 +21,7 @@ export default function AppBar() {
   const supabaseClient = useSupabaseClient();
 
   const handleSignOut = async () => {
-    await supabaseClient.auth.signOut();
+    await supabaseClient.auth.signOut().then(router.replace('/'));
     return;
   };
 
