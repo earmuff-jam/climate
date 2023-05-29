@@ -19,20 +19,18 @@ export const useAppBarConfig = () => {
     const updateProfilePic = (value) => setProfilePic(value);
     const handleSignOut = async () => supabaseClient.auth.signOut();
 
-    useEffect(() => {
-        const userID = user.id;
-        const {data, error} = supabaseClient
-            .storage
-            .from('avatars')
-            .getPublicUrl(`profile/${userID}`);
-        if (error) return;
-        console.log(data);
+    // useEffect(() => {
+    //     const userID = user.id;
+    //     const {data, error} = supabaseClient
+    //         .storage
+    //         .from('avatars')
+    //         .getPublicUrl(`profile/${userID}`);
+    //     if (error) return;
 
-        const {data: testData, error: testErr} = supabaseClient
-            .storage
-            .listBuckets();
-        console.log(testData, testErr);
-    }, []);
+    //     const {data: testData, error: testErr} = supabaseClient
+    //         .storage
+    //         .listBuckets();
+    // }, []);
 
     return {
         handleSignOut,
