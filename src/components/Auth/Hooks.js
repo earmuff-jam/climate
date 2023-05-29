@@ -12,6 +12,48 @@ export const useProfileConfig = () => {
   const router = useRouter();
   const supabaseClient = useSupabaseClient();
   const [profileData, setProfileData] = useState({});
+  const [profileImg, setProfileImg] = useState(null);
+
+  const handleChange = (ev) => {
+    const label = ev.target.id;
+    const value = ev.target.value;
+    const newProfileData = { ...profileData };
+    newProfileData[label] = value;
+    setProfileData({ ...newProfileData });
+  };
+  const submit = async (event) => {
+    event.preventDefault();
+    const { error: upsertProfileDataErr } = await supabaseClient
+      .from("profiles")
+      .upsert({
+        id: user?.id,
+        full_name: profileData?.full_name,
+        first_name: profileData?.first_name,
+        last_name: profileData?.last_name,
+        username: profileData?.username,
+        created_on: profileData?.created_on,
+        updated_on: new Date().toISOString(),
+        updated_by: user.id,
+      })
+      .select();
+
+    if (profileImg) {
+      const filename = `${user.id}`;
+      const { data, error } = await supabaseClient.storage
+        .from("avatars")
+        .upload(filename, profileImg, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (error) return;
+      const filepath = data.path;
+      console.log("the filepath is - ", filepath);
+      // save filepath in database
+    }
+    if (upsertProfileDataErr) return;
+    router.reload();
+  };
 
   const fetchUserList = async () => {
     const { data, error } = await supabaseClient
@@ -31,33 +73,6 @@ export const useProfileConfig = () => {
       .eq("id", user.id);
     setProfileData(...data);
   };
-
-  const handleChange = (ev) => {
-    const label = ev.target.id;
-    const value = ev.target.value;
-    const newProfileData = { ...profileData };
-    newProfileData[label] = value;
-    setProfileData({ ...newProfileData });
-  };
-
-  const submit = async (event) => {
-    event.preventDefault();
-    await supabaseClient
-      .from("profiles")
-      .upsert({
-        id: user?.id,
-        full_name: profileData?.full_name,
-        first_name: profileData?.first_name,
-        last_name: profileData?.last_name,
-        username: profileData?.username,
-        created_on: profileData?.created_on,
-        updated_on: new Date().toISOString(),
-        updated_by: user.id,
-      })
-      .select();
-    await router.reload();
-  };
-
   const { isLoading, isError, error } = useQuery("profileData", fetchUserList);
 
   return {
@@ -67,5 +82,7 @@ export const useProfileConfig = () => {
     profileData,
     submit,
     handleChange,
+    profileImg,
+    setProfileImg,
   };
 };

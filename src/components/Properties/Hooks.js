@@ -98,11 +98,11 @@ export const usePropertyConfig = () => {
     setFormData({ ...formData, [id]: value });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    processtoDb(formData);
-    setFormData({ ...BLANK_PROPERTIES_FORM });
-  };
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        processtoDb(formData);
+        setFormData({...BLANK_PROPERTIES_FORM});
+    };
 
   const fetchPropertyList = async () => {
     const { data, error } = await supabaseClient

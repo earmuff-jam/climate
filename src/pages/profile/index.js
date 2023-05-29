@@ -1,11 +1,19 @@
-import { useProfileConfig } from "@/components/Auth/Hooks";
 import moment from "moment";
+import { useProfileConfig } from "@/components/Auth/Hooks";
 import ProfileChips from "@/components/Profile/ProfileChips";
 import PrivateLayout from "@/components/Auth/PrivateLayout";
 
 export default function Profile() {
-  const { isLoading, isError, error, profileData, submit, handleChange } =
-    useProfileConfig();
+  const {
+    isLoading,
+    isError,
+    error,
+    profileData,
+    submit,
+    handleChange,
+    profileImg,
+    setProfileImg,
+  } = useProfileConfig();
 
   if (isLoading) {
     return <span>Loading ...</span>;
@@ -17,12 +25,36 @@ export default function Profile() {
   return (
     <div className="m-10">
       <div className="px-4 sm:px-0">
-        <h3 className="text-base font-semibold leading-7 text-gray-900">
-          Profile Information
-        </h3>
-        <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
-          Personal details of logged in user.
-        </p>
+        <div className="mb-5">
+          <h3 className="text-base font-semibold leading-7 text-gray-900">
+            Profile Information
+          </h3>
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+            Personal details of logged in user.
+          </p>
+        </div>
+        <div className="flex flex-col gap-2 text-sm text-gray-500">
+          <label>Change profile picture </label>
+          <input
+            type="file"
+            placeholder="Choose profile picture"
+            name="profile_pic"
+            onChange={(event) => {
+              setProfileImg(event.target.files[0]);
+            }}
+          />
+          {profileImg && (
+            <div>
+              <img
+                alt="not found"
+                width={"250px"}
+                src={URL.createObjectURL(profileImg)}
+              />
+              <br />
+              <button onClick={() => setProfileImg(null)}>Remove</button>
+            </div>
+          )}
+        </div>
         <ProfileChips />
       </div>
       <div className="mt-6 border-t border-gray-100">
