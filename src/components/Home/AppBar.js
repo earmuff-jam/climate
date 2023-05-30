@@ -1,34 +1,15 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { Typography } from "@material-tailwind/react";
-import { Fragment, useEffect, useState } from "react";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { Fragment } from "react";
+import { useAppBarConfig } from "./Hooks";
+import { Button, Typography } from "@material-tailwind/react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-
-const navigation = [
-  { name: "Dashboard", href: "/", current: false },
-  { name: "Properties", href: "/properties", current: false },
-  { name: "Tenants", href: "/tenants", current: false },
-];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function AppBar() {
-  const router = useRouter();
-  const supabaseClient = useSupabaseClient();
-
-  const handleSignOut = async () => {
-    await supabaseClient.auth.signOut().then(router.replace('/'));
-    return;
-  };
-
-  const navigate = (route) => {
-    router.push(route);
-  };
-
+  const { intials, nav, navigate, handleSignOut } = useAppBarConfig();
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -59,7 +40,7 @@ export default function AppBar() {
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
-                    {navigation.map((item) => (
+                    {nav.map((item) => (
                       <div
                         key={item.name}
                         onClick={() => {
@@ -80,20 +61,24 @@ export default function AppBar() {
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <button
+                {/* <Badge content={"5"}> */}
+                <Button
                   type="button"
                   className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
                   <span className="sr-only">View notifications</span>
+                  <span className="ml-2 inline-block whitespace-nowrap rounded-[0.27rem] bg-white-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-red-100">
+                    7
+                  </span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
+                </Button>
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
                     <Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="sr-only">Open user menu</span>
-                      <Typography variant="h4">{"JH"}</Typography>
+                      <Typography variant="h5">{intials}</Typography>
                     </Menu.Button>
                   </div>
                   <Transition
@@ -119,19 +104,6 @@ export default function AppBar() {
                           </a>
                         )}
                       </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            Settings
-                          </a>
-                        )}
-                      </Menu.Item>
                       <Menu.Button>
                         {({ active }) => (
                           <a
@@ -154,7 +126,7 @@ export default function AppBar() {
 
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 px-2 pb-3 pt-2">
-              {navigation.map((item) => (
+              {nav.map((item) => (
                 <Disclosure.Button
                   key={item.name}
                   as="a"
