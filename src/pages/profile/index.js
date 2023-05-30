@@ -1,5 +1,5 @@
-import { useProfileConfig } from "@/components/Auth/Hooks";
 import moment from "moment";
+import { useProfileConfig } from "@/components/Auth/Hooks";
 import ProfileChips from "@/components/Profile/ProfileChips";
 import PrivateLayout from "@/components/Auth/PrivateLayout";
 
@@ -113,6 +113,10 @@ export default function Profile() {
     </div>
   );
 }
+
+Profile.getInitialProps = async (ctx) => {
+  return {};
+};
 
 Profile.getLayout = function getLayout(page) {
   return <PrivateLayout>{page}</PrivateLayout>;

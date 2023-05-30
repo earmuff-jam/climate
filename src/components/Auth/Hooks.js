@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useQuery } from "react-query";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 
@@ -55,15 +54,14 @@ export const useProfileConfig = () => {
         updated_by: user.id,
       })
       .select();
-    await router.reload();
+    router.reload();
   };
 
-  const { isLoading, isError, error } = useQuery("profileData", fetchUserList);
+  useEffect(() => {
+    fetchUserList();
+  }, [user?.id]);
 
   return {
-    isLoading,
-    isError,
-    error,
     profileData,
     submit,
     handleChange,

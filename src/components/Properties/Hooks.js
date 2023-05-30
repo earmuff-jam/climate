@@ -42,9 +42,8 @@ export const usePropertyConfig = () => {
   const router = useRouter();
   const supabaseClient = useSupabaseClient();
 
+  const userID = user?.id;
   const [open, setOpen] = useState(false);
-  const [property, setProperty] = useState({});
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [formData, setFormData] = useState({ ...BLANK_PROPERTIES_FORM });
 
   const navigate = (pId) => {
@@ -82,16 +81,6 @@ export const usePropertyConfig = () => {
   const handleClick = () => {
     setOpen(!open);
   };
-  const handleDrawerClick = (el) => {
-    if (el) {
-      setProperty(el);
-      setDrawerOpen(el);
-      return;
-    }
-    setProperty(null);
-    setDrawerOpen(false);
-    return;
-  };
 
   const handleInputChange = (event) => {
     const { id, value } = event.target;
@@ -105,10 +94,13 @@ export const usePropertyConfig = () => {
   };
 
   const fetchPropertyList = async () => {
-    const { data, error } = await supabaseClient
-      .from("properties")
-      .select(
-        `
+    if (userID) {
+      const { data, error } =
+        userID &&
+        (await supabaseClient
+          .from("properties")
+          .select(
+            `
       id,
       title,
       description,
@@ -137,9 +129,11 @@ export const usePropertyConfig = () => {
       updated_on,
       sharable_groups
     `
-      )
-      .eq("owner_id", user.id);
-    return data;
+          )
+          .eq("owner_id", userID));
+      return data;
+    }
+    return null;
   };
 
   const fetchAllPropertiesList = async () => {
@@ -193,10 +187,7 @@ export const usePropertyConfig = () => {
     allPropertiesList,
     formData,
     open,
-    property,
-    drawerOpen,
     handleClick,
-    handleDrawerClick,
     handleInputChange,
     handleSubmit,
     navigate,

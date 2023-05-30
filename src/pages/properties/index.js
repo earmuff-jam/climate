@@ -16,10 +16,7 @@ const Properties = () => {
     data,
     formData,
     open,
-    property,
-    drawerOpen,
     handleClick,
-    handleDrawerClick,
     handleInputChange,
     handleSubmit,
   } = usePropertyConfig();
@@ -33,16 +30,7 @@ const Properties = () => {
 
   return (
     <>
-      <List
-        handleClick={handleClick}
-        handleDrawerClick={handleDrawerClick}
-        data={data}
-      />
-      {data?.length > 0 && drawerOpen && (
-        <Drawer isOpen={drawerOpen} setIsOpen={handleDrawerClick}>
-          <Property property={property} />
-        </Drawer>
-      )}
+      <List handleClick={handleClick} data={data} />
       {open && (
         <SimpleModal
           title={"Add Property"}
