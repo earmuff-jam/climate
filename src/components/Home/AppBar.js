@@ -34,7 +34,7 @@ export default function AppBar() {
                     src="/images/logo.svg"
                     alt="Property Co Parent Image"
                     onClick={() => {
-                      router.push("/");
+                      navigate("/");
                     }}
                   />
                 </div>
