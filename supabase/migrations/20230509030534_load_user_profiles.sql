@@ -1,9 +1,14 @@
 
 BEGIN;
+
+DROP EXTENSION IF EXISTS "uuid-ossp" CASCADE;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- Create a table for public profiles
--- 9043 :: ADMIN,  7543 :: PROPERTY_OWNER, 1204 :: TENANT
+-- 9043 :: ADMIN,  7543 :: USER, 1204 :: MAINTENANCE
 DROP TYPE IF EXISTS df_role_value CASCADE;
 CREATE TYPE df_role_value AS ENUM ('9043', '7543', '1204');
+
 DROP TABLE IF EXISTS profiles CASCADE ;
 create table profiles
 (
@@ -11,7 +16,7 @@ create table profiles
     username   TEXT UNIQUE,
     first_name TEXT,
     last_name  TEXT,
-    user_role  TEXT                                                           NOT NULL DEFAULT '1204',
+    user_role  TEXT                                                           NOT NULL DEFAULT '7543',
     created_on TIMESTAMP WITH TIME ZONE                                       NOT NULL,
     updated_by UUID,
     updated_on TIMESTAMP WITH TIME ZONE

@@ -1,116 +1,112 @@
-import moment from "moment";
-import { useProfileConfig } from "@/components/Auth/Hooks";
-import ProfileChips from "@/components/Profile/ProfileChips";
-import PrivateLayout from "@/components/Auth/PrivateLayout";
+import { useProfileConfig } from '@/components/Auth/Hooks';
+import PrivateLayout from '@/components/Auth/PrivateLayout';
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Divider,
+  Grid,
+  Box,
+  Skeleton,
+} from '@mui/material';
 
 export default function Profile() {
   const { isLoading, isError, error, profileData, submit, handleChange } =
     useProfileConfig();
 
   if (isLoading) {
-    return <span>Loading ...</span>;
+    return (
+      <Skeleton
+        variant='rounded'
+        animation='wave'
+        height={'100%'}
+        width={'100%'}
+      />
+    );
   }
   if (isError) {
     return <span>Error: {error.message}</span>;
   }
 
   return (
-    <div className="m-10">
-      <div className="px-4 sm:px-0">
-        <h3 className="text-base font-semibold leading-7 text-gray-900">
+    <Container maxWidth='md' sx={{ mt: 10 }}>
+      <Box sx={{ px: 4 }}>
+        <Typography variant='h6' gutterBottom>
           Profile Information
-        </h3>
-        <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+        </Typography>
+        <Typography variant='body2' color='textSecondary' gutterBottom>
           Personal details of logged in user.
-        </p>
-        <ProfileChips />
-      </div>
-      <div className="mt-6 border-t border-gray-100">
-        <dl className="divide-y divide-gray-100">
-          <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">
-              First name
-            </dt>
-            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              <div>
-                <div className="relative mt-2 rounded-md shadow-sm">
-                  <input
-                    type="text"
-                    name="first_name"
-                    id="first_name"
-                    className="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder="First name"
-                    value={profileData?.first_name}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-            </dd>
-          </div>
-          <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">
-              Last name
-            </dt>
-            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              <div>
-                <div className="relative mt-2 rounded-md shadow-sm">
-                  <input
-                    type="text"
-                    name="last_name"
-                    id="last_name"
-                    className="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder="Last name"
-                    value={profileData?.last_name}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-            </dd>
-          </div>
-
-          <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">
-              User name
-            </dt>
-            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              <div>
-                <div className="relative mt-2 rounded-md shadow-sm">
-                  <input
-                    type="text"
-                    name="username"
-                    id="username"
-                    className="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder="User Name"
-                    value={profileData?.username || ""}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-            </dd>
-          </div>
-
-          <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">
-              {profileData?.updated_on === null ? "Created" : "Updated"}
-            </dt>
-            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+        </Typography>
+      </Box>
+      <Divider sx={{ my: 3 }} />
+      <Box>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={4}>
+            <Typography variant='body1'>First name</Typography>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <TextField
+              fullWidth
+              id='first_name'
+              name='first_name'
+              placeholder='First name'
+              value={profileData?.first_name}
+              onChange={handleChange}
+              variant='outlined'
+              size='small'
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Typography variant='body1'>Last name</Typography>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <TextField
+              fullWidth
+              id='last_name'
+              name='last_name'
+              placeholder='Last name'
+              value={profileData?.last_name}
+              onChange={handleChange}
+              variant='outlined'
+              size='small'
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Typography variant='body1'>User name</Typography>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <TextField
+              fullWidth
+              id='username'
+              name='username'
+              placeholder='User Name'
+              value={profileData?.username || ''}
+              onChange={handleChange}
+              variant='outlined'
+              size='small'
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Typography variant='body1'>
+              {profileData?.updated_on === null ? 'Created' : 'Last Updated'}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <Typography variant='body2'>
               {profileData?.updated_on === null
-                ? moment(profileData?.created_on).fromNow()
-                : moment(profileData?.updated_on).fromNow()}
-            </dd>
-          </div>
-        </dl>
-        <div className="text-center">
-          <button
-            type="button"
-            onClick={submit}
-            className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-          >
+                ? profileData?.created_on
+                : profileData?.updated_on}
+            </Typography>
+          </Grid>
+        </Grid>
+        <Box sx={{ textAlign: 'center', mt: 3 }}>
+          <Button variant='contained' color='primary' onClick={submit}>
             Submit
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </Box>
+      </Box>
+    </Container>
   );
 }
 

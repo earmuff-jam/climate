@@ -1,7 +1,7 @@
-import React from "react";
-import EntryForm from "./EntryForm";
-import AppBar from "../Home/AppBar";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import React from 'react';
+import EntryForm from './EntryForm';
+import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import HomeAppBar from '../AppBar/HomeAppBar';
 
 const PrivateLayout = ({ children }) => {
   const user = useUser();
@@ -13,7 +13,8 @@ const PrivateLayout = ({ children }) => {
 
   return (
     <>
-      <AppBar />
+      {/* All users are logged in if arrive here */}
+      <HomeAppBar isUserLoggedIn={true} />
       <div>{children}</div>
     </>
   );

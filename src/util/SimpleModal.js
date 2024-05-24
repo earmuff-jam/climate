@@ -1,40 +1,33 @@
-import React from "react";
+import React from 'react';
 import {
-  Button,
   Dialog,
-  DialogHeader,
-  DialogBody,
-  DialogFooter,
-} from "@material-tailwind/react";
+  DialogTitle,
+  DialogContent,
+  IconButton,
+  Stack,
+} from '@mui/material';
+import { CloseRounded } from '@mui/icons-material';
 
 const SimpleModal = (props) => {
-  const { title, handleClick, children, showSubmit, handleSubmit } = props;
+  const { title, handleClose, children } = props;
+
   return (
-    <Dialog open={open} handler={handleClick} size="xxl">
-      <DialogHeader>{title}</DialogHeader>
-      <DialogBody divider className="h-[40rem] overflow-scroll">{children}</DialogBody>
-      <DialogFooter>
-        <Button
-          variant="text"
-          color="red"
-          onClick={handleClick}
-          className="mr-1"
+    <Dialog open={true} onClose={handleClose} maxWidth='xl' fullWidth>
+      <DialogTitle>
+        <Stack
+          direction='row'
+          justifyContent={'space-between'}
+          alignItems={'center'}
         >
-          <span>Cancel</span>
-        </Button>
-        {showSubmit && (
-          <Button
-            variant="gradient"
-            color="green"
-            onClick={(ev) => {
-              handleClick();
-              handleSubmit(ev);
-            }}
-          >
-            <span>Confirm</span>
-          </Button>
-        )}
-      </DialogFooter>
+          {title}
+          <IconButton aria-label='close' onClick={handleClose} color='error'>
+            <CloseRounded />
+          </IconButton>
+        </Stack>
+      </DialogTitle>
+      <DialogContent dividers sx={{ maxHeight: '40rem', overflow: 'auto' }}>
+        {children}
+      </DialogContent>
     </Dialog>
   );
 };

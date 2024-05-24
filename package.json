@@ -9,22 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.14",
-    "@heroicons/react": "^2.0.17",
-    "@material-tailwind/react": "^1.4.2",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.15.18",
+    "@mui/material": "^5.15.18",
     "@supabase/auth-helpers-nextjs": "^0.6.0",
     "@supabase/auth-helpers-react": "^0.3.1",
     "@supabase/auth-ui-react": "^0.3.5",
     "@supabase/supabase-js": "2.21.0",
     "autoprefixer": "10.4.14",
+    "dayjs": "^1.11.11",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.2",
-    "moment": "^2.29.4",
     "next": "13.3.2",
     "postcss": "8.4.23",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-query": "^3.39.3",
-    "tailwindcss": "3.3.2"
+    "xlsx": "^0.18.5"
   }
 }

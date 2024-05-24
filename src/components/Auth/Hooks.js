@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 
 /**
  * this hook is used to retrieve and update profile data with configuration details
@@ -14,7 +14,7 @@ export const useProfileConfig = () => {
 
   const fetchUserList = async () => {
     const { data, error } = await supabaseClient
-      .from("profiles")
+      .from('profiles')
       .select(
         `
         id,
@@ -27,8 +27,11 @@ export const useProfileConfig = () => {
         updated_by
         `
       )
-      .eq("id", user.id);
-    setProfileData(...data);
+      .eq('id', user.id);
+
+    // get the first user that matches the criteria. this will always be the person who logged in.
+    const selectedUser = data.find(Boolean);
+    setProfileData(selectedUser);
   };
 
   const handleChange = (ev) => {
@@ -42,14 +45,14 @@ export const useProfileConfig = () => {
   const submit = async (event) => {
     event.preventDefault();
     await supabaseClient
-      .from("profiles")
+      .from('profiles')
       .upsert({
         id: user?.id,
         full_name: profileData?.full_name,
         first_name: profileData?.first_name,
         last_name: profileData?.last_name,
         username: profileData?.username,
-        created_on: profileData?.created_on,
+        created_on: new Date().toISOString(),
         updated_on: new Date().toISOString(),
         updated_by: user.id,
       })
@@ -59,6 +62,7 @@ export const useProfileConfig = () => {
 
   useEffect(() => {
     fetchUserList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
   return {
