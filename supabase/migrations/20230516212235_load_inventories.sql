@@ -8,26 +8,26 @@ BEGIN;
 DROP TABLE IF EXISTS inventories CASCADE;
 CREATE TABLE IF NOT EXISTS inventories
 (
-    id                    UUID PRIMARY KEY         NOT NULL DEFAULT gen_random_uuid(),
-    name                  VARCHAR(100)             NOT NULL,
+    id                    UUID PRIMARY KEY                                                                  NOT NULL DEFAULT gen_random_uuid(),
+    name                  VARCHAR(100)                                                                      NOT NULL,
     description           VARCHAR(500),
-    price                 DECIMAL(10, 4)                    DEFAULT 0.00,
+    price                 DECIMAL(10, 4)                                                                             DEFAULT 0.00,
     barcode               VARCHAR(100),
     sku                   VARCHAR(100),
-    quantity              INT                               DEFAULT 1,
+    quantity              INT                                                                                        DEFAULT 1,
     bought_at             VARCHAR(500),
     location              VARCHAR(500),
     storage_location_id   UUID REFERENCES storage_locations (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    is_bookmarked         BOOLEAN                  NOT NULL DEFAULT false,
-    is_returnable         BOOLEAN                  NOT NULL DEFAULT false,
+    is_bookmarked         BOOLEAN                                                                          NOT NULL DEFAULT false,
+    is_returnable         BOOLEAN                                                                          NOT NULL DEFAULT false,
     return_location       VARCHAR(200),
     max_weight            VARCHAR(10) , -- weight distribution is in kg
     min_weight            VARCHAR(10) , -- weight distribution is in kg
     max_height            VARCHAR(10) , -- height distribution is in inches
     min_height            VARCHAR(10) , -- height distribution is in inches
-    created_at            TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    created_on            TIMESTAMP WITH TIME ZONE                                                         NOT NULL DEFAULT NOW(),
     created_by            UUID REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    updated_at            TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_on            TIMESTAMP WITH TIME ZONE                                                         NOT NULL DEFAULT NOW(),
     updated_by            UUID REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE,
     sharable_groups       UUID[]
 );
