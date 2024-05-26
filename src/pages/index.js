@@ -1,14 +1,12 @@
 import PublicLayout from "@/components/Auth/PublicLayout";
-import TopContent from "@/components/Home/TopContent";
 import PromoSection from "@/components/Home/PromoSection";
-import PropertyList from "@/components/Properties/PropertyList";
+import { Stack } from "@mui/material";
+
 export default function Home() {
   return (
-    <div className="mx-10 my-10">
-      <TopContent />
+    <Stack>
       <PromoSection />
-      <PropertyList />
-    </div>
+    </Stack>
   );
 }
 

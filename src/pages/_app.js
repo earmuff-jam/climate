@@ -1,10 +1,11 @@
-import "@/styles/globals.css";
-import React, { useState } from "react";
-import { ThemeProvider } from "@material-tailwind/react";
-import { ReactQueryDevtools } from "react-query/devtools";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { SessionContextProvider } from "@supabase/auth-helpers-react";
-import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import '@/styles/globals.css';
+import React, { useState } from 'react';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { SessionContextProvider } from '@supabase/auth-helpers-react';
+import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import theme from '../styles/theme';
+import { ThemeProvider } from '@emotion/react';
 
 export default function App({ Component, pageProps }) {
   const [supabase] = useState(() => createBrowserSupabaseClient());
@@ -19,7 +20,7 @@ export default function App({ Component, pageProps }) {
       initialSession={pageProps.intialSession}
     >
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
+        <ThemeProvider theme={theme}>
           {getLayout(<Component {...pageProps} />)}
           <ReactQueryDevtools initialIsOpen={false} />
         </ThemeProvider>
