@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import { useQuery } from 'react-query';
 
 /**
  * this hook is used to retrieve and update profile data with configuration details
@@ -12,8 +13,8 @@ export const useProfileConfig = () => {
   const supabaseClient = useSupabaseClient();
   const [profileData, setProfileData] = useState({});
 
-  const fetchUserList = async () => {
-    const { data, error } = await supabaseClient
+  const fetchUserDetails = () => {
+    return supabaseClient
       .from('profiles')
       .select(
         `
@@ -28,10 +29,6 @@ export const useProfileConfig = () => {
         `
       )
       .eq('id', user.id);
-
-    // get the first user that matches the criteria. this will always be the person who logged in.
-    const selectedUser = data.find(Boolean);
-    setProfileData(selectedUser);
   };
 
   const handleChange = (ev) => {
@@ -60,12 +57,22 @@ export const useProfileConfig = () => {
     router.reload();
   };
 
-  useEffect(() => {
-    fetchUserList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]);
+  const {
+    isLoading: isFetchUserDetailsLoading,
+    isError: isFetchUserDetailsError,
+    error: fetchUserDetailsError,
+  } = useQuery('userProfileDetails', fetchUserDetails, {
+    onSuccess: (response) => {
+      // get the first user that matches the criteria. this will always be the person who logged in.
+      const selectedUser = response.data.find(Boolean);
+      setProfileData(selectedUser);
+    },
+  });
 
   return {
+    isFetchUserDetailsLoading,
+    isFetchUserDetailsError,
+    fetchUserDetailsError,
     profileData,
     submit,
     handleChange,

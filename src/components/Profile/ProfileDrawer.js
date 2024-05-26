@@ -14,7 +14,7 @@ export const PROFILE_DRAWER_NAVIGATION_ITEMS = [
   'Display',
 ];
 
-const ProfileDrawer = ({ handleSelection }) => {
+const ProfileDrawer = ({ selectedRow, handleSelection }) => {
   return (
     <Stack
       sx={(theme) => ({
@@ -27,7 +27,7 @@ const ProfileDrawer = ({ handleSelection }) => {
       {PROFILE_DRAWER_NAVIGATION_ITEMS.map((v, index) => (
         <List key={index} disablePadding>
           <ListItem onClick={() => handleSelection(index)}>
-            <ListItemButton>
+            <ListItemButton selected={index === selectedRow}>
               <ListItemText primary={v} />
             </ListItemButton>
           </ListItem>

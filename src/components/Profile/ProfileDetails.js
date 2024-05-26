@@ -9,11 +9,20 @@ import {
 } from '@mui/material';
 import ProfileDrawer from './ProfileDrawer';
 import ProfileContent from './ProfileContent';
+import AccountContent from './AccountContent';
+import NotificationsContent from './NotificationsContent';
+import AppearanceSettings from './AppearanceSettings';
 
 const displaySelection = (rowToDisplay) => {
   switch (rowToDisplay) {
     case 0:
       return <ProfileContent />;
+    case 1:
+      return <AccountContent />;
+    case 2:
+      return <NotificationsContent />;
+    case 3:
+      return <AppearanceSettings />;
     default:
       return <ProfileContent />;
   }
@@ -35,7 +44,10 @@ const ProfileDetails = () => {
       </Box>
       <Divider sx={{ my: 3 }} />
       <Stack direction={'row'}>
-        <ProfileDrawer handleSelection={handleSelection} />
+        <ProfileDrawer
+          selectedRow={selectedRow}
+          handleSelection={handleSelection}
+        />
         <Box sx={{ flexGrow: 1 }}>{displaySelection(selectedRow)}</Box>
       </Stack>
     </Container>
