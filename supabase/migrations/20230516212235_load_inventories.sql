@@ -1,4 +1,6 @@
 
+-- 0003 load inventories details ---
+--- Description: inventory item details ---
 
 BEGIN;
 

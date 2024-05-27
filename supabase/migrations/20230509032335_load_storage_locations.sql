@@ -1,6 +1,9 @@
+
+-- 0002 - load storage locations --
+-- Description: Create the storage location for select inventory item -- 
+
 BEGIN;
 
--- Description: Create the storage locations table
 DROP TABLE IF EXISTS storage_locations CASCADE;
 CREATE TABLE IF NOT EXISTS storage_locations
 (

@@ -23,6 +23,7 @@ export const useProfileConfig = () => {
         username,
         first_name,
         last_name,
+        bio,
         user_role,
         created_on,
         updated_by
@@ -49,6 +50,7 @@ export const useProfileConfig = () => {
         first_name: profileData?.first_name,
         last_name: profileData?.last_name,
         username: profileData?.username,
+        bio: profileData?.bio,
         created_on: new Date().toISOString(),
         updated_on: new Date().toISOString(),
         updated_by: user.id,
