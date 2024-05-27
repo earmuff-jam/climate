@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Typography,
   Button,
@@ -7,38 +7,39 @@ import {
   Divider,
   Checkbox,
   FormControlLabel,
+  Skeleton,
 } from '@mui/material';
+
 import {
   AssignmentLateRounded,
   BookmarkRounded,
   SettingsSuggestRounded,
 } from '@mui/icons-material';
+import useFetchProfileConfigDetails from '../../features/profile/fetchProfileConfigDetails';
 
 const NotificationsContent = () => {
   const submit = () => {};
 
-  const [notificationSetting, setNotificationSetting] = useState({
-    bookmarkedItems: {
-      name: 'bookmarked_items',
-      is_notification_enabled: false,
-    },
-    itemsDue: {
-      name: 'items_due',
-      is_items_due_enabled: true,
-    },
-    system_settings: {
-      name: 'system_settings',
-      is_system_settings_enabled: true,
-    },
-  });
-
   const handleCheckbox = () => {};
+
+  const { data, isLoading, isError } = useFetchProfileConfigDetails();
+
+  if (isLoading) {
+    return (
+      <Skeleton
+        variant='rounded'
+        animation='wave'
+        height={'100%'}
+        width={'100%'}
+      />
+    );
+  }
 
   return (
     <>
       <Box sx={{ pb: 2 }}>
         <Typography variant='h4' gutterBottom>
-          Notfication Center
+          Notification Center
         </Typography>
         <Typography variant='caption' gutterBottom>
           Setup notifications for alerts regarding your bookmarked inventories.
@@ -50,9 +51,7 @@ const NotificationsContent = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={
-                notificationSetting.bookmarkedItems.is_notification_enabled
-              }
+              checked={data.notify_bookmarked_items}
               onChange={(e) =>
                 handleCheckbox('is_bookmarked', e.target.checked)
               }
@@ -63,11 +62,7 @@ const NotificationsContent = () => {
             <Stack>
               <Stack direction={'row'} alignItems={'center'} spacing={1}>
                 <BookmarkRounded
-                  color={
-                    notificationSetting.is_notification_enabled
-                      ? 'primary'
-                      : 'secondary'
-                  }
+                  color={data.notify_bookmarked_items ? 'primary' : 'secondary'}
                 />
                 <Typography variant='caption'>Bookmarked Items</Typography>
               </Stack>
@@ -80,7 +75,7 @@ const NotificationsContent = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={notificationSetting.itemsDue.is_items_due_enabled}
+              checked={data.notify_due_items}
               onChange={(e) => handleCheckbox('items_due', e.target.checked)}
               color='primary'
             />
@@ -89,11 +84,7 @@ const NotificationsContent = () => {
             <Stack>
               <Stack direction={'row'} alignItems={'center'} spacing={1}>
                 <AssignmentLateRounded
-                  color={
-                    notificationSetting.itemsDue.is_items_due_enabled
-                      ? 'warning'
-                      : 'secondary'
-                  }
+                  color={data.notify_due_items ? 'warning' : 'secondary'}
                 />
                 <Typography variant='caption'>Due Items</Typography>
               </Stack>
@@ -106,9 +97,7 @@ const NotificationsContent = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={
-                notificationSetting.system_settings.is_system_settings_enabled
-              }
+              checked={data.notify_settings_privacy}
               onChange={(e) =>
                 handleCheckbox('is_system_settings_enabled', e.target.checked)
               }
@@ -119,12 +108,7 @@ const NotificationsContent = () => {
             <Stack>
               <Stack direction={'row'} alignItems={'center'} spacing={1}>
                 <SettingsSuggestRounded
-                  color={
-                    notificationSetting.system_settings
-                      .is_system_settings_enabled
-                      ? 'primary'
-                      : 'secondary'
-                  }
+                  color={data.notify_settings_privacy ? 'primary' : 'secondary'}
                 />
                 <Typography variant='caption'>
                   Settings and privacy changes.

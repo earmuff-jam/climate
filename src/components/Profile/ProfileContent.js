@@ -8,32 +8,17 @@ import {
   Stack,
   Divider,
 } from '@mui/material';
-import { useProfileConfig } from './Hooks';
 import dayjs from 'dayjs';
+import useFetchProfileDetails from '../../features/profile/fetchProfileDetails';
 
 const relativeTime = require('dayjs/plugin/relativeTime');
 dayjs.extend(relativeTime);
 
 const ProfileContent = () => {
-  const {
-    isFetchUserDetailsLoading,
-    isFetchUserDetailsError,
-    fetchUserDetailsError,
-    profileData,
-    submit,
-    handleChange,
-  } = useProfileConfig();
+  const submit = () => {};
 
-  if (isFetchUserDetailsLoading) {
-    return (
-      <Skeleton
-        variant='rounded'
-        animation='wave'
-        height={'100%'}
-        width={'100%'}
-      />
-    );
-  }
+  const handleChange = () => {};
+  const { data, isLoading, isError } = useFetchProfileDetails();
 
   return (
     <>
@@ -55,7 +40,7 @@ const ProfileContent = () => {
           id='username'
           name='username'
           placeholder='User Name'
-          value={profileData?.username || ''}
+          value={data?.username || ''}
           onChange={handleChange}
           variant='outlined'
           size='small'
@@ -71,7 +56,7 @@ const ProfileContent = () => {
           id='first_name'
           name='first_name'
           placeholder='First name'
-          value={profileData?.first_name}
+          value={data?.first_name}
           onChange={handleChange}
           variant='outlined'
           size='small'
@@ -84,7 +69,7 @@ const ProfileContent = () => {
           id='last_name'
           name='last_name'
           placeholder='Last name'
-          value={profileData?.last_name}
+          value={data?.last_name}
           onChange={handleChange}
           variant='outlined'
           size='small'
@@ -98,7 +83,7 @@ const ProfileContent = () => {
           id='bio'
           name='bio'
           placeholder='Couple of words to describe yourself.'
-          value={profileData?.bio}
+          value={data?.bio}
           onChange={handleChange}
           variant='outlined'
           multiline={true}
@@ -107,9 +92,9 @@ const ProfileContent = () => {
         />
 
         <Typography variant='body1'>
-          {profileData?.updated_on === null
-            ? `Created ${dayjs(profileData?.created_on).fromNow()}`
-            : `Last updated ${dayjs(profileData?.updated_on).fromNow()}`}
+          {data?.updated_on === null
+            ? `Created ${dayjs(data?.created_on).fromNow()}`
+            : `Last updated ${dayjs(data?.updated_on).fromNow()}`}
         </Typography>
         <Box sx={{ textAlign: 'center', mt: 3 }}>
           <Button variant='outlined' color='primary' onClick={submit}>

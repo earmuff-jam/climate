@@ -22,5 +22,6 @@ END;
 
 ALTER TABLE user_settings ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "users can update their own profile details" ON user_settings FOR INSERT WITH CHECK(auth.uid() = id);
-CREATE POLICY "users can perform updates on their own profile" ON user_settings FOR UPDATE USING(auth.uid() = id);
+CREATE POLICY "users can view their profile settings" ON user_settings FOR SELECT USING (true);
+CREATE POLICY "users can insert new values to their profile settings" ON user_settings FOR INSERT WITH CHECK(auth.uid() = id);
+CREATE POLICY "users can update their own profile settings" ON user_settings FOR UPDATE USING(auth.uid() = id);
