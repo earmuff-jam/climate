@@ -9,7 +9,6 @@ const {
   TableCell,
   Checkbox,
   TableBody,
-  Tooltip,
   Box,
   IconButton,
   Skeleton,

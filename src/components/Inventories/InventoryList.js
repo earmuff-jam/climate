@@ -1,18 +1,13 @@
 import React, { useState } from 'react';
 import SimpleModal from '@/util/SimpleModal';
-import {
-  Box,
-  Button,
-  Container,
-  Skeleton,
-  Stack,
-  Typography,
-} from '@mui/material';
-import AddInventoryWithStepper from '../../components/Inventories/AddInventoryWithStepper';
+import { Box, Container } from '@mui/material';
+import AddInventoryWithStepper from './AddInventoryWithStepper';
 import { AddRounded, LibraryAddRounded } from '@mui/icons-material';
 import AddBulkUploadInventory from './AddBulkUploadInventory';
 import { useFetchInventoriesList } from '@/features/notifications/notification';
-import Categories from './Categories';
+import HeaderWithButton from '@/util/HeaderWithButton';
+import InventoriesTable from './InventoriesTable';
+import { VIEW_INVENTORY_LIST_HEADERS } from './constants';
 
 const InventoryList = () => {
   // list of inventories
@@ -31,35 +26,29 @@ const InventoryList = () => {
   return (
     <Box sx={{ py: 8 }}>
       <Container maxWidth='lg'>
-        <Box
-          display='flex'
-          justifyContent='space-between'
-          alignItems='center'
-          mb={4}
-        >
-          <Typography variant='h4' component='h2'>
-            Categories
-          </Typography>
-          <Stack direction='row' spacing={2} useFlexGap>
-            <Button
-              color='primary'
-              variant='outlined'
-              onClick={handleDisplayAddSingleInventoryModal}
-              startIcon={<AddRounded />}
-            >
-              Add Item
-            </Button>
-            <Button
-              color='primary'
-              variant='outlined'
-              onClick={handleDisplayAddBulkInventoryModal}
-              startIcon={<LibraryAddRounded />}
-            >
-              Upload bulk
-            </Button>
-          </Stack>
-        </Box>
-        <Categories />
+        {/* inventories section */}
+        <HeaderWithButton
+          title='Inventories'
+          showPrimaryButton={true}
+          primaryButtonVariant={'outlined'}
+          primaryButtonColor={'primary'}
+          primaryButtonTextLabel={'Add Item'}
+          showPrimaryStartIcon={true}
+          primaryStartIcon={<AddRounded />}
+          showSecondaryButton={true}
+          secondaryButtonVariant={'outlined'}
+          secondaryButtonTextLabel={'Upload bulk'}
+          secondaryButtonColor='primary'
+          showSecondaryStartIcon={true}
+          secondaryStartIcon={<LibraryAddRounded />}
+          handleClickPrimaryButton={handleDisplayAddSingleInventoryModal}
+          handleClickSecondaryButton={handleDisplayAddBulkInventoryModal}
+        />
+        <InventoriesTable
+          isLoading={isLoading}
+          inventoryData={data}
+          inventoryColumns={Object.values(VIEW_INVENTORY_LIST_HEADERS)}
+        />
       </Container>
       {displayModal && (
         <SimpleModal
@@ -75,6 +64,7 @@ const InventoryList = () => {
           title={'Add Bulk Item'}
           handleClose={handleCloseAddBulkInventoryItem}
           showSubmit={false}
+          maxSize={'md'}
         >
           <AddBulkUploadInventory />
         </SimpleModal>

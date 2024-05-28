@@ -1,5 +1,4 @@
 import {
-  AssignmentLateRounded,
   BookmarkAddedRounded,
   KitchenRounded,
   ShoppingBagRounded,
