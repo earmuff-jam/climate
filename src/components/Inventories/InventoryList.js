@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 import SimpleModal from '@/util/SimpleModal';
-import { Box, Button, Container, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Skeleton,
+  Stack,
+  Typography,
+} from '@mui/material';
 import AddInventoryWithStepper from '../../components/Inventories/AddInventoryWithStepper';
-import { DisplayNoMatchingRecordsComponent } from '@/util/util';
 import { AddRounded, LibraryAddRounded } from '@mui/icons-material';
 import AddBulkUploadInventory from './AddBulkUploadInventory';
+import { useFetchInventoriesList } from '@/features/notifications/notification';
+import Categories from './Categories';
 
 const InventoryList = () => {
   // list of inventories
-  const [data, setData] = useState([]);
+  const { data, isLoading, isError } = useFetchInventoriesList();
   const [displayModal, setDisplayModal] = useState(false);
   const [displayBulkUpload, setDisplayBulkUpload] = useState(false);
 
@@ -30,7 +38,7 @@ const InventoryList = () => {
           mb={4}
         >
           <Typography variant='h4' component='h2'>
-            Bookmarked Inventories
+            Categories
           </Typography>
           <Stack direction='row' spacing={2} useFlexGap>
             <Button
@@ -51,9 +59,7 @@ const InventoryList = () => {
             </Button>
           </Stack>
         </Box>
-        {data === null || data?.length === 0 ? (
-          <DisplayNoMatchingRecordsComponent />
-        ) : null}
+        <Categories />
       </Container>
       {displayModal && (
         <SimpleModal
