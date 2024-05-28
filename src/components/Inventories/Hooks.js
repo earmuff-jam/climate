@@ -116,7 +116,7 @@ export const useInventoryConfiguration = () => {
     setFormData({ ...BLANK_INVENTORY_FORM });
   };
 
-  const fetchAllInventoryStorageLocationOptions = async () => {
+  const fetchAllInventoryStorageLocationOptions = () => {
     return supabaseClient.from('storage_locations').select(
       `
       id,

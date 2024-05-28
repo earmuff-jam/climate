@@ -1,4 +1,8 @@
 
+-- 0001 -- load user profile details ---
+--- loads the user profile details for any logged in user --- 
+
+
 BEGIN;
 
 DROP EXTENSION IF EXISTS "uuid-ossp" CASCADE;
@@ -17,37 +21,51 @@ create table profiles
     first_name TEXT,
     last_name  TEXT,
     user_role  TEXT                                                           NOT NULL DEFAULT '7543',
+    bio        TEXT,
     created_on TIMESTAMP WITH TIME ZONE                                       NOT NULL,
     updated_by UUID,
     updated_on TIMESTAMP WITH TIME ZONE
 );
 
-alter table profiles
-    enable row level security;
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY; 
 
-create policy "Public profiles are viewable by everyone." on profiles
-    for select using (true);
+CREATE POLICY "public profiles are visible by everyone" ON profiles FOR SELECT USING (true);
+CREATE POLICY "users can update their own profile details" ON profiles FOR INSERT WITH CHECK(auth.uid() = id);
+CREATE POLICY "users can perform updates on their own profile" ON profiles FOR UPDATE USING(auth.uid() = id);
 
-create policy "Users can insert their own profile." on profiles
-    for insert with check (auth.uid() = id);
 
-create policy "Users can update own profile." on profiles
-    for update using (auth.uid() = id);
-
-create or replace function public.handle_new_user()
-    returns trigger as
+-- trigger to update notifications details
+CREATE OR REPLACE FUNCTION public.handle_new_user_settings()
+    RETURNS TRIGGER AS
 $$
-begin
-    insert into public.profiles (id, created_on)
-    values (new.id, now());
-    return new;
-end;
-$$ language plpgsql security definer;
-drop trigger if exists on_auth_user_created on auth.users;
-create trigger on_auth_user_created
-    after insert
-    on auth.users
-    for each row
-execute procedure public.handle_new_user();
+BEGIN
+    INSERT INTO public.user_settings (id, notify_bookmarked_items, notify_due_items, notify_settings_privacy, display_mode, created_on)
+    VALUES (NEW.id, false, false, false, false, now());
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_settings_applied_trigger ON auth.users;
+CREATE TRIGGER on_auth_user_settings_applied_trigger
+    AFTER INSERT ON auth.users FOR EACH ROW
+    EXECUTE PROCEDURE public.handle_new_user_settings();
+
+END;
+
+-- trigger to update the profile settings --
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+    RETURNS TRIGGER AS 
+$$
+BEGIN
+    INSERT INTO public.profiles (id, created_on) 
+    VALUES (NEW.id, now()); 
+    RETURN NEW;
+END; 
+$$ LANGUAGE plpgsql SECURiTY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_created_trigger ON auth.users; 
+CREATE TRIGGER on_auth_user_created_trigger 
+    AFTER INSERT ON auth.users FOR EACH ROW 
+    EXECUTE PROCEDURE public.handle_new_user();
 
 END;
