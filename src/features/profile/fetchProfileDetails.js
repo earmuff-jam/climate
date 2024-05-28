@@ -13,7 +13,7 @@ const useFetchProfileDetails = () => {
 
   return useQuery({
     queryFn: queryFn,
-    queryKey: ['profileConfig', user.id],
+    queryKey: ['profileDetails', user.id],
   });
 };
 

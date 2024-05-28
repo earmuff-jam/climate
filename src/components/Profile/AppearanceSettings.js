@@ -5,25 +5,14 @@ import {
   Box,
   Stack,
   Divider,
-  Card,
-  CardContent,
-  IconButton,
   Checkbox,
   FormControlLabel,
 } from '@mui/material';
-import { DarkModeRounded, WarningRounded } from '@mui/icons-material';
+import { DarkModeRounded } from '@mui/icons-material';
 
 const AppearanceSettings = () => {
-  const [appearanceSetting, setAppearanceSetting] = useState({
-    dark_mode: {
-      name: 'dark_mode',
-      is_dark_mode_enabled: false,
-    },
-  });
+  const [displayMode, setDisplayMode] = useState(false); // false denotes light mode
 
-  const handleCheckbox = () => {};
-
-  const submit = () => {};
   return (
     <>
       <Box sx={{ pb: 2 }}>
@@ -40,8 +29,8 @@ const AppearanceSettings = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={appearanceSetting.dark_mode.is_dark_mode_enabled}
-              onChange={(e) => handleCheckbox('dark_mode', e.target.checked)}
+              checked={displayMode}
+              onChange={() => setDisplayMode(!displayMode)}
               color='primary'
             />
           }
@@ -49,11 +38,7 @@ const AppearanceSettings = () => {
             <Stack>
               <Stack direction={'row'} alignItems={'center'} spacing={1}>
                 <DarkModeRounded
-                  color={
-                    appearanceSetting.dark_mode.is_dark_mode_enabled
-                      ? 'primary'
-                      : 'secondary'
-                  }
+                  color={displayMode ? 'primary' : 'secondary'}
                 />
                 <Typography variant='caption'>Enable dark mode</Typography>
               </Stack>
@@ -64,23 +49,12 @@ const AppearanceSettings = () => {
           }
         />
       </Stack>
-      <Stack sx={{ margin: '0 auto' }}>
-        <Card>
-          <CardContent>
-            <Stack alignItems={'center'}>
-              <IconButton>
-                <WarningRounded color='warning' />
-              </IconButton>
-              <Typography>Unable to proceed at this time. </Typography>
-            </Stack>
-          </CardContent>
-        </Card>
-        <Box sx={{ textAlign: 'center', mt: 3 }}>
-          <Button variant='outlined' color='primary' onClick={submit} disabled>
-            Save
-          </Button>
-        </Box>
-      </Stack>
+
+      <Box sx={{ textAlign: 'center', mt: 3 }}>
+        <Button variant='outlined' color='primary' onClick={() => {}} disabled>
+          Save
+        </Button>
+      </Box>
     </>
   );
 };

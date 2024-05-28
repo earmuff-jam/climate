@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Typography,
   Button,
@@ -15,14 +15,49 @@ import {
   BookmarkRounded,
   SettingsSuggestRounded,
 } from '@mui/icons-material';
-import useFetchProfileConfigDetails from '../../features/profile/fetchProfileConfigDetails';
+import { useFetchProfileConfigDetails } from '../../features/profile/fetchProfileConfigDetails';
+import { BLANK_NOTIFICATION_DETAILS } from './constants';
+import useUpsertProfileNotificationDetails from '@/features/profile/upsertNotificationDetails';
+import { useRouter } from 'next/router';
+import { useQueryClient } from 'react-query';
 
 const NotificationsContent = () => {
-  const submit = () => {};
-
-  const handleCheckbox = () => {};
-
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const { data, isLoading, isError } = useFetchProfileConfigDetails();
+  const upsertProfileNotificationDetailsMutation =
+    useUpsertProfileNotificationDetails();
+
+  const [userProfileNotificationSettings, setUserProfileNotificationSettings] =
+    useState({ ...BLANK_NOTIFICATION_DETAILS });
+
+  const submit = (ev) => {
+    ev.preventDefault();
+    upsertProfileNotificationDetailsMutation.mutate(
+      userProfileNotificationSettings,
+      {
+        onSuccess: (response) => {
+          queryClient.invalidateQueries(['profileConfig']);
+          const selectedNotification = response.data.find(Boolean);
+          setUserProfileNotificationSettings({ ...selectedNotification });
+          router.push('/inventories');
+        },
+      }
+    );
+  };
+
+  const handleCheckbox = (selection, value) => {
+    const draftFormData = { ...userProfileNotificationSettings };
+    draftFormData[selection] = value;
+    setUserProfileNotificationSettings(draftFormData);
+  };
+
+  useEffect(() => {
+    if (!isLoading && !isError) {
+      setUserProfileNotificationSettings(data);
+    }
+    // eslint-disable-next-line
+  }, [isLoading]);
 
   if (isLoading) {
     return (
@@ -51,9 +86,9 @@ const NotificationsContent = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={data.notify_bookmarked_items}
+              checked={userProfileNotificationSettings.notify_bookmarked_items}
               onChange={(e) =>
-                handleCheckbox('is_bookmarked', e.target.checked)
+                handleCheckbox('notify_bookmarked_items', e.target.checked)
               }
               color='primary'
             />
@@ -62,7 +97,11 @@ const NotificationsContent = () => {
             <Stack>
               <Stack direction={'row'} alignItems={'center'} spacing={1}>
                 <BookmarkRounded
-                  color={data.notify_bookmarked_items ? 'primary' : 'secondary'}
+                  color={
+                    userProfileNotificationSettings.notify_bookmarked_items
+                      ? 'primary'
+                      : 'secondary'
+                  }
                 />
                 <Typography variant='caption'>Bookmarked Items</Typography>
               </Stack>
@@ -75,8 +114,10 @@ const NotificationsContent = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={data.notify_due_items}
-              onChange={(e) => handleCheckbox('items_due', e.target.checked)}
+              checked={userProfileNotificationSettings.notify_due_items}
+              onChange={(e) =>
+                handleCheckbox('notify_due_items', e.target.checked)
+              }
               color='primary'
             />
           }
@@ -84,7 +125,11 @@ const NotificationsContent = () => {
             <Stack>
               <Stack direction={'row'} alignItems={'center'} spacing={1}>
                 <AssignmentLateRounded
-                  color={data.notify_due_items ? 'warning' : 'secondary'}
+                  color={
+                    userProfileNotificationSettings.notify_due_items
+                      ? 'warning'
+                      : 'secondary'
+                  }
                 />
                 <Typography variant='caption'>Due Items</Typography>
               </Stack>
@@ -97,9 +142,9 @@ const NotificationsContent = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={data.notify_settings_privacy}
+              checked={userProfileNotificationSettings.notify_settings_privacy}
               onChange={(e) =>
-                handleCheckbox('is_system_settings_enabled', e.target.checked)
+                handleCheckbox('notify_settings_privacy', e.target.checked)
               }
               color='primary'
             />
@@ -108,7 +153,11 @@ const NotificationsContent = () => {
             <Stack>
               <Stack direction={'row'} alignItems={'center'} spacing={1}>
                 <SettingsSuggestRounded
-                  color={data.notify_settings_privacy ? 'primary' : 'secondary'}
+                  color={
+                    userProfileNotificationSettings.notify_settings_privacy
+                      ? 'primary'
+                      : 'secondary'
+                  }
                 />
                 <Typography variant='caption'>
                   Settings and privacy changes.
@@ -122,7 +171,7 @@ const NotificationsContent = () => {
         />
       </Stack>
       <Box sx={{ textAlign: 'center', mt: 3 }}>
-        <Button variant='outlined' color='primary' onClick={submit} disabled>
+        <Button variant='outlined' color='primary' onClick={submit}>
           Save
         </Button>
       </Box>

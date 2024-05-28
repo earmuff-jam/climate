@@ -1,24 +1,7 @@
 import { useQuery } from 'react-query';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 
-const useFetchProfileConfigDetails = () => {
-  const user = useUser();
-  const supabaseClient = useSupabaseClient();
-
-  const queryFn = async () => {
-    return fetchConfigDetails(supabaseClient, user.id).then(
-      (result) => result.data
-    );
-  };
-
-  return useQuery({
-    queryFn: queryFn,
-    queryKey: ['profileConfig', user.id],
-  });
-};
-
-export default useFetchProfileConfigDetails;
-
+// supabase fn to retrieve config details for a selected user
 const fetchConfigDetails = (client, userID) => {
   return client
     .from('user_settings')
@@ -36,4 +19,21 @@ const fetchConfigDetails = (client, userID) => {
     )
     .eq('id', userID)
     .single();
+};
+
+// fn used for profile configuration details
+export const useFetchProfileConfigDetails = () => {
+  const user = useUser();
+  const supabaseClient = useSupabaseClient();
+
+  const queryFn = async () => {
+    return fetchConfigDetails(supabaseClient, user.id).then(
+      (result) => result.data
+    );
+  };
+
+  return useQuery({
+    queryFn: queryFn,
+    queryKey: ['profileConfig', user.id],
+  });
 };
