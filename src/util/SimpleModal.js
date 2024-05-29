@@ -9,10 +9,15 @@ import {
 import { CloseRounded } from '@mui/icons-material';
 
 const SimpleModal = (props) => {
-  const { title, handleClose, children } = props;
+  const { title, handleClose, maxSize, children } = props;
 
   return (
-    <Dialog open={true} onClose={handleClose} maxWidth='xl' fullWidth>
+    <Dialog
+      open={true}
+      onClose={handleClose}
+      maxWidth={maxSize ?? 'xl'}
+      fullWidth
+    >
       <DialogTitle>
         <Stack
           direction='row'

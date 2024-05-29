@@ -17,12 +17,14 @@ import {
   IconButton,
   Skeleton,
 } from '@mui/material';
+
 import {
   BookmarkRounded,
   CheckRounded,
   RestartAltRounded,
   SwapHorizRounded,
 } from '@mui/icons-material';
+
 import { useInventoryConfiguration } from './Hooks';
 
 const filter = createFilterOptions();

@@ -1,20 +1,24 @@
-import React from 'react';
-import { useRouter } from 'next/router';
-import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
-import { AppBar, Box, Button, Stack, Toolbar, Typography } from '@mui/material';
+import React from "react";
+import { useRouter } from "next/router";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { AppBar, Box, Button, Stack, Toolbar, Typography } from "@mui/material";
+import { useQueryClient } from "react-query";
 
 const HomeAppBar = ({ isUserLoggedIn }) => {
   const { push, replace } = useRouter();
+  const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
 
   const handleSignOut = async () => {
-    await supabaseClient.auth.signOut().then(replace('/'));
+    await supabaseClient.auth.signOut();
+    queryClient.removeQueries();
+    replace('/');
     return;
   };
 
   const handleClick = (isUserLoggedIn) => {
     if (!isUserLoggedIn) {
-      push('/');
+      push("/");
     } else {
       handleSignOut();
     }
@@ -22,36 +26,36 @@ const HomeAppBar = ({ isUserLoggedIn }) => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position='static'>
+      <AppBar position="static">
         <Toolbar>
-          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <Typography variant='h6' component='div'>
+          <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
+            <Typography variant="h6" component="div">
               Climate
             </Typography>
           </Box>
-          <Stack direction='row'>
+          <Stack direction="row">
             {!isUserLoggedIn ? (
-              <Button color='inherit' onClick={() => push('/profile')}>
+              <Button color="inherit" onClick={() => push("/profile")}>
                 Login
               </Button>
             ) : (
-              <Stack direction={'row'}>
-                <Button color='inherit' onClick={() => push('/inventories')}>
+              <Stack direction={"row"}>
+                <Button color="inherit" onClick={() => push("/inventories")}>
                   Inventories
                 </Button>
-                <Button color='inherit' onClick={() => push('/profile')}>
+                <Button color="inherit" onClick={() => push("/profile")}>
                   Profile
                 </Button>
               </Stack>
             )}
-            <Button color='inherit' onClick={() => handleClick(isUserLoggedIn)}>
-              {isUserLoggedIn ? 'Sign out' : 'Contact'}
+            <Button color="inherit" onClick={() => handleClick(isUserLoggedIn)}>
+              {isUserLoggedIn ? "Sign out" : "Contact"}
             </Button>
             {!isUserLoggedIn ? (
               <Button
-                variant='outlined'
-                color='inherit'
-                onClick={() => push('/profile')}
+                variant="outlined"
+                color="inherit"
+                onClick={() => push("/profile")}
               >
                 Try for free
               </Button>

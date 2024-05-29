@@ -10,10 +10,7 @@ const upsertProfileDetails = (client, data) => {
   return client.from('profiles').upsert(data).select();
 };
 
-/**
- * upsert profile details mutation fn
- *
- */
+// upsert profile details mutation fn
 const useUpsertProfileDetails = () => {
   const supabaseClient = useSupabaseClient();
   return useMutation((data) => upsertProfileDetails(supabaseClient, data));

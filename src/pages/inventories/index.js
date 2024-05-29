@@ -1,14 +1,15 @@
 import React from 'react';
-import InventoryList from '@/components/Inventories/InventoryList';
+import CategoryList from '@/components/Categories/CategoryList';
 import Collection from '@/components/Inventories/Collection';
 import PrivateLayout from '@/components/Auth/PrivateLayout';
+import InventoryList from '@/components/Inventories/InventoryList';
 
 const Inventories = () => {
   return (
     <>
+      <CategoryList />
       <InventoryList />
-      <Collection title={'Inventories'} displayInventories={true} />
-      <Collection title={'Learn more'} displayInventories={false} />
+      <Collection title={'Learn more'} />
     </>
   );
 };
