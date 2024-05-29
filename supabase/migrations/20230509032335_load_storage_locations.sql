@@ -7,12 +7,12 @@ BEGIN;
 DROP TABLE IF EXISTS storage_locations CASCADE;
 CREATE TABLE IF NOT EXISTS storage_locations
 (
-    id              UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
-    location        VARCHAR(100)             NOT NULL UNIQUE,
+    id              UUID PRIMARY KEY                                                                            DEFAULT gen_random_uuid(),
+    location        VARCHAR(100)                                                            NOT NULL UNIQUE,
     created_by      UUID REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE,
     updated_by      UUID REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    created_at      TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    updated_at      TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    created_at      TIMESTAMP WITH TIME ZONE NOT NULL                                                           DEFAULT NOW(),
+    updated_at      TIMESTAMP WITH TIME ZONE NOT NULL                                                           DEFAULT NOW(),
     sharable_groups UUID[]
 );
 

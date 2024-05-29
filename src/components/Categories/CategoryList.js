@@ -2,14 +2,11 @@ import React, { useState } from 'react';
 import SimpleModal from '@/util/SimpleModal';
 import { Box, Container } from '@mui/material';
 import { AddRounded } from '@mui/icons-material';
-import { useFetchInventoriesList } from '@/features/notifications/notification';
 import Categories from './Categories';
 import HeaderWithButton from '@/util/HeaderWithButton';
 import AddCategory from './AddCategory';
 
 const CategoryList = () => {
-  // list of inventories // todo revamp to categories
-  const { data, isLoading, isError } = useFetchInventoriesList();
   const [displayModal, setDisplayModal] = useState(false);
 
   const handleCloseAddCategory = () => setDisplayModal(false);
@@ -32,7 +29,7 @@ const CategoryList = () => {
           showSecondaryButton={false}
           handleClickPrimaryButton={handleDisplayAddSingleInventoryModal}
         />
-        <Categories />
+        <Categories /> {/* categories component */}
       </Container>
       {displayModal && (
         <SimpleModal
@@ -41,7 +38,7 @@ const CategoryList = () => {
           showSubmit={false}
           maxSize={'md'}
         >
-          <AddCategory />
+          <AddCategory handleCloseAddCategory={handleCloseAddCategory} />
         </SimpleModal>
       )}
     </Box>

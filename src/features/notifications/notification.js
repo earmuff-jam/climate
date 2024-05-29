@@ -24,9 +24,9 @@ const fetchInventoriesList = (client, userID) => {
       min_weight,
       max_height,
       min_height,
-      created_at,
+      created_on,
       created_by,
-      updated_at,
+      updated_on,
       updated_by,
       sharable_groups
           `
@@ -34,7 +34,7 @@ const fetchInventoriesList = (client, userID) => {
     .eq('created_by', userID);
 };
 
-// fn used for profile configuration details
+// fn used to fetch all inventories for a selected user
 export const useFetchInventoriesList = () => {
   const user = useUser();
   const supabaseClient = useSupabaseClient();

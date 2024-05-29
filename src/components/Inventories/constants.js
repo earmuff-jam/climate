@@ -1,9 +1,3 @@
-import {
-  BookmarkAddedRounded,
-  KitchenRounded,
-  ShoppingBagRounded,
-} from '@mui/icons-material';
-
 /**
  * default inventories landing page items to encourage users to use
  * various features of the application
@@ -30,30 +24,6 @@ export const DEFAULT_INVENTORIES_LANDING_PAGE_TEXT = [
       'Understand your inventories better. Keep tabs on more important inventories',
     imageSrc: 'images/kitchen-items.jpg',
     imageAlt: 'default-bookmarked-inventory-items-img',
-  },
-];
-
-export const VIEW_INVENTORY_CATEGORIES = [
-  {
-    name: 'Bookmarked Items',
-    description: 'Items that are labelled as bookmark',
-    icon: <BookmarkAddedRounded />,
-    expensesInPercent: 0,
-    color: 'primary.main',
-  },
-  {
-    name: 'Kitchen and food',
-    description: 'Items that are categorized under kitchen and pantry',
-    icon: <KitchenRounded />,
-    expensesInPercent: 0,
-    color: 'warning.main',
-  },
-  {
-    name: 'Shopping',
-    description: 'Items that are categorized under shopping',
-    icon: <ShoppingBagRounded />,
-    expensesInPercent: 0,
-    color: 'error.main',
   },
 ];
 

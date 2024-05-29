@@ -1,12 +1,27 @@
-import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import {
   BLANK_CATEGORY_DETAILS,
   BLANK_CATEGORY_DETAILS_ERROR,
   BLANK_CATEGORY_DETAILS_TOUCHED,
 } from './constants';
+import { useQueryClient } from 'react-query';
+import {
+  Box,
+  Button,
+  Snackbar,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useUpsertCategoryDetails } from '@/features/categories/categories';
+import dayjs from 'dayjs';
+import { useUser } from '@supabase/auth-helpers-react';
 
-const AddCategory = () => {
+const AddCategory = ({ handleCloseAddCategory }) => {
+  const user = useUser();
+  const queryClient = useQueryClient();
+  const upsertCategoryDetailsMutation = useUpsertCategoryDetails();
+
   const [categoryDetails, setCategoryDetails] = useState({
     ...BLANK_CATEGORY_DETAILS,
   });
@@ -17,37 +32,6 @@ const AddCategory = () => {
   const [categoryDetailsTouched, setCategoryDetailsTouched] = useState({
     ...BLANK_CATEGORY_DETAILS_TOUCHED,
   });
-
-  const addCategoryDetails = () => {
-    const addItemToInventory = async (formData) => {
-      // const { resp, err } = await supabaseClient
-      //   .from('inventories')
-      //   .insert({
-      //     name: categoryDetails.name,
-      //     description: categoryDetails.description,
-      //     price: categoryDetails.price,
-      //     barcode: categoryDetails.barcode,
-      //     sku: categoryDetails.sku,
-      //     quantity: categoryDetails.quantity,
-      //     bought_at: categoryDetails.bought_at,
-      //     location: categoryDetails.location,
-      //     is_bookmarked: categoryDetails.is_bookmarked,
-      //     is_returnable: categoryDetails.is_returnable,
-      //     return_location: categoryDetails.return_location,
-      //     max_weight: categoryDetails.max_weight,
-      //     min_weight: categoryDetails.min_weight,
-      //     max_height: categoryDetails.max_height,
-      //     min_height: categoryDetails.min_height,
-      //     created_by: user.id,
-      //     created_at: categoryDetails.created_at,
-      //     updated_by: user.id,
-      //     updated_at: categoryDetails.updated_at,
-      //     sharable_groups: [user.id],
-      //   })
-      //   .select();
-      // return;
-    };
-  };
 
   const handleInputChange = (ev) => {
     const { id, value } = event.target;
@@ -78,24 +62,36 @@ const AddCategory = () => {
     setCategoryDetails({ ...categoryDetails, [id]: value });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
+  const handleSubmit = () => {
     if (
-      Object.values(categoryDetailsError).some((v) => v.errorMsg.length >= 0)
+      Object.values(categoryDetailsTouched).filter(Boolean).length != 2 ||
+      Object.values(categoryDetailsError).some((v) => v.errorMsg.length > 0)
     ) {
-      return false;
+      return (
+        <Snackbar
+          autoHideDuration={6000}
+          color='error'
+          message={`Error updating category ${categoryDetails.category_name}`}
+        />
+      );
     }
 
     const draftRequest = {
-      ...formData,
-      location: storageLocation.storageLocation,
-      created_by: userID,
+      ...categoryDetails,
+      is_deleteable: true,
+      created_by: user.id,
+      created_on: dayjs(),
+      sharable_groups: [user.id],
     };
 
-    addCategoryDetails(draftRequest);
-    setCategoryDetails({ ...BLANK_INVENTORY_FORM });
-    setCategoryDetailsTouched({ ...BLANK_CATEGORY_DETAILS_TOUCHED });
+    upsertCategoryDetailsMutation.mutate(draftRequest, {
+      onSuccess: (response) => {
+        queryClient.invalidateQueries(['categoryList']);
+        setCategoryDetails({ ...BLANK_CATEGORY_DETAILS });
+        setCategoryDetailsTouched({ ...BLANK_CATEGORY_DETAILS_TOUCHED });
+        handleCloseAddCategory();
+      },
+    });
   };
 
   return (
@@ -105,11 +101,7 @@ const AddCategory = () => {
         <Typography variant='caption'>Add new category.</Typography>
       </Stack>
       <Stack alignItems={'center'}>
-        <Box
-          component='form'
-          onSubmit={handleSubmit}
-          sx={{ maxWidth: 600, width: '100%' }}
-        >
+        <Box component='form' sx={{ maxWidth: 600, width: '100%' }}>
           <Stack spacing={2} useFlexGap>
             <TextField
               id='category_name'
