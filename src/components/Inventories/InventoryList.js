@@ -26,9 +26,13 @@ const InventoryList = () => {
   return (
     <Box sx={{ py: 8 }}>
       <Container maxWidth='lg'>
-        {/* inventories section */}
+        {/* bookmarked inventories section */}
         <HeaderWithButton
-          title='Inventories'
+          title='Bookmarked Inventories'
+          showSecondaryTitle={true}
+          secondaryTitle={'View all your inventories'}
+          showRedirectLink={true}
+          redirectTo={'/inventories/list'}
           showPrimaryButton={true}
           primaryButtonVariant={'outlined'}
           primaryButtonColor={'primary'}
@@ -44,10 +48,13 @@ const InventoryList = () => {
           handleClickPrimaryButton={handleDisplayAddSingleInventoryModal}
           handleClickSecondaryButton={handleDisplayAddBulkInventoryModal}
         />
+        {/* bookmarked inventories has less column headers */}
         <InventoriesTable
           isLoading={isLoading}
-          inventoryData={data}
-          inventoryColumns={Object.values(VIEW_INVENTORY_LIST_HEADERS)}
+          data={data}
+          columns={Object.values(VIEW_INVENTORY_LIST_HEADERS).filter(
+            (v) => v.displayConcise
+          )}
         />
       </Container>
       {displayModal && (

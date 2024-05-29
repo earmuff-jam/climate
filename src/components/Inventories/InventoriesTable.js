@@ -16,7 +16,7 @@ const {
 
 const InventoriesTable = ({ isLoading, columns, data }) => {
   const columnHeaderFormatter = (column) => {
-    return column?.label;
+    return column.label;
   };
 
   const rowFormatter = () => {};
@@ -36,9 +36,10 @@ const InventoriesTable = ({ isLoading, columns, data }) => {
   }
 
   // empty rows displays no matching records text
-  if (data === null || data === 'undefined' || data?.length === 0) {
-    return <DisplayNoMatchingRecordsComponent />;
-  }
+  // todo: reinstate this once we have all the change for inventories table
+  // if (data === null || data === undefined || data?.length === 0) {
+  //   return <DisplayNoMatchingRecordsComponent />;
+  // }
 
   return (
     <TableContainer>

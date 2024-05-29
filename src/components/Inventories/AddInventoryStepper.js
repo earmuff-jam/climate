@@ -67,6 +67,7 @@ export const loadAddFormBasedOnStepNumber = (
   setStorageLocation,
   handleInputChange,
   handleCheckbox,
+  handleReset,
   handleSubmit,
   options
 ) => {
@@ -74,11 +75,7 @@ export const loadAddFormBasedOnStepNumber = (
     case 1:
       return (
         <Stack alignItems={'center'}>
-          <Box
-            component='form'
-            onSubmit={handleSubmit}
-            sx={{ maxWidth: 600, width: '100%' }}
-          >
+          <Box component='form' sx={{ maxWidth: 600, width: '100%' }}>
             <Stack spacing={2} useFlexGap>
               <Stack direction={'row'} spacing={2} useFlexGap>
                 <TextField
@@ -205,11 +202,7 @@ export const loadAddFormBasedOnStepNumber = (
     case 2:
       return (
         <Stack alignItems={'center'}>
-          <Box
-            component='form'
-            onSubmit={handleSubmit}
-            sx={{ maxWidth: 600, width: '100%' }}
-          >
+          <Box component='form' sx={{ maxWidth: 600, width: '100%' }}>
             <Stack spacing={2} useFlexGap>
               <TextField
                 id='price'
@@ -367,30 +360,41 @@ export const loadAddFormBasedOnStepNumber = (
       );
     case 3:
       return (
-        <Stack alignItems={'center'}>
-          <Card sx={{ display: 'flex', width: '100%', maxWidth: '600px' }}>
-            <CardContent>
-              <Stack direction='row'>
-                <IconButton disabled>
-                  <BookmarkRounded
-                    color={formData.is_bookmarked ? 'primary' : 'secondary'}
-                  />
-                </IconButton>
-                <Stack>
-                  <Typography>Item name: {formData.name}</Typography>
-                  <Typography variant='caption'>
-                    {formData.description}
-                  </Typography>
-                  <Stack direction={'row'} spacing={1}>
-                    <Typography fontWeight={'bold'}>Quantity: </Typography>
-                    <Typography>{formData.quantity}</Typography>
+        <>
+          <Stack alignItems={'center'}>
+            <Card sx={{ display: 'flex', width: '100%', maxWidth: '600px' }}>
+              <CardContent>
+                <Stack direction='row'>
+                  <IconButton disabled>
+                    <BookmarkRounded
+                      color={formData.is_bookmarked ? 'primary' : 'secondary'}
+                    />
+                  </IconButton>
+                  <Stack>
+                    <Typography>Item name: {formData.name}</Typography>
+                    <Typography variant='caption'>
+                      {formData.description}
+                    </Typography>
+                    <Stack direction={'row'} spacing={1}>
+                      <Typography fontWeight={'bold'}>Quantity: </Typography>
+                      <Typography>{formData.quantity}</Typography>
+                    </Stack>
                   </Stack>
+                  <Box sx={{ flexGrow: 1 }}></Box>
                 </Stack>
-                <Box sx={{ flexGrow: 1 }}></Box>
-              </Stack>
-            </CardContent>
-          </Card>
-        </Stack>
+              </CardContent>
+            </Card>
+          </Stack>
+          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            <Box sx={{ flex: '1 1 auto' }} />
+            <Button startIcon={<RestartAltRounded />} onClick={handleReset}>
+              Reset
+            </Button>
+            <Button startIcon={<CheckRounded />} onClick={handleSubmit}>
+              Submit
+            </Button>
+          </Box>
+        </>
       );
     default:
       return null;
@@ -479,57 +483,44 @@ export default function AddInventoryStepper() {
           );
         })}
       </Stepper>
-      {activeStep === steps.length ? (
-        <>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button startIcon={<RestartAltRounded />} onClick={handleReset}>
-              Reset
+      <>
+        <Typography sx={{ mt: 2, mb: 1 }}>
+          Step {activeStep + 1}
+          {loadInstructionsBasedOnStepNumber(activeStep + 1)}
+          {loadAddFormBasedOnStepNumber(
+            activeStep + 1,
+            formData,
+            formDataError,
+            storageLocation,
+            setStorageLocation,
+            handleInputChange,
+            handleCheckbox,
+            handleReset,
+            handleSubmit,
+            fetchAllInventoryStorageLocationOptionsData.data
+          )}
+        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+          <Button
+            color='inherit'
+            disabled={activeStep === 0}
+            onClick={handleBack}
+            sx={{ mr: 1 }}
+          >
+            Back
+          </Button>
+          <Box sx={{ flex: '1 1 auto' }} />
+          {isStepOptional(activeStep) && (
+            <Button color='inherit' onClick={handleSkip} sx={{ mr: 1 }}>
+              Skip
             </Button>
-            <Button startIcon={<CheckRounded />} onClick={handleReset}>
-              Submit
-            </Button>
-          </Box>
-        </>
-      ) : (
-        <>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            Step {activeStep + 1}
-            {loadInstructionsBasedOnStepNumber(activeStep + 1)}
-            {loadAddFormBasedOnStepNumber(
-              activeStep + 1,
-              formData,
-              formDataError,
-              storageLocation,
-              setStorageLocation,
-              handleInputChange,
-              handleCheckbox,
-              handleSubmit,
-              fetchAllInventoryStorageLocationOptionsData.data
-            )}
-          </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Button
-              color='inherit'
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
-            >
-              Back
-            </Button>
-            <Box sx={{ flex: '1 1 auto' }} />
-            {isStepOptional(activeStep) && (
-              <Button color='inherit' onClick={handleSkip} sx={{ mr: 1 }}>
-                Skip
-              </Button>
-            )}
+          )}
 
-            {activeStep !== steps.length - 1 ? (
-              <Button onClick={handleNext}>Next</Button>
-            ) : null}
-          </Box>
-        </>
-      )}
+          {activeStep !== steps.length - 1 ? (
+            <Button onClick={handleNext}>Next</Button>
+          ) : null}
+        </Box>
+      </>
     </Box>
   );
 }
