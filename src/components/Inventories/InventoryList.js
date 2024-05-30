@@ -4,14 +4,13 @@ import { Box, Container } from '@mui/material';
 import AddInventoryWithStepper from './AddInventoryWithStepper';
 import { AddRounded, LibraryAddRounded } from '@mui/icons-material';
 import AddBulkUploadInventory from './AddBulkUploadInventory';
-import { useFetchInventoriesList } from '@/features/notifications/notification';
 import HeaderWithButton from '@/util/HeaderWithButton';
 import InventoriesTable from './InventoriesTable';
 import { VIEW_INVENTORY_LIST_HEADERS } from './constants';
+import { useFetchInventoriesList } from '@/features/inventories';
 
 const InventoryList = () => {
-  // list of inventories
-  const { data, isLoading, isError } = useFetchInventoriesList();
+  const { data, isLoading } = useFetchInventoriesList();
   const [displayModal, setDisplayModal] = useState(false);
   const [displayBulkUpload, setDisplayBulkUpload] = useState(false);
 

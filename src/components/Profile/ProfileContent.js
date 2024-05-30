@@ -16,9 +16,11 @@ import {
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useQueryClient } from 'react-query';
-import useFetchProfileDetails from '../../features/profile/fetchProfileDetails';
-import useUpsertProfileDetails from '@/features/profile/upsertProfileDetails';
 import { useUser } from '@supabase/auth-helpers-react';
+import {
+  useFetchProfileDetails,
+  useUpsertProfileDetails,
+} from '@/features/profile';
 
 const relativeTime = require('dayjs/plugin/relativeTime');
 dayjs.extend(relativeTime);

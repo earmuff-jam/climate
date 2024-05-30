@@ -9,17 +9,18 @@ import {
   FormControlLabel,
   Skeleton,
 } from '@mui/material';
-
 import {
   AssignmentLateRounded,
   BookmarkRounded,
   SettingsSuggestRounded,
 } from '@mui/icons-material';
-import { useFetchProfileConfigDetails } from '../../features/profile/fetchProfileConfigDetails';
-import { BLANK_NOTIFICATION_DETAILS } from './constants';
-import useUpsertProfileNotificationDetails from '@/features/profile/upsertNotificationDetails';
 import { useRouter } from 'next/router';
 import { useQueryClient } from 'react-query';
+import { BLANK_NOTIFICATION_DETAILS } from './constants';
+import {
+  useFetchProfileConfigDetails,
+  useUpsertProfileNotificationDetails,
+} from '@/features/profile';
 
 const NotificationsContent = () => {
   const router = useRouter();

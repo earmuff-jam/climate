@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Box,
   Card,
@@ -9,18 +10,18 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import React from 'react';
-import { DeleteRounded, TrendingUpRounded } from '@mui/icons-material';
 import {
   useDeleteSelectedCategory,
   useFetchCategoryList,
-} from '@/features/categories/categories';
-import { VIEW_CATEGORY_LIST } from './constants';
+} from '@/features/categories';
+
 import { useQueryClient } from 'react-query';
+import { VIEW_CATEGORY_LIST } from './constants';
+import { DeleteRounded, TrendingUpRounded } from '@mui/icons-material';
 
 const Categories = () => {
   const queryClient = useQueryClient();
-  const { data, isLoading, isError } = useFetchCategoryList();
+  const { data, isLoading } = useFetchCategoryList();
   const deleteCategoryMutation = useDeleteSelectedCategory();
 
   const handleDelete = (id) => {

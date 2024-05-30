@@ -25,10 +25,197 @@ import {
   SwapHorizRounded,
 } from '@mui/icons-material';
 
-import { useInventoryConfiguration } from './Hooks';
+import { useQueryClient } from 'react-query';
+import { useUser } from '@supabase/auth-helpers-react';
+import { useFetchStorageLocationList } from '@/features/storageLocations';
+import { BLANK_INVENTORY_FORM, BLANK_INVENTORY_FORM_ERROR } from './constants';
+import { useUpsertInventoryDetails } from '@/features/inventories';
 
 const filter = createFilterOptions();
 const steps = ['Add inventory', 'Add more details', 'Publish inventory'];
+
+export default function AddInventoryStepper() {
+  const user = useUser();
+  const queryClient = useQueryClient();
+  const { data, isLoading } = useFetchStorageLocationList();
+  const upsertInventoryDetailsMutation = useUpsertInventoryDetails();
+
+  const [activeStep, setActiveStep] = useState(0);
+  const [skipped, setSkipped] = useState(new Set());
+  const [storageLocation, setStorageLocation] = useState('');
+
+  const [formData, setFormData] = useState({ ...BLANK_INVENTORY_FORM });
+  const [formDataError, setFormDataError] = useState({
+    ...BLANK_INVENTORY_FORM_ERROR,
+  });
+
+  const handleInputChange = (event) => {
+    const { id, value } = event.target;
+
+    const draftErrorElements = { ...formDataError };
+    let errorFound = false;
+
+    for (const validator of draftErrorElements[id].validators) {
+      if (validator.validate(value)) {
+        draftErrorElements[id] = {
+          ...draftErrorElements[id],
+          errorMsg: validator.message,
+        };
+        errorFound = true;
+        break;
+      }
+    }
+
+    if (!errorFound) {
+      draftErrorElements[id] = {
+        ...draftErrorElements[id],
+        errorMsg: '',
+      };
+    }
+
+    setFormData({ ...formData, [id]: value });
+    setFormDataError(draftErrorElements);
+  };
+
+  const handleCheckbox = (name, value) => {
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (
+      Object.values(formDataError).some((v) => v.errorMsg.length > 0) ||
+      storageLocation === null ||
+      Object.keys(storageLocation).length <= 0
+    ) {
+      return false;
+    }
+
+    const draftRequest = {
+      ...formData,
+      location: storageLocation.storageLocation,
+      created_by: user.id,
+    };
+
+    upsertInventoryDetailsMutation.mutate(draftRequest, {
+      onSuccess: (response) => {
+        queryClient.invalidateQueries(['inventoryList']);
+        setFormData({ ...BLANK_INVENTORY_FORM });
+        setFormDataError({ ...BLANK_INVENTORY_FORM_ERROR });
+        handleCloseAddCategory();
+      },
+    });
+    setFormData({ ...BLANK_INVENTORY_FORM });
+  };
+
+  const isStepOptional = (step) => {
+    return step === 1;
+  };
+
+  const isStepSkipped = (step) => {
+    return skipped.has(step);
+  };
+
+  const handleNext = () => {
+    let newSkipped = skipped;
+    if (isStepSkipped(activeStep)) {
+      newSkipped = new Set(newSkipped.values());
+      newSkipped.delete(activeStep);
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped(newSkipped);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleSkip = () => {
+    if (!isStepOptional(activeStep)) {
+      throw new Error("You can't skip a step that isn't optional.");
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped((prevSkipped) => {
+      const newSkipped = new Set(prevSkipped.values());
+      newSkipped.add(activeStep);
+      return newSkipped;
+    });
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+
+  if (isLoading)
+    return (
+      <Skeleton variant='rounded' animation='wave' height={100} width={100} />
+    );
+
+  return (
+    <Box sx={{ width: '100%' }}>
+      <Stepper activeStep={activeStep}>
+        {steps.map((label, index) => {
+          const stepProps = {};
+          const labelProps = {};
+          if (isStepOptional(index)) {
+            labelProps.optional = (
+              <Typography variant='caption'>Optional</Typography>
+            );
+          }
+          if (isStepSkipped(index)) {
+            stepProps.completed = false;
+          }
+          return (
+            <Step key={label} {...stepProps}>
+              <StepLabel {...labelProps}>{label}</StepLabel>
+            </Step>
+          );
+        })}
+      </Stepper>
+      <>
+        <Typography sx={{ mt: 2, mb: 1 }}>
+          Step {activeStep + 1}
+          {loadInstructionsBasedOnStepNumber(activeStep + 1)}
+          {loadAddFormBasedOnStepNumber(
+            activeStep + 1,
+            formData,
+            formDataError,
+            storageLocation,
+            setStorageLocation,
+            handleInputChange,
+            handleCheckbox,
+            handleReset,
+            handleSubmit,
+            data
+          )}
+        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+          <Button
+            color='inherit'
+            disabled={activeStep === 0}
+            onClick={handleBack}
+            sx={{ mr: 1 }}
+          >
+            Back
+          </Button>
+          <Box sx={{ flex: '1 1 auto' }} />
+          {isStepOptional(activeStep) && (
+            <Button color='inherit' onClick={handleSkip} sx={{ mr: 1 }}>
+              Skip
+            </Button>
+          )}
+
+          {activeStep !== steps.length - 1 ? (
+            <Button onClick={handleNext}>Next</Button>
+          ) : null}
+        </Box>
+      </>
+    </Box>
+  );
+}
 
 export const loadInstructionsBasedOnStepNumber = (stepNumber) => {
   switch (stepNumber) {
@@ -400,127 +587,3 @@ export const loadAddFormBasedOnStepNumber = (
       return null;
   }
 };
-
-export default function AddInventoryStepper() {
-  const {
-    formData,
-    formDataError,
-    storageLocation,
-    setStorageLocation,
-    handleInputChange,
-    handleCheckbox,
-    handleSubmit,
-    isFetchAllInventoryStorageLocationOptionsLoading,
-    fetchAllInventoryStorageLocationOptionsData,
-  } = useInventoryConfiguration();
-
-  const [activeStep, setActiveStep] = useState(0);
-  const [skipped, setSkipped] = useState(new Set());
-
-  if (isFetchAllInventoryStorageLocationOptionsLoading)
-    return (
-      <Skeleton variant='rounded' animation='wave' height={100} width={100} />
-    );
-
-  const isStepOptional = (step) => {
-    return step === 1;
-  };
-
-  const isStepSkipped = (step) => {
-    return skipped.has(step);
-  };
-
-  const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
-  return (
-    <Box sx={{ width: '100%' }}>
-      <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => {
-          const stepProps = {};
-          const labelProps = {};
-          if (isStepOptional(index)) {
-            labelProps.optional = (
-              <Typography variant='caption'>Optional</Typography>
-            );
-          }
-          if (isStepSkipped(index)) {
-            stepProps.completed = false;
-          }
-          return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
-            </Step>
-          );
-        })}
-      </Stepper>
-      <>
-        <Typography sx={{ mt: 2, mb: 1 }}>
-          Step {activeStep + 1}
-          {loadInstructionsBasedOnStepNumber(activeStep + 1)}
-          {loadAddFormBasedOnStepNumber(
-            activeStep + 1,
-            formData,
-            formDataError,
-            storageLocation,
-            setStorageLocation,
-            handleInputChange,
-            handleCheckbox,
-            handleReset,
-            handleSubmit,
-            fetchAllInventoryStorageLocationOptionsData.data
-          )}
-        </Typography>
-        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-          <Button
-            color='inherit'
-            disabled={activeStep === 0}
-            onClick={handleBack}
-            sx={{ mr: 1 }}
-          >
-            Back
-          </Button>
-          <Box sx={{ flex: '1 1 auto' }} />
-          {isStepOptional(activeStep) && (
-            <Button color='inherit' onClick={handleSkip} sx={{ mr: 1 }}>
-              Skip
-            </Button>
-          )}
-
-          {activeStep !== steps.length - 1 ? (
-            <Button onClick={handleNext}>Next</Button>
-          ) : null}
-        </Box>
-      </>
-    </Box>
-  );
-}

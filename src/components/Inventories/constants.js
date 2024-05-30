@@ -149,3 +149,193 @@ export const VIEW_INVENTORY_LIST_HEADERS = {
     modifier: (value) => `${value}`,
   },
 };
+
+// blank inventory form
+export const BLANK_INVENTORY_FORM = {
+  id: '',
+  name: '',
+  description: '',
+  price: '',
+  barcode: '',
+  sku: '',
+  quantity: '',
+  bought_at: '',
+  location: '',
+  storage_location_id: '',
+  is_bookmarked: '',
+  is_returnable: '',
+  return_location: '',
+  max_weight: '',
+  min_weight: '',
+  max_height: '',
+  min_height: '',
+  created_on: '',
+  created_by: '',
+  updated_on: '',
+  updated_by: '',
+  sharable_groups: '',
+};
+
+// erorr handling for adding an inventory form
+export const BLANK_INVENTORY_FORM_ERROR = {
+  name: {
+    errorMsg: '',
+    validators: [
+      {
+        validate: (value) => value.trim().length === 0,
+        message: 'Item name is required',
+      },
+      {
+        validate: (value) => value.trim().length >= 50,
+        message: 'Item name should be less than 50 characters',
+      },
+    ],
+  },
+  description: {
+    errorMsg: '',
+    validators: [
+      {
+        validate: (value) => value.trim().length === 0,
+        message: 'Item description is required',
+      },
+      {
+        validate: (value) => value.trim().length >= 50,
+        message: 'Item description should be less than 50 characters',
+      },
+    ],
+  },
+  price: {
+    errorMsg: '',
+    validators: [
+      {
+        validate: (value) => value.trim().length === 0,
+        message: 'Price for the selected item is required',
+      },
+      {
+        validate: (value) => isNaN(value) || parseInt(value) <= 0,
+        message: 'A positive number is required',
+      },
+    ],
+  },
+  barcode: {
+    errorMsg: '',
+    validators: [
+      {
+        validate: (value) => value.trim().length >= 50,
+        message: 'Item barcode should be less than 50 characters',
+      },
+    ],
+  },
+  sku: {
+    errorMsg: '',
+    validators: [
+      {
+        validate: (value) => value.trim().length >= 50,
+        message: 'SKU of item should be less than 50 characters',
+      },
+    ],
+  },
+  quantity: {
+    errorMsg: '',
+    validators: [
+      {
+        validate: (value) => value.trim().length === 0,
+        message: 'Quantity for the selected item is required',
+      },
+      {
+        validate: (value) => isNaN(value) || parseInt(value) <= 0,
+        message: 'A positive number is required',
+      },
+    ],
+  },
+  bought_at: {
+    errorMsg: '',
+    validators: [],
+  },
+  location: {
+    errorMsg: '',
+    validators: [],
+  },
+  is_bookmarked: {
+    errorMsg: '',
+    validators: [],
+  },
+  is_returnable: {
+    errorMsg: '',
+    validators: [],
+  },
+  return_location: {
+    errorMsg: '',
+    validators: [
+      {
+        validate: (value) => value.trim().length >= 50,
+        message: 'Return location should be less than 50 characters',
+      },
+    ],
+  },
+  return_datetime: {
+    errorMsg: '',
+    validators: [
+      {
+        validate: (value) => value < new Date().toISOString(),
+        message: 'Return datetime cannot be an eariler date or time',
+      },
+    ],
+  },
+  max_weight: {
+    errorMsg: '',
+    validators: [
+      {
+        validate: (value) => isNaN(value) || parseInt(value) <= 0,
+        message: 'A positive number is required',
+      },
+    ],
+  },
+  min_weight: {
+    errorMsg: '',
+    validators: [
+      {
+        validate: (value) => isNaN(value) || parseInt(value) <= 0,
+        message: 'A positive number is required',
+      },
+    ],
+  },
+  max_height: {
+    errorMsg: '',
+    validators: [
+      {
+        validate: (value) => isNaN(value) || parseInt(value) <= 0,
+        message: 'A positive number is required',
+      },
+    ],
+  },
+  min_height: {
+    errorMsg: '',
+    validators: [
+      {
+        validate: (value) => isNaN(value) || parseInt(value) <= 0,
+        message: 'A positive number is required',
+      },
+    ],
+  },
+  created_on: {
+    errorMsg: '',
+    validators: [],
+  },
+  created_by: {
+    errorMsg: '',
+    validators: [],
+  },
+  updated_on: {
+    errorMsg: '',
+    validators: [],
+  },
+  updated_by: {
+    errorMsg: '',
+    validators: [],
+  },
+  sharable_groups: {
+    errorMsg: '',
+    validators: [],
+  },
+};

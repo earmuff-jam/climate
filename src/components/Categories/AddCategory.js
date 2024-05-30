@@ -13,7 +13,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useUpsertCategoryDetails } from '@/features/categories/categories';
+import { useUpsertCategoryDetails } from '@/features/categories';
 import dayjs from 'dayjs';
 import { useUser } from '@supabase/auth-helpers-react';
 

@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS inventories
     is_bookmarked         BOOLEAN                                                                          NOT NULL DEFAULT false,
     is_returnable         BOOLEAN                                                                          NOT NULL DEFAULT false,
     return_location       VARCHAR(200),
+    return_datetime       TIMESTAMP WITH TIME ZONE                                                             NULL,
     max_weight            VARCHAR(10) , -- weight distribution is in kg
     min_weight            VARCHAR(10) , -- weight distribution is in kg
     max_height            VARCHAR(10) , -- height distribution is in inches
