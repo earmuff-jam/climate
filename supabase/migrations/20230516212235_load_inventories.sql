@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS inventories
     min_height            VARCHAR(10) , -- height distribution is in inches
     created_on            TIMESTAMP WITH TIME ZONE                                                         NOT NULL DEFAULT NOW(),
     created_by            UUID REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    updated_on            TIMESTAMP WITH TIME ZONE                                                         NOT NULL DEFAULT NOW(),
-    updated_by            UUID REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    updated_on            TIMESTAMP WITH TIME ZONE,
+    updated_by            UUID,
     sharable_groups       UUID[]
 );
 COMMENT

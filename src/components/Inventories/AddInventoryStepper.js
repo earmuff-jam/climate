@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import dayjs from 'dayjs';
 import {
   TextField,
   Box,
@@ -34,7 +35,7 @@ import { useUpsertInventoryDetails } from '@/features/inventories';
 const filter = createFilterOptions();
 const steps = ['Add inventory', 'Add more details', 'Publish inventory'];
 
-export default function AddInventoryStepper() {
+export default function AddInventoryStepper({ handleClose }) {
   const user = useUser();
   const queryClient = useQueryClient();
   const { data, isLoading } = useFetchStorageLocationList();
@@ -94,8 +95,9 @@ export default function AddInventoryStepper() {
 
     const draftRequest = {
       ...formData,
-      location: storageLocation.storageLocation,
+      location: storageLocation,
       created_by: user.id,
+      created_on: dayjs().toISOString(),
     };
 
     upsertInventoryDetailsMutation.mutate(draftRequest, {
@@ -103,7 +105,7 @@ export default function AddInventoryStepper() {
         queryClient.invalidateQueries(['inventoryList']);
         setFormData({ ...BLANK_INVENTORY_FORM });
         setFormDataError({ ...BLANK_INVENTORY_FORM_ERROR });
-        handleCloseAddCategory();
+        handleClose(); // close the modal form
       },
     });
     setFormData({ ...BLANK_INVENTORY_FORM });
@@ -151,7 +153,12 @@ export default function AddInventoryStepper() {
 
   if (isLoading)
     return (
-      <Skeleton variant='rounded' animation='wave' height={100} width={100} />
+      <Skeleton
+        variant='rounded'
+        animation='wave'
+        height={'30vh'}
+        width={'50vw'}
+      />
     );
 
   return (

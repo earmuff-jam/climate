@@ -2,10 +2,10 @@ import React from 'react';
 import { Box } from '@mui/material';
 import AddInventoryStepper from './AddInventoryStepper';
 
-const AddInventoryWithStepper = () => {
+const AddInventoryWithStepper = ({ handleClose }) => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-      <AddInventoryStepper />
+      <AddInventoryStepper handleClose={handleClose} />
     </Box>
   );
 };

@@ -1,3 +1,4 @@
+const { v4: uuidv4, validate } = require('uuid');
 import { useMutation, useQuery } from 'react-query';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 import dayjs from 'dayjs';
@@ -59,34 +60,67 @@ export const useFetchInventoriesList = () => {
  * @param {Object} data - the inventory details to create
  * @returns
  */
-const upsertInventoryDetails = async (client, data) => {
-  const { storage_location, ...inventoryData } = data;
+const upsertInventoryDetails = async (client, userID, data) => {
+  // remove id, so the application can generate itself
+  const { id, price, quantity, location, ...inventoryData } = data;
 
   try {
-    let storageLocationId = inventoryData.storage_location_id;
+    let storageLocationID = '';
+    const { data: storageLocationDetails, error: storageLocationDetailsError } =
+      await client
+        .from('storage_locations')
+        .select('id, location')
+        .eq('location', location.location)
+        .single();
 
-    // Upsert storage location if provided
-    // if there is no storage location ID, then that is a new location
-    if (!storageLocationId) {
+    if (storageLocationDetailsError) {
+      throw storageLocationDetailsError;
+    }
+
+    let createdByUUID = '';
+    if (validate(userID)) {
+      createdByUUID = userID;
+    }
+
+    if (!storageLocationDetails) {
+      // Create a new storage location
       const { data: storageLocationData, error: storageLocationError } =
         await client
           .from('storage_locations')
-          .upsert({
-            location: storage_location,
-            created_by: user.id,
-            created_at: dayjs(),
-            sharable_groups: [user.id],
+          .insert({
+            location: location.location,
+            created_by: createdByUUID,
+            created_on: dayjs().toISOString(),
+            sharable_groups: [createdByUUID],
           })
-          .select();
+          .select()
+          .single();
 
       if (storageLocationError) throw storageLocationError;
 
-      // Assuming the storage location has a unique identifier 'id'
-      storageLocationId = storageLocationData[0].id;
+      storageLocationID = storageLocationData.id;
+    } else {
+      // Existing storage location found
+      storageLocationID = storageLocationDetails.id;
     }
 
     // Set the storage_location_id in the inventory data
-    inventoryData.storage_location_id = storageLocationId;
+    inventoryData.location = location.location;
+    if (validate(storageLocationID)) {
+      inventoryData.storage_location_id = storageLocationID;
+    }
+
+    if (price !== undefined) {
+      inventoryData.price = parseFloat(price);
+    }
+
+    if (quantity !== undefined) {
+      inventoryData.quantity = parseInt(quantity, 10);
+    }
+
+    inventoryData.updated_by = createdByUUID; // first time creator is updator
+    inventoryData.updated_on = dayjs().toISOString();
+    inventoryData.sharable_groups = [createdByUUID];
 
     // Upsert inventory details
     const { data: inventoryDataResult, error: inventoryError } = await client
@@ -104,8 +138,11 @@ const upsertInventoryDetails = async (client, data) => {
 
 // upsert inventory details mutation fn
 export const useUpsertInventoryDetails = () => {
+  const user = useUser();
   const supabaseClient = useSupabaseClient();
-  return useMutation((data) => upsertInventoryDetails(supabaseClient, data));
+  return useMutation((data) =>
+    upsertInventoryDetails(supabaseClient, user.id, data)
+  );
 };
 
 /**

@@ -3,7 +3,7 @@ import * as XLSX from 'xlsx';
 import React, { useState } from 'react';
 import { Box, Button, Input, Stack, Typography } from '@mui/material';
 
-const AddBulkUploadInventory = () => {
+const AddBulkUploadInventory = ({ handleClose }) => {
   const [uploadedFileInJson, setUploadedFileInJson] = useState([]);
 
   const handleFileChange = (event) => {
@@ -45,6 +45,7 @@ const AddBulkUploadInventory = () => {
   const resetData = () => {
     setOpen(false);
     setUploadedFileInJson(null);
+    handleClose(); // close the modal
   };
 
   const submit = () => {

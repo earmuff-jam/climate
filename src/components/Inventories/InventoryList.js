@@ -62,7 +62,9 @@ const InventoryList = () => {
           handleClose={handleCloseAddSingleInventoryItem}
           showSubmit={false}
         >
-          <AddInventoryWithStepper />
+          <AddInventoryWithStepper
+            handleClose={handleCloseAddSingleInventoryItem}
+          />
         </SimpleModal>
       )}
       {displayBulkUpload && (
@@ -72,7 +74,9 @@ const InventoryList = () => {
           showSubmit={false}
           maxSize={'md'}
         >
-          <AddBulkUploadInventory />
+          <AddBulkUploadInventory
+            handleClose={handleCloseAddBulkInventoryItem}
+          />
         </SimpleModal>
       )}
     </Box>

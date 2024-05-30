@@ -49,10 +49,8 @@ const InventoriesTable = ({ isLoading, columns, data }) => {
             <TableCell padding='checkbox' align='center'>
               <Checkbox disabled />
             </TableCell>
-            {columns?.map((column) => (
-              <TableCell key={column}>
-                {columnHeaderFormatter(column)}
-              </TableCell>
+            {columns?.map((column, index) => (
+              <TableCell key={index}>{columnHeaderFormatter(column)}</TableCell>
             ))}
           </TableRow>
         </TableHead>
@@ -86,8 +84,10 @@ const InventoriesTable = ({ isLoading, columns, data }) => {
                 </IconButton>
               </Box>
             </TableCell>
-            {data?.map((row) => (
-              <TableCell key={row}>{rowFormatter(row, rowIndex)}</TableCell>
+            {data?.map((row, rowIndex) => (
+              <TableCell key={rowIndex}>
+                {rowFormatter(row, rowIndex)}
+              </TableCell>
             ))}
           </TableRow>
         </TableBody>
