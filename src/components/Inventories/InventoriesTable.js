@@ -1,7 +1,6 @@
-import { DisplayNoMatchingRecordsComponent } from '@/util/util';
-
-const { OpenInNewRounded } = require('@mui/icons-material');
-const {
+import React from 'react';
+import dayjs from 'dayjs';
+import {
   TableContainer,
   Table,
   TableHead,
@@ -9,20 +8,25 @@ const {
   TableCell,
   Checkbox,
   TableBody,
-  Box,
   IconButton,
   Skeleton,
-} = require('@mui/material');
+  Tooltip,
+  Stack,
+} from '@mui/material';
+import { OpenInNewRounded } from '@mui/icons-material';
+import { DisplayNoMatchingRecordsComponent } from '@/util/util';
 
-const InventoriesTable = ({ isLoading, columns, data }) => {
+const InventoriesTable = ({ isLoading, columns, data, onRowSelect }) => {
   const columnHeaderFormatter = (column) => {
     return column.label;
   };
 
-  const rowFormatter = () => {};
-
-  const handleRowSelection = () => {};
-  const handleDisplayMoreDetails = () => {};
+  const rowFormatter = (row, column) => {
+    if (['created_on', 'updated_on'].includes(column)) {
+      return dayjs(row[column]).fromNow();
+    }
+    return row[column] ?? '-';
+  };
 
   if (isLoading) {
     return (
@@ -35,11 +39,9 @@ const InventoriesTable = ({ isLoading, columns, data }) => {
     );
   }
 
-  // empty rows displays no matching records text
-  // todo: reinstate this once we have all the change for inventories table
-  // if (data === null || data === undefined || data?.length === 0) {
-  //   return <DisplayNoMatchingRecordsComponent />;
-  // }
+  if (!data || data.length === 0) {
+    return <DisplayNoMatchingRecordsComponent />;
+  }
 
   return (
     <TableContainer>
@@ -49,47 +51,49 @@ const InventoriesTable = ({ isLoading, columns, data }) => {
             <TableCell padding='checkbox' align='center'>
               <Checkbox disabled />
             </TableCell>
-            {columns?.map((column, index) => (
-              <TableCell key={index}>{columnHeaderFormatter(column)}</TableCell>
-            ))}
+            {Object.keys(columns).map((colKey) => {
+              const column = columns[colKey];
+              return (
+                <TableCell key={column.id}>
+                  {columnHeaderFormatter(column)}
+                </TableCell>
+              );
+            })}
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow hover key={0}>
-            <TableCell padding='checkbox'>
-              <Box>
-                <Checkbox
-                  disabled={true}
-                  color='primary'
-                  size='small'
-                  onClick={(event) =>
-                    !isItemDisabled
-                      ? handleRowSelection(event, selectedID)
-                      : null
-                  }
-                  inputProps={{ 'aria-labelledby': 'labelId' }}
-                />
-                <IconButton
-                  size='small'
-                  disableRipple={true}
-                  disableFocusRipple={true}
-                  disabled={false}
-                  onClick={(event) =>
-                    !isItemDisabled
-                      ? handleDisplayMoreDetails(event, selectedID)
-                      : null
-                  }
-                >
-                  <OpenInNewRounded />
-                </IconButton>
-              </Box>
-            </TableCell>
-            {data?.map((row, rowIndex) => (
-              <TableCell key={rowIndex}>
-                {rowFormatter(row, rowIndex)}
-              </TableCell>
-            ))}
-          </TableRow>
+          {data.map((row, rowIndex) => (
+            <Tooltip key={rowIndex} title={row.description}>
+              <TableRow hover>
+                <TableCell padding='checkbox'>
+                  <Stack direction='row'>
+                    <Checkbox
+                      disabled={true}
+                      color='primary'
+                      size='small'
+                      inputProps={{ 'aria-labelledby': 'labelId' }}
+                    />
+                    <IconButton
+                      size='small'
+                      disableRipple={true}
+                      disableFocusRipple={true}
+                      onClick={() => onRowSelect(row)}
+                    >
+                      <OpenInNewRounded />
+                    </IconButton>
+                  </Stack>
+                </TableCell>
+                {Object.keys(columns).map((colKey) => {
+                  const column = columns[colKey];
+                  return (
+                    <TableCell key={column.id}>
+                      {rowFormatter(row, column.colName)}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            </Tooltip>
+          ))}
         </TableBody>
       </Table>
     </TableContainer>

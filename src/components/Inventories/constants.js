@@ -1,3 +1,8 @@
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
+
 /**
  * default inventories landing page items to encourage users to use
  * various features of the application
@@ -29,6 +34,35 @@ export const DEFAULT_INVENTORIES_LANDING_PAGE_TEXT = [
 ];
 
 /**
+ * combines the config for host details based on the eventObj parameter. returns a
+ * list of tableRows derieved from the eventObj object. If modifier function is passed
+ * in, we build the table in accordance to it as well.
+ * @param {Object} eventObj - the current selected event to build the table for
+ * @returns {Array} tableRows - the combined row with modifiers applied if passed in.
+ */
+export const BUILD_TABLE_CONSTANTS = (columnLabels) => (eventObj) => {
+  if (!eventObj) {
+    return [];
+  }
+  const tableRows = columnLabels.map(({ id, colName, label, modifier }) => {
+    let value = eventObj[colName];
+    if (modifier) {
+      value = modifier(value, { colName, label });
+    } else {
+      value = value || 'N/A';
+    }
+    return {
+      id,
+      colName,
+      label,
+      value,
+    };
+  });
+
+  return tableRows;
+};
+
+/**
  * INVENTORY LIST HEADERS STATIC COMPONENT
  * displayConcise lets users view the column name in bookmarked inventories
  * modifier fn lets the value be modified, for eg date will be modified with this property
@@ -39,88 +73,82 @@ export const VIEW_INVENTORY_LIST_HEADERS = {
     colName: 'name',
     label: 'Item name',
     displayConcise: true,
-    modifier: (value) => `${value}`,
+    modifier: (value) => `${value || '-'}`,
   },
   description: {
     id: 2,
     colName: 'description',
     label: 'Item Description',
     displayName: 'Description',
-    modifier: (value) => `${value}`,
+    modifier: (value) => `${value || '-'}`,
   },
   price: {
     id: 3,
     colName: 'price',
     label: 'Cost',
     displayConcise: true,
-    modifier: (value) => `${value}`,
-  },
-  status: {
-    id: 4,
-    colName: 'status',
-    label: 'Status',
-    modifier: (value) => `${value}`,
+    modifier: (value) => `${value || '-'}`,
   },
   barcode: {
     id: 5,
     colName: 'barcode',
     label: 'Barcode',
-    modifier: (value) => `${value}`,
+    modifier: (value) => `${value || '-'}`,
   },
   sku: {
     id: 6,
     colName: 'sku',
     label: 'SKU',
-    modifier: (value) => `${value}`,
+    modifier: (value) => `${value || '-'}`,
   },
   quantity: {
     id: 7,
     colName: 'quantity',
     label: 'Quantity',
-    modifier: (value) => `${value}`,
+    modifier: (value) => `${value || '-'}`,
   },
   location: {
     id: 8,
     colName: 'location',
     label: 'Storage location',
     displayConcise: true,
-    modifier: (value) => `${value}`,
+    modifier: (value) => `${value || '-'}`,
   },
   is_returnable: {
     id: 9,
     colName: 'is_returnable',
     label: 'Returnable',
-    modifier: (value) => `${value}`,
+    modifier: (value) => `${value || '-'}`,
   },
   return_location: {
     id: 10,
     colName: 'return_location',
     label: 'Return Location',
-    modifier: (value) => `${value}`,
+    modifier: (value) => `${value || '-'}`,
   },
   max_weight: {
     id: 11,
     colName: 'max_weight',
     label: 'Max Weight',
-    modifier: (value) => `${value}`,
+    modifier: (value) => `${value || '-'}`,
   },
   min_weight: {
     id: 12,
     colName: 'min_weight',
     label: 'Min Weight',
-    modifier: (value) => `${value}`,
+    modifier: (value) => `${value || '-'}`,
   },
   max_height: {
     id: 13,
     colName: 'max_height',
     label: 'Max Height',
-    modifier: (value) => `${value}`,
+    modifier: (value) => `${value || '-'}`,
   },
   min_height: {
     id: 14,
     colName: 'min_height',
     label: 'Min Height',
-    modifier: (value) => `${value}`,
+    modifier: (value) => `${value || '-'}`,
   },
   updated_at: {
     id: 15,
@@ -129,56 +157,26 @@ export const VIEW_INVENTORY_LIST_HEADERS = {
     displayConcise: true,
     modifier: (value) => `${dayjs(value).fromNow()}`,
   },
-  created_at: {
-    id: 16,
-    colName: 'created_at',
-    label: 'Created At',
-    modifier: (value) => `${dayjs(value).fromNow()}`,
-  },
   updater_name: {
     id: 17,
     colName: 'updater_name',
     label: 'Updated By',
     displayConcise: true,
-    modifier: (value) => `${value}`,
+    modifier: (value) => `${value || '-'}`,
   },
   bought_at: {
     id: 18,
     colName: 'bought_at',
     label: 'Purchase Location',
-    modifier: (value) => `${value}`,
+    modifier: (value) => `${value || '-'}`,
   },
 };
 
-// blank inventory form
+// blank form to add inventory details
 export const BLANK_INVENTORY_FORM = {
-  id: '',
-  name: '',
-  description: '',
-  price: '',
-  barcode: '',
-  sku: '',
-  quantity: '',
-  bought_at: '',
-  location: '',
-  storage_location_id: '',
-  is_bookmarked: false,
-  is_returnable: false,
-  return_location: '',
-  max_weight: '',
-  min_weight: '',
-  max_height: '',
-  min_height: '',
-  created_on: '',
-  created_by: '',
-  updated_on: '',
-  updated_by: '',
-  sharable_groups: '',
-};
-
-// erorr handling for adding an inventory form
-export const BLANK_INVENTORY_FORM_ERROR = {
   name: {
+    value: '',
+    isRequired: false,
     errorMsg: '',
     validators: [
       {
@@ -192,6 +190,8 @@ export const BLANK_INVENTORY_FORM_ERROR = {
     ],
   },
   description: {
+    value: '',
+    isRequired: false,
     errorMsg: '',
     validators: [
       {
@@ -205,6 +205,8 @@ export const BLANK_INVENTORY_FORM_ERROR = {
     ],
   },
   price: {
+    value: '',
+    isRequired: false,
     errorMsg: '',
     validators: [
       {
@@ -218,6 +220,8 @@ export const BLANK_INVENTORY_FORM_ERROR = {
     ],
   },
   barcode: {
+    value: '',
+    isRequired: false,
     errorMsg: '',
     validators: [
       {
@@ -227,6 +231,8 @@ export const BLANK_INVENTORY_FORM_ERROR = {
     ],
   },
   sku: {
+    value: '',
+    isRequired: false,
     errorMsg: '',
     validators: [
       {
@@ -236,6 +242,8 @@ export const BLANK_INVENTORY_FORM_ERROR = {
     ],
   },
   quantity: {
+    value: '',
+    isRequired: false,
     errorMsg: '',
     validators: [
       {
@@ -249,22 +257,31 @@ export const BLANK_INVENTORY_FORM_ERROR = {
     ],
   },
   bought_at: {
+    value: '',
+    isRequired: false,
     errorMsg: '',
     validators: [],
   },
   location: {
+    isRequired: false,
     errorMsg: '',
     validators: [],
   },
   is_bookmarked: {
+    value: false,
+    isRequired: false,
     errorMsg: '',
     validators: [],
   },
   is_returnable: {
+    value: false,
+    isRequired: false,
     errorMsg: '',
     validators: [],
   },
   return_location: {
+    value: '',
+    isRequired: false,
     errorMsg: '',
     validators: [
       {
@@ -274,6 +291,8 @@ export const BLANK_INVENTORY_FORM_ERROR = {
     ],
   },
   return_datetime: {
+    value: '',
+    isRequired: false,
     errorMsg: '',
     validators: [
       {
@@ -283,6 +302,8 @@ export const BLANK_INVENTORY_FORM_ERROR = {
     ],
   },
   max_weight: {
+    value: '',
+    isRequired: false,
     errorMsg: '',
     validators: [
       {
@@ -292,6 +313,8 @@ export const BLANK_INVENTORY_FORM_ERROR = {
     ],
   },
   min_weight: {
+    value: '',
+    isRequired: false,
     errorMsg: '',
     validators: [
       {
@@ -301,6 +324,8 @@ export const BLANK_INVENTORY_FORM_ERROR = {
     ],
   },
   max_height: {
+    value: '',
+    isRequired: false,
     errorMsg: '',
     validators: [
       {
@@ -310,6 +335,8 @@ export const BLANK_INVENTORY_FORM_ERROR = {
     ],
   },
   min_height: {
+    value: '',
+    isRequired: false,
     errorMsg: '',
     validators: [
       {
