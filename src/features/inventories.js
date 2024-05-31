@@ -31,7 +31,10 @@ const fetchInventoriesList = (client, userID) => {
       updated_on,
       updated_by,
       sharable_groups,
-      storage_locations (id)
+      storage_locations (id),
+      updator_name:profiles!updated_by(
+        username
+      )
         `
     )
     .eq('created_by', userID);

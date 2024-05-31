@@ -25,6 +25,12 @@ const InventoriesTable = ({ isLoading, columns, data, onRowSelect }) => {
     if (['created_on', 'updated_on'].includes(column)) {
       return dayjs(row[column]).fromNow();
     }
+    if (['price', 'quantity'].includes(column)) {
+      return row[column] <= 0 ? '-' : row[column];
+    }
+    if (['updator_name', 'creator_name'].includes(column)) {
+      return row[column]?.username ?? '-';
+    }
     return row[column] ?? '-';
   };
 

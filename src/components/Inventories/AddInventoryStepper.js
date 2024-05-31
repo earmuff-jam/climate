@@ -47,7 +47,6 @@ export default function AddInventoryStepper({ handleClose }) {
 
   const handleInputChange = (event) => {
     const { id, value } = event.target;
-
     const updatedFormData = { ...formData };
     let errorMsg = '';
 
@@ -99,8 +98,15 @@ export default function AddInventoryStepper({ handleClose }) {
       return;
     }
 
+    const formattedData = Object.values(formData).reduce((acc, el) => {
+      if (el.value) {
+        acc[el.id] = el.value;
+      }
+      return acc;
+    }, {});
+
     const draftRequest = {
-      ...formData,
+      ...formattedData,
       location: storageLocation,
       created_by: user.id,
       created_on: dayjs().toISOString(),

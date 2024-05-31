@@ -157,12 +157,12 @@ export const VIEW_INVENTORY_LIST_HEADERS = {
     displayConcise: true,
     modifier: (value) => `${dayjs(value).fromNow()}`,
   },
-  updater_name: {
+  updator_name: {
     id: 17,
-    colName: 'updater_name',
+    colName: 'updator_name',
     label: 'Updated By',
     displayConcise: true,
-    modifier: (value) => `${value || '-'}`,
+    modifier: (value) => `${value?.username || '-'}`,
   },
   bought_at: {
     id: 18,
@@ -175,6 +175,7 @@ export const VIEW_INVENTORY_LIST_HEADERS = {
 // blank form to add inventory details
 export const BLANK_INVENTORY_FORM = {
   name: {
+    id: 'name',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -190,6 +191,7 @@ export const BLANK_INVENTORY_FORM = {
     ],
   },
   description: {
+    id: 'description',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -205,6 +207,7 @@ export const BLANK_INVENTORY_FORM = {
     ],
   },
   price: {
+    id: 'price',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -220,6 +223,7 @@ export const BLANK_INVENTORY_FORM = {
     ],
   },
   barcode: {
+    id: 'barcode',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -231,6 +235,7 @@ export const BLANK_INVENTORY_FORM = {
     ],
   },
   sku: {
+    id: 'sku',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -242,6 +247,7 @@ export const BLANK_INVENTORY_FORM = {
     ],
   },
   quantity: {
+    id: 'quantity',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -257,29 +263,34 @@ export const BLANK_INVENTORY_FORM = {
     ],
   },
   bought_at: {
+    id: 'bought_at',
     value: '',
     isRequired: false,
     errorMsg: '',
     validators: [],
   },
   location: {
+    id: 'location',
     isRequired: false,
     errorMsg: '',
     validators: [],
   },
   is_bookmarked: {
+    id: 'is_bookmarked',
     value: false,
     isRequired: false,
     errorMsg: '',
     validators: [],
   },
   is_returnable: {
+    id: 'is_returnable',
     value: false,
     isRequired: false,
     errorMsg: '',
     validators: [],
   },
   return_location: {
+    id: 'return_location',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -291,6 +302,7 @@ export const BLANK_INVENTORY_FORM = {
     ],
   },
   return_datetime: {
+    id: 'return_datetime',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -302,6 +314,7 @@ export const BLANK_INVENTORY_FORM = {
     ],
   },
   max_weight: {
+    id: 'max_weight',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -313,6 +326,7 @@ export const BLANK_INVENTORY_FORM = {
     ],
   },
   min_weight: {
+    id: 'min_weight',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -324,6 +338,7 @@ export const BLANK_INVENTORY_FORM = {
     ],
   },
   max_height: {
+    id: 'max_height',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -335,6 +350,7 @@ export const BLANK_INVENTORY_FORM = {
     ],
   },
   min_height: {
+    id: 'min_height',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -346,22 +362,27 @@ export const BLANK_INVENTORY_FORM = {
     ],
   },
   created_on: {
+    id: 'created_on',
     errorMsg: '',
     validators: [],
   },
   created_by: {
+    id: 'created_by',
     errorMsg: '',
     validators: [],
   },
   updated_on: {
+    id: 'updated_on',
     errorMsg: '',
     validators: [],
   },
   updated_by: {
+    id: 'updated_by',
     errorMsg: '',
     validators: [],
   },
   sharable_groups: {
+    id: 'sharable_groups',
     errorMsg: '',
     validators: [],
   },
