@@ -79,7 +79,7 @@ const InventoryList = () => {
         {/* bookmarked inventories has less column headers */}
         <InventoriesTable
           isLoading={isLoading}
-          data={data}
+          data={data?.bookmarkedItems}
           columns={Object.values(VIEW_INVENTORY_LIST_HEADERS).filter(
             (v) => v.displayConcise
           )}

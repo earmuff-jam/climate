@@ -184,7 +184,7 @@ export const BLANK_INVENTORY_FORM = {
         message: 'Item name is required',
       },
       {
-        validate: (value) => value.trim().length >= 50,
+        validate: (value) => value.trim().length >= 200,
         message: 'Item name should be less than 50 characters',
       },
     ],
@@ -199,7 +199,7 @@ export const BLANK_INVENTORY_FORM = {
         message: 'Item description is required',
       },
       {
-        validate: (value) => value.trim().length >= 50,
+        validate: (value) => value.trim().length >= 500,
         message: 'Item description should be less than 50 characters',
       },
     ],

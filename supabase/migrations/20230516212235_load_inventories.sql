@@ -9,11 +9,11 @@ DROP TABLE IF EXISTS inventories CASCADE;
 CREATE TABLE IF NOT EXISTS inventories
 (
     id                    UUID PRIMARY KEY                                                                  NOT NULL DEFAULT gen_random_uuid(),
-    name                  VARCHAR(100)                                                                      NOT NULL,
+    name                  VARCHAR(200)                                                                      NOT NULL,
     description           VARCHAR(500),
     price                 DECIMAL(10, 4)                                                                             DEFAULT 0.00,
-    barcode               VARCHAR(100),
-    sku                   VARCHAR(100),
+    barcode               VARCHAR(500),
+    sku                   VARCHAR(500),
     quantity              INT                                                                                        DEFAULT 1,
     bought_at             VARCHAR(500),
     location              VARCHAR(500),

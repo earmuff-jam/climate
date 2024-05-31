@@ -490,7 +490,7 @@ export const loadAddFormBasedOnStepNumber = (
                   }
                 />
               </Stack>
-              {formData.is_returnable ? (
+              {formData.is_returnable.value ? (
                 <Stack direction={'row'} useFlexGap spacing={2}>
                   <TextField
                     id='return_location'

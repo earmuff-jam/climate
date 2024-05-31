@@ -43,9 +43,9 @@ export const useFetchInventoriesList = () => {
   const supabaseClient = useSupabaseClient();
 
   const queryFn = async () => {
-    return fetchInventoriesList(supabaseClient, user.id).then(
-      (result) => result.data
-    );
+    const result = await fetchInventoriesList(supabaseClient, user.id);
+    const bookmarkedItems = result.data.filter((item) => item.is_bookmarked);
+    return { result: result.data, bookmarkedItems };
   };
 
   return useQuery({
