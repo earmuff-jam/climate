@@ -12,8 +12,9 @@ import {
   Skeleton,
   Tooltip,
   Stack,
+  Typography,
 } from '@mui/material';
-import { OpenInNewRounded } from '@mui/icons-material';
+import { FileOpenRounded } from '@mui/icons-material';
 import { DisplayNoMatchingRecordsComponent } from '@/util/util';
 
 const InventoriesTable = ({ isLoading, columns, data, onRowSelect }) => {
@@ -55,13 +56,17 @@ const InventoriesTable = ({ isLoading, columns, data, onRowSelect }) => {
         <TableHead>
           <TableRow>
             <TableCell padding='checkbox' align='center'>
-              <Checkbox disabled />
+              <Stack direction='row'>
+                <Checkbox disabled size='small' />
+              </Stack>
             </TableCell>
             {Object.keys(columns).map((colKey) => {
               const column = columns[colKey];
               return (
                 <TableCell key={column.id}>
-                  {columnHeaderFormatter(column)}
+                  <Typography fontWeight={'bold'}>
+                    {columnHeaderFormatter(column)}
+                  </Typography>
                 </TableCell>
               );
             })}
@@ -85,7 +90,7 @@ const InventoriesTable = ({ isLoading, columns, data, onRowSelect }) => {
                       disableFocusRipple={true}
                       onClick={() => onRowSelect(row)}
                     >
-                      <OpenInNewRounded />
+                      <FileOpenRounded color='primary' />
                     </IconButton>
                   </Stack>
                 </TableCell>
