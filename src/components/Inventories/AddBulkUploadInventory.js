@@ -3,7 +3,7 @@ import * as XLSX from 'xlsx';
 import React, { useState } from 'react';
 import { Box, Button, Input, Stack, Typography } from '@mui/material';
 
-const AddBulkUploadInventory = () => {
+const AddBulkUploadInventory = ({ handleClose }) => {
   const [uploadedFileInJson, setUploadedFileInJson] = useState([]);
 
   const handleFileChange = (event) => {
@@ -45,6 +45,7 @@ const AddBulkUploadInventory = () => {
   const resetData = () => {
     setOpen(false);
     setUploadedFileInJson(null);
+    handleClose(); // close the modal
   };
 
   const submit = () => {
@@ -59,33 +60,40 @@ const AddBulkUploadInventory = () => {
         <Typography fontWeight='bold'>
           Upload inventory items in bulk
         </Typography>
-        <Typography variant='caption'>
-          Please use the provided template so that all fields are added in the
-          system.
-        </Typography>
+        <Stack direction={'column'}>
+          <Typography variant='caption' component={Box}>
+            Please use the provided template so that all fields are added in the
+            system.
+            <Stack
+              direction={'row'}
+              sx={{ cursor: 'pointer', alignItems: 'flex-end' }}
+              onClick={downloadBulkUploadTemplate}
+            >
+              <DownloadRounded color='primary' />
+              <Typography variant='caption' color='text.secondary'>
+                Download template
+              </Typography>
+            </Stack>
+          </Typography>
+        </Stack>
       </Stack>
       <Stack alignItems={'center'}>
         <Box
           component='form'
           onSubmit={submit}
-          sx={{ maxWidth: 600, width: '100%' }}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            maxWidth: 600,
+            width: '100%',
+          }}
         >
-          <form>
-            <Input type='file' onChange={handleFileChange} />
-          </form>
+          <Input type='file' onChange={handleFileChange} />
           <Typography variant='caption'>
             Uploading excel data must contain required headers
           </Typography>
         </Box>
         <Stack direction={'row'} spacing={2} useFlexGap sx={{ py: 4 }}>
-          <Button
-            variant='outlined'
-            endIcon={<DownloadRounded />}
-            onClick={downloadBulkUploadTemplate}
-          >
-            Download Template
-          </Button>
-
           <Button endIcon={<SaveRounded />} onClick={submit}>
             Save
           </Button>

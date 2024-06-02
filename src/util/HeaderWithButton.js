@@ -1,9 +1,14 @@
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Button, Stack, Typography, Link } from '@mui/material';
+import NextLink from 'next/link';
 import React from 'react';
 
 const HeaderWithButton = (props) => {
   const {
     title,
+    showSecondaryTitle,
+    secondaryTitle,
+    showRedirectLink,
+    redirectTo,
     showPrimaryButton,
     primaryButtonVariant,
     primaryButtonColor,
@@ -26,9 +31,21 @@ const HeaderWithButton = (props) => {
       alignItems='center'
       mb={4}
     >
-      <Typography variant='h4' component='h2'>
-        {title}
-      </Typography>
+      <Stack>
+        <Typography variant='h4' component='h2'>
+          {title}
+        </Typography>
+        {showSecondaryTitle ? (
+          // if we do not want to show redirect link
+          showRedirectLink ? (
+            <Link href={redirectTo} component={NextLink}>
+              <Typography variant='caption'>{secondaryTitle}</Typography>
+            </Link>
+          ) : (
+            <Typography variant='caption'>{secondaryTitle}</Typography>
+          )
+        ) : null}
+      </Stack>
       <Stack direction='row' spacing={2} useFlexGap>
         {showPrimaryButton ? (
           <Button

@@ -9,11 +9,11 @@ DROP TABLE IF EXISTS inventories CASCADE;
 CREATE TABLE IF NOT EXISTS inventories
 (
     id                    UUID PRIMARY KEY                                                                  NOT NULL DEFAULT gen_random_uuid(),
-    name                  VARCHAR(100)                                                                      NOT NULL,
+    name                  VARCHAR(200)                                                                      NOT NULL,
     description           VARCHAR(500),
     price                 DECIMAL(10, 4)                                                                             DEFAULT 0.00,
-    barcode               VARCHAR(100),
-    sku                   VARCHAR(100),
+    barcode               VARCHAR(500),
+    sku                   VARCHAR(500),
     quantity              INT                                                                                        DEFAULT 1,
     bought_at             VARCHAR(500),
     location              VARCHAR(500),
@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS inventories
     is_bookmarked         BOOLEAN                                                                          NOT NULL DEFAULT false,
     is_returnable         BOOLEAN                                                                          NOT NULL DEFAULT false,
     return_location       VARCHAR(200),
+    return_datetime       TIMESTAMP WITH TIME ZONE                                                             NULL,
     max_weight            VARCHAR(10) , -- weight distribution is in kg
     min_weight            VARCHAR(10) , -- weight distribution is in kg
     max_height            VARCHAR(10) , -- height distribution is in inches

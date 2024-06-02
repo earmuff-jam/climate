@@ -1,7 +1,6 @@
-import { DisplayNoMatchingRecordsComponent } from '@/util/util';
-
-const { OpenInNewRounded } = require('@mui/icons-material');
-const {
+import React from 'react';
+import dayjs from 'dayjs';
+import {
   TableContainer,
   Table,
   TableHead,
@@ -9,20 +8,32 @@ const {
   TableCell,
   Checkbox,
   TableBody,
-  Box,
   IconButton,
   Skeleton,
-} = require('@mui/material');
+  Tooltip,
+  Stack,
+  Typography,
+} from '@mui/material';
+import { FileOpenRounded } from '@mui/icons-material';
+import { DisplayNoMatchingRecordsComponent } from '@/util/util';
 
-const InventoriesTable = ({ isLoading, columns, data }) => {
+const InventoriesTable = ({ isLoading, columns, data, onRowSelect }) => {
   const columnHeaderFormatter = (column) => {
-    return column?.label;
+    return column.label;
   };
 
-  const rowFormatter = () => {};
-
-  const handleRowSelection = () => {};
-  const handleDisplayMoreDetails = () => {};
+  const rowFormatter = (row, column) => {
+    if (['created_on', 'updated_on'].includes(column)) {
+      return dayjs(row[column]).fromNow();
+    }
+    if (['price', 'quantity'].includes(column)) {
+      return row[column] <= 0 ? '-' : row[column];
+    }
+    if (['updator_name', 'creator_name'].includes(column)) {
+      return row[column]?.username ?? '-';
+    }
+    return row[column] ?? '-';
+  };
 
   if (isLoading) {
     return (
@@ -35,8 +46,7 @@ const InventoriesTable = ({ isLoading, columns, data }) => {
     );
   }
 
-  // empty rows displays no matching records text
-  if (data === null || data === 'undefined' || data?.length === 0) {
+  if (!data || data.length === 0) {
     return <DisplayNoMatchingRecordsComponent />;
   }
 
@@ -46,49 +56,55 @@ const InventoriesTable = ({ isLoading, columns, data }) => {
         <TableHead>
           <TableRow>
             <TableCell padding='checkbox' align='center'>
-              <Checkbox disabled />
+              <Stack direction='row'>
+                <Checkbox disabled size='small' />
+              </Stack>
             </TableCell>
-            {columns?.map((column) => (
-              <TableCell key={column}>
-                {columnHeaderFormatter(column)}
-              </TableCell>
-            ))}
+            {Object.keys(columns).map((colKey) => {
+              const column = columns[colKey];
+              return (
+                <TableCell key={column.id}>
+                  <Typography fontWeight={'bold'}>
+                    {columnHeaderFormatter(column)}
+                  </Typography>
+                </TableCell>
+              );
+            })}
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow hover key={0}>
-            <TableCell padding='checkbox'>
-              <Box>
-                <Checkbox
-                  disabled={true}
-                  color='primary'
-                  size='small'
-                  onClick={(event) =>
-                    !isItemDisabled
-                      ? handleRowSelection(event, selectedID)
-                      : null
-                  }
-                  inputProps={{ 'aria-labelledby': 'labelId' }}
-                />
-                <IconButton
-                  size='small'
-                  disableRipple={true}
-                  disableFocusRipple={true}
-                  disabled={false}
-                  onClick={(event) =>
-                    !isItemDisabled
-                      ? handleDisplayMoreDetails(event, selectedID)
-                      : null
-                  }
-                >
-                  <OpenInNewRounded />
-                </IconButton>
-              </Box>
-            </TableCell>
-            {data?.map((row) => (
-              <TableCell key={row}>{rowFormatter(row, rowIndex)}</TableCell>
-            ))}
-          </TableRow>
+          {data.map((row, rowIndex) => (
+            <Tooltip key={rowIndex} title={row.description}>
+              <TableRow hover>
+                <TableCell padding='checkbox'>
+                  <Stack direction='row'>
+                    <Checkbox
+                      disabled={true}
+                      color='primary'
+                      size='small'
+                      inputProps={{ 'aria-labelledby': 'labelId' }}
+                    />
+                    <IconButton
+                      size='small'
+                      disableRipple={true}
+                      disableFocusRipple={true}
+                      onClick={() => onRowSelect(row)}
+                    >
+                      <FileOpenRounded color='primary' />
+                    </IconButton>
+                  </Stack>
+                </TableCell>
+                {Object.keys(columns).map((colKey) => {
+                  const column = columns[colKey];
+                  return (
+                    <TableCell key={column.id}>
+                      {rowFormatter(row, column.colName)}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            </Tooltip>
+          ))}
         </TableBody>
       </Table>
     </TableContainer>

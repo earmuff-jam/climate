@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import dayjs from 'dayjs';
 import {
   TextField,
   Box,
@@ -17,18 +18,238 @@ import {
   IconButton,
   Skeleton,
 } from '@mui/material';
-
 import {
   BookmarkRounded,
   CheckRounded,
   RestartAltRounded,
   SwapHorizRounded,
 } from '@mui/icons-material';
-
-import { useInventoryConfiguration } from './Hooks';
+import { useQueryClient } from 'react-query';
+import { BLANK_INVENTORY_FORM } from './constants';
+import { useUser } from '@supabase/auth-helpers-react';
+import { useUpsertInventoryDetails } from '@/features/inventories';
+import { useFetchStorageLocationList } from '@/features/storageLocations';
 
 const filter = createFilterOptions();
 const steps = ['Add inventory', 'Add more details', 'Publish inventory'];
+
+export default function AddInventoryStepper({ handleClose }) {
+  const user = useUser();
+  const queryClient = useQueryClient();
+  const { data, isLoading } = useFetchStorageLocationList();
+  const upsertInventoryDetailsMutation = useUpsertInventoryDetails();
+
+  const [activeStep, setActiveStep] = useState(0);
+  const [skipped, setSkipped] = useState(new Set());
+  const [storageLocation, setStorageLocation] = useState('');
+
+  const [formData, setFormData] = useState({ ...BLANK_INVENTORY_FORM });
+
+  const handleInputChange = (event) => {
+    const { id, value } = event.target;
+    const updatedFormData = { ...formData };
+    let errorMsg = '';
+
+    for (const validator of updatedFormData[id].validators) {
+      if (validator.validate(value)) {
+        errorMsg = validator.message;
+        break;
+      }
+    }
+
+    updatedFormData[id] = {
+      ...updatedFormData[id],
+      value,
+      errorMsg,
+    };
+
+    setFormData(updatedFormData);
+  };
+
+  const handleCheckbox = (name, value) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: { ...prevFormData[name], value },
+    }));
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const containsErr = Object.values(formData).reduce((acc, el) => {
+      if (el.errorMsg) {
+        return true;
+      }
+      return acc;
+    }, false);
+
+    const requiredFormFields = Object.values(formData).filter(
+      (v) => v.required
+    );
+    const isRequiredFieldsEmpty = requiredFormFields.some(
+      (el) => el.value.trim() === ''
+    );
+
+    if (
+      containsErr ||
+      isRequiredFieldsEmpty ||
+      storageLocation === null ||
+      Object.keys(storageLocation).length <= 0
+    ) {
+      return;
+    }
+
+    const formattedData = Object.values(formData).reduce((acc, el) => {
+      if (el.value) {
+        acc[el.id] = el.value;
+      }
+      return acc;
+    }, {});
+
+    const draftRequest = {
+      ...formattedData,
+      location: storageLocation,
+      created_by: user.id,
+      created_on: dayjs().toISOString(),
+    };
+
+    upsertInventoryDetailsMutation.mutate(draftRequest, {
+      onSuccess: (response) => {
+        queryClient.invalidateQueries(['inventoryList']);
+      },
+    });
+    handleClose(); // close the modal form
+    setFormData({ ...BLANK_INVENTORY_FORM });
+  };
+
+  const isStepOptional = (step) => {
+    return step === 1;
+  };
+
+  const isStepSkipped = (step) => {
+    return skipped.has(step);
+  };
+
+  const handleNext = () => {
+    let newSkipped = skipped;
+    if (isStepSkipped(activeStep)) {
+      newSkipped = new Set(newSkipped.values());
+      newSkipped.delete(activeStep);
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped(newSkipped);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleSkip = () => {
+    if (!isStepOptional(activeStep)) {
+      throw new Error("You can't skip a step that isn't optional.");
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped((prevSkipped) => {
+      const newSkipped = new Set(prevSkipped.values());
+      newSkipped.add(activeStep);
+      return newSkipped;
+    });
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+
+  const containsErr = Object.values(formData).reduce((acc, el) => {
+    if (el.errorMsg) {
+      return true;
+    }
+    return acc;
+  }, false);
+
+  const requiredFormFields = Object.values(formData).filter((v) => v.required);
+  const isRequiredFieldsEmpty = requiredFormFields.some(
+    (el) => el.value.trim() === ''
+  );
+
+  const isDisabled =
+    containsErr ||
+    isRequiredFieldsEmpty ||
+    storageLocation === null ||
+    Object.keys(storageLocation).length <= 0;
+
+  if (isLoading)
+    return (
+      <Skeleton
+        variant='rounded'
+        animation='wave'
+        height={'30vh'}
+        width={'50vw'}
+      />
+    );
+
+  return (
+    <Box sx={{ width: '100%' }}>
+      <Stepper activeStep={activeStep}>
+        {steps.map((label, index) => {
+          const stepProps = {};
+          const labelProps = {};
+          if (isStepOptional(index)) {
+            labelProps.optional = (
+              <Typography variant='caption'>Optional</Typography>
+            );
+          }
+          if (isStepSkipped(index)) {
+            stepProps.completed = false;
+          }
+          return (
+            <Step key={label} {...stepProps}>
+              <StepLabel {...labelProps}>{label}</StepLabel>
+            </Step>
+          );
+        })}
+      </Stepper>
+      <>
+        <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+        {loadInstructionsBasedOnStepNumber(activeStep + 1)}
+        {loadAddFormBasedOnStepNumber(
+          activeStep + 1,
+          formData,
+          storageLocation,
+          setStorageLocation,
+          handleInputChange,
+          handleCheckbox,
+          handleReset,
+          handleSubmit,
+          data
+        )}
+        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+          <Button
+            color='inherit'
+            disabled={activeStep === 0}
+            onClick={handleBack}
+            sx={{ mr: 1 }}
+          >
+            Back
+          </Button>
+          <Box sx={{ flex: '1 1 auto' }} />
+          {isStepOptional(activeStep) && (
+            <Button color='inherit' onClick={handleSkip} sx={{ mr: 1 }}>
+              Skip
+            </Button>
+          )}
+
+          {activeStep !== steps.length - 1 ? (
+            <Button disabled={isDisabled} onClick={handleNext}>
+              Next
+            </Button>
+          ) : null}
+        </Box>
+      </>
+    </Box>
+  );
+}
 
 export const loadInstructionsBasedOnStepNumber = (stepNumber) => {
   switch (stepNumber) {
@@ -62,11 +283,11 @@ export const loadInstructionsBasedOnStepNumber = (stepNumber) => {
 export const loadAddFormBasedOnStepNumber = (
   stepNumber,
   formData,
-  formDataError,
   storageLocation,
   setStorageLocation,
   handleInputChange,
   handleCheckbox,
+  handleReset,
   handleSubmit,
   options
 ) => {
@@ -74,28 +295,24 @@ export const loadAddFormBasedOnStepNumber = (
     case 1:
       return (
         <Stack alignItems={'center'}>
-          <Box
-            component='form'
-            onSubmit={handleSubmit}
-            sx={{ maxWidth: 600, width: '100%' }}
-          >
+          <Box component='form' sx={{ maxWidth: 600, width: '100%' }}>
             <Stack spacing={2} useFlexGap>
               <Stack direction={'row'} spacing={2} useFlexGap>
                 <TextField
                   id='name'
                   label='Item name'
-                  value={formData.name}
+                  value={formData.name.value}
                   onChange={handleInputChange}
                   fullWidth
                   variant='outlined'
                   size='small'
-                  error={Boolean(formDataError.name['errorMsg'].length)}
-                  helperText={formDataError.name['errorMsg']}
+                  error={Boolean(formData.name['errorMsg'].length)}
+                  helperText={formData.name['errorMsg']}
                 />
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={formData.is_bookmarked}
+                      checked={formData.is_bookmarked.value}
                       onChange={(e) =>
                         handleCheckbox('is_bookmarked', e.target.checked)
                       }
@@ -105,7 +322,9 @@ export const loadAddFormBasedOnStepNumber = (
                   label={
                     <Stack direction={'row'} alignItems={'center'}>
                       <BookmarkRounded
-                        color={formData.is_bookmarked ? 'primary' : 'secondary'}
+                        color={
+                          formData.is_bookmarked.value ? 'primary' : 'secondary'
+                        }
                       />
                       <Typography variant='caption'>Bookmark</Typography>
                     </Stack>
@@ -115,26 +334,26 @@ export const loadAddFormBasedOnStepNumber = (
               <TextField
                 id='description'
                 label='Description'
-                value={formData.description}
+                value={formData.description.value}
                 onChange={handleInputChange}
                 fullWidth
                 variant='outlined'
                 size='small'
-                error={Boolean(formDataError.description['errorMsg'].length)}
-                helperText={formDataError.description['errorMsg']}
+                error={Boolean(formData.description['errorMsg'].length)}
+                helperText={formData.description['errorMsg']}
               />
             </Stack>
             <Stack direction={'row'} sx={{ py: 2 }} useFlexGap spacing={2}>
               <TextField
                 id='quantity'
                 label='Item quantity'
-                value={formData.quantity}
+                value={formData.quantity.value}
                 onChange={handleInputChange}
                 fullWidth
                 variant='outlined'
                 size='small'
-                error={Boolean(formDataError.quantity['errorMsg'].length)}
-                helperText={formDataError.quantity['errorMsg']}
+                error={Boolean(formData.quantity['errorMsg'].length)}
+                helperText={formData.quantity['errorMsg']}
               />
             </Stack>
             <Autocomplete
@@ -205,45 +424,41 @@ export const loadAddFormBasedOnStepNumber = (
     case 2:
       return (
         <Stack alignItems={'center'}>
-          <Box
-            component='form'
-            onSubmit={handleSubmit}
-            sx={{ maxWidth: 600, width: '100%' }}
-          >
+          <Box component='form' sx={{ maxWidth: 600, width: '100%' }}>
             <Stack spacing={2} useFlexGap>
               <TextField
                 id='price'
                 label='Item price'
-                value={formData.price}
+                value={formData.price.value}
                 onChange={handleInputChange}
                 fullWidth
                 variant='outlined'
                 size='small'
-                error={Boolean(formDataError.price['errorMsg'].length)}
-                helperText={formDataError.price['errorMsg']}
+                error={Boolean(formData.price['errorMsg'].length)}
+                helperText={formData.price['errorMsg']}
               />
               <Stack direction={'row'} useFlexGap spacing={2}>
                 <TextField
                   id='barcode'
                   label='Item Barcode'
-                  value={formData.barcode}
+                  value={formData.barcode.value}
                   onChange={handleInputChange}
                   fullWidth
                   variant='outlined'
                   size='small'
-                  error={Boolean(formDataError.barcode['errorMsg'].length)}
-                  helperText={formDataError.barcode['errorMsg']}
+                  error={Boolean(formData.barcode['errorMsg'].length)}
+                  helperText={formData.barcode['errorMsg']}
                 />
                 <TextField
                   id='sku'
                   label='Item SKU'
-                  value={formData.sku}
+                  value={formData.sku.value}
                   onChange={handleInputChange}
                   fullWidth
                   variant='outlined'
                   size='small'
-                  error={Boolean(formDataError.sku['errorMsg'].length)}
-                  helperText={formDataError.sku['errorMsg']}
+                  error={Boolean(formData.sku['errorMsg'].length)}
+                  helperText={formData.sku['errorMsg']}
                 />
               </Stack>
 
@@ -251,18 +466,18 @@ export const loadAddFormBasedOnStepNumber = (
                 <TextField
                   id='bought_at'
                   label='Place of purchase'
-                  value={formData.bought_at}
+                  value={formData.bought_at.value}
                   onChange={handleInputChange}
                   fullWidth
                   variant='outlined'
                   size='small'
-                  error={Boolean(formDataError.bought_at['errorMsg'].length)}
-                  helperText={formDataError.bought_at['errorMsg']}
+                  error={Boolean(formData.bought_at['errorMsg'].length)}
+                  helperText={formData.bought_at['errorMsg']}
                 />
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={formData.is_returnable}
+                      checked={formData.is_returnable.value}
                       onChange={(e) =>
                         handleCheckbox('is_returnable', e.target.checked)
                       }
@@ -272,27 +487,27 @@ export const loadAddFormBasedOnStepNumber = (
                   label={
                     <Stack direction={'row'} alignItems={'center'}>
                       <SwapHorizRounded
-                        color={formData.is_returnable ? 'primary' : 'secondary'}
+                        color={
+                          formData.is_returnable.value ? 'primary' : 'secondary'
+                        }
                       />
                       <Typography variant='caption'>Returnable</Typography>
                     </Stack>
                   }
                 />
               </Stack>
-              {formData.is_returnable ? (
+              {formData.is_returnable.value ? (
                 <Stack direction={'row'} useFlexGap spacing={2}>
                   <TextField
                     id='return_location'
                     label='Item return location'
-                    value={formData.return_location}
+                    value={formData.return_location.value}
                     onChange={handleInputChange}
                     fullWidth
                     variant='outlined'
                     size='small'
-                    error={Boolean(
-                      formDataError.return_location['errorMsg'].length
-                    )}
-                    helperText={formDataError.return_location['errorMsg']}
+                    error={Boolean(formData.return_location['errorMsg'].length)}
+                    helperText={formData.return_location['errorMsg']}
                   />
                   <TextField
                     fullWidth
@@ -300,12 +515,10 @@ export const loadAddFormBasedOnStepNumber = (
                     label='Return date and time'
                     variant='standard'
                     type='datetime-local'
-                    value={formData.return_datetime}
+                    value={formData.return_datetime.value}
                     onChange={handleInputChange}
-                    error={Boolean(
-                      formDataError.return_datetime['errorMsg'].length
-                    )}
-                    helperText={formDataError.return_datetime['errorMsg']}
+                    error={Boolean(formData.return_datetime['errorMsg'].length)}
+                    helperText={formData.return_datetime['errorMsg']}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -318,48 +531,48 @@ export const loadAddFormBasedOnStepNumber = (
               <TextField
                 id='max_weight'
                 label='Max weight in kg'
-                value={formData.max_weight}
+                value={formData.max_weight.value}
                 onChange={handleInputChange}
                 fullWidth
                 variant='outlined'
                 size='small'
-                error={Boolean(formDataError.max_weight['errorMsg'].length)}
-                helperText={formDataError.max_weight['errorMsg']}
+                error={Boolean(formData.max_weight['errorMsg'].length)}
+                helperText={formData.max_weight['errorMsg']}
               />
               <TextField
                 id='min_weight'
                 label='Min weight in kg'
-                value={formData.min_weight}
+                value={formData.min_weight.value}
                 onChange={handleInputChange}
                 fullWidth
                 variant='outlined'
                 size='small'
-                error={Boolean(formDataError.min_weight['errorMsg'].length)}
-                helperText={formDataError.min_weight['errorMsg']}
+                error={Boolean(formData.min_weight['errorMsg'].length)}
+                helperText={formData.min_weight['errorMsg']}
               />
             </Stack>
             <Stack direction={'row'} useFlexGap spacing={2}>
               <TextField
                 id='max_height'
                 label='Max height in inches'
-                value={formData.max_height}
+                value={formData.max_height.value}
                 onChange={handleInputChange}
                 fullWidth
                 variant='outlined'
                 size='small'
-                error={Boolean(formDataError.max_height['errorMsg'].length)}
-                helperText={formDataError.max_height['errorMsg']}
+                error={Boolean(formData.max_height['errorMsg'].length)}
+                helperText={formData.max_height['errorMsg']}
               />
               <TextField
                 id='min_height'
                 label='Min height in inches'
-                value={formData.min_height}
+                value={formData.min_height.value}
                 onChange={handleInputChange}
                 fullWidth
                 variant='outlined'
                 size='small'
-                error={Boolean(formDataError.min_height['errorMsg'].length)}
-                helperText={formDataError.min_height['errorMsg']}
+                error={Boolean(formData.min_height['errorMsg'].length)}
+                helperText={formData.min_height['errorMsg']}
               />
             </Stack>
           </Box>
@@ -367,169 +580,45 @@ export const loadAddFormBasedOnStepNumber = (
       );
     case 3:
       return (
-        <Stack alignItems={'center'}>
-          <Card sx={{ display: 'flex', width: '100%', maxWidth: '600px' }}>
-            <CardContent>
-              <Stack direction='row'>
-                <IconButton disabled>
-                  <BookmarkRounded
-                    color={formData.is_bookmarked ? 'primary' : 'secondary'}
-                  />
-                </IconButton>
-                <Stack>
-                  <Typography>Item name: {formData.name}</Typography>
-                  <Typography variant='caption'>
-                    {formData.description}
-                  </Typography>
-                  <Stack direction={'row'} spacing={1}>
-                    <Typography fontWeight={'bold'}>Quantity: </Typography>
-                    <Typography>{formData.quantity}</Typography>
-                  </Stack>
-                </Stack>
-                <Box sx={{ flexGrow: 1 }}></Box>
-              </Stack>
-            </CardContent>
-          </Card>
-        </Stack>
-      );
-    default:
-      return null;
-  }
-};
-
-export default function AddInventoryStepper() {
-  const {
-    formData,
-    formDataError,
-    storageLocation,
-    setStorageLocation,
-    handleInputChange,
-    handleCheckbox,
-    handleSubmit,
-    isFetchAllInventoryStorageLocationOptionsLoading,
-    fetchAllInventoryStorageLocationOptionsData,
-  } = useInventoryConfiguration();
-
-  const [activeStep, setActiveStep] = useState(0);
-  const [skipped, setSkipped] = useState(new Set());
-
-  if (isFetchAllInventoryStorageLocationOptionsLoading)
-    return (
-      <Skeleton variant='rounded' animation='wave' height={100} width={100} />
-    );
-
-  const isStepOptional = (step) => {
-    return step === 1;
-  };
-
-  const isStepSkipped = (step) => {
-    return skipped.has(step);
-  };
-
-  const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
-  return (
-    <Box sx={{ width: '100%' }}>
-      <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => {
-          const stepProps = {};
-          const labelProps = {};
-          if (isStepOptional(index)) {
-            labelProps.optional = (
-              <Typography variant='caption'>Optional</Typography>
-            );
-          }
-          if (isStepSkipped(index)) {
-            stepProps.completed = false;
-          }
-          return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
-            </Step>
-          );
-        })}
-      </Stepper>
-      {activeStep === steps.length ? (
         <>
+          <Stack alignItems={'center'}>
+            <Card sx={{ display: 'flex', width: '100%', maxWidth: '600px' }}>
+              <CardContent>
+                <Stack direction='row'>
+                  <IconButton disabled>
+                    <BookmarkRounded
+                      color={
+                        formData.is_bookmarked.value ? 'primary' : 'secondary'
+                      }
+                    />
+                  </IconButton>
+                  <Stack>
+                    <Typography>Item name: {formData.name.value}</Typography>
+                    <Typography variant='caption'>
+                      {formData.description.value}
+                    </Typography>
+                    <Stack direction={'row'} spacing={1}>
+                      <Typography fontWeight={'bold'}>Quantity: </Typography>
+                      <Typography>{formData.quantity.value}</Typography>
+                    </Stack>
+                  </Stack>
+                  <Box sx={{ flexGrow: 1 }}></Box>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Stack>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
             <Button startIcon={<RestartAltRounded />} onClick={handleReset}>
               Reset
             </Button>
-            <Button startIcon={<CheckRounded />} onClick={handleReset}>
+            <Button startIcon={<CheckRounded />} onClick={handleSubmit}>
               Submit
             </Button>
           </Box>
         </>
-      ) : (
-        <>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            Step {activeStep + 1}
-            {loadInstructionsBasedOnStepNumber(activeStep + 1)}
-            {loadAddFormBasedOnStepNumber(
-              activeStep + 1,
-              formData,
-              formDataError,
-              storageLocation,
-              setStorageLocation,
-              handleInputChange,
-              handleCheckbox,
-              handleSubmit,
-              fetchAllInventoryStorageLocationOptionsData.data
-            )}
-          </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Button
-              color='inherit'
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
-            >
-              Back
-            </Button>
-            <Box sx={{ flex: '1 1 auto' }} />
-            {isStepOptional(activeStep) && (
-              <Button color='inherit' onClick={handleSkip} sx={{ mr: 1 }}>
-                Skip
-              </Button>
-            )}
-
-            {activeStep !== steps.length - 1 ? (
-              <Button onClick={handleNext}>Next</Button>
-            ) : null}
-          </Box>
-        </>
-      )}
-    </Box>
-  );
-}
+      );
+    default:
+      return null;
+  }
+};

@@ -32,6 +32,7 @@ To develop locally, the following steps should suffice.
 
 ### Issues during local development
 
+#### Common issue - Problem updating schema_migrations
 1. One of the most common issues that happens is running `supabase create migration <name>` and running an error on the file name.
    To solve this, simply rename to the correct pattern. No other work is required.
 2. If you have already made some changes and you ran command `supabase remote db commit`, you will see that it will pull remote migration to your local instance. **This is not correct**. You should only run this command once - when you initialize the project for the first time.
@@ -43,6 +44,12 @@ To develop locally, the following steps should suffice.
    - After you bring your migrations in, run command `supabase db reset` to reset your db.
    - Running `supabase db push` should not be a problem anymore.
    - Add `user` and start testing + building the application.
+
+
+#### Common Issue - Problem resetting local db
+
+1. Run command `npx supabase stop -no-backup` to completely remove all data when you stop the supabase db.
+2. Continue with `npx supabase start` from here again
 
 **CREATING MIGRATIONS**
 
