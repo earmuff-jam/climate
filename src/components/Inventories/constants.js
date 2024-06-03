@@ -9,7 +9,7 @@ dayjs.extend(relativeTime);
  */
 export const DEFAULT_INVENTORIES_LANDING_PAGE_TEXT = [
   {
-    name: 'Create Maintenance Request',
+    name: 'Create and view maintenance request',
     description: 'Create periodic maintenance of inventory items',
     imageSrc: 'images/books.jpg',
     imageAlt: 'default-maintenance-inventory-items-img',
@@ -177,7 +177,7 @@ export const BLANK_INVENTORY_FORM = {
   name: {
     id: 'name',
     value: '',
-    isRequired: false,
+    isRequired: true,
     errorMsg: '',
     validators: [
       {
@@ -193,7 +193,7 @@ export const BLANK_INVENTORY_FORM = {
   description: {
     id: 'description',
     value: '',
-    isRequired: false,
+    isRequired: true,
     errorMsg: '',
     validators: [
       {
@@ -249,7 +249,7 @@ export const BLANK_INVENTORY_FORM = {
   quantity: {
     id: 'quantity',
     value: '',
-    isRequired: false,
+    isRequired: true,
     errorMsg: '',
     validators: [
       {
