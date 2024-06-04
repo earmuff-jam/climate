@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   Box,
+  Button,
   Card,
   CardContent,
   Grid,
@@ -12,28 +13,41 @@ import {
 } from '@mui/material';
 
 import { useQueryClient } from 'react-query';
-import {
-  DeleteRounded,
-  HighlightOffRounded,
-  TrendingUpRounded,
-} from '@mui/icons-material';
+import { HighlightOffRounded, TrendingUpRounded } from '@mui/icons-material';
 import { DisplayNoMatchingRecordsComponent } from '@/util/util';
 import {
   useDeleteSelectedMaintenancePlan,
   useFetchMaintenanceList,
 } from '@/features/maintenancePlan';
+import SimpleModal from '@/util/SimpleModal';
 
 const PlanList = () => {
   const queryClient = useQueryClient();
   const { data, isLoading } = useFetchMaintenanceList();
   const deleteMaintenancePlanMutation = useDeleteSelectedMaintenancePlan();
 
-  const handleDelete = (id) => {
+  const [openDialog, setOpenDialog] = useState(false);
+  const [idToDelete, setIdToDelete] = useState(-1);
+  const handleDelete = () => {
+    setOpenDialog(true);
+  };
+
+  const reset = () => {
+    setOpenDialog(false);
+    setIdToDelete(-1);
+  };
+
+  const confirmDelete = (id) => {
+    if (id === -1) {
+      // unknown id to delete. protect from confirmation box
+      return;
+    }
     deleteMaintenancePlanMutation.mutate(id, {
       onSettled: (response) => {
         queryClient.invalidateQueries(['maintenancePlanDetails']);
       },
     });
+    reset();
   };
 
   if (isLoading) {
@@ -70,7 +84,7 @@ const PlanList = () => {
                     <Typography variant='caption'>{item.type}</Typography>
 
                     <Box
-                      sx={{ px: 1, py: 0, borderRadius: 2, maxWidth: '4rem' }}
+                      sx={{ px: 1, py: 0, borderRadius: 2, maxWidth: '7rem' }}
                       bgcolor={'secondary.main'}
                     >
                       <Stack
@@ -83,15 +97,19 @@ const PlanList = () => {
                           color={index % 2 == 0 ? 'success' : 'error'}
                         />
                         <Typography variant='caption'>
-                          ${item.total_items ?? 0}%
+                          Total items {item.total_items ?? 0}
                         </Typography>
                       </Stack>
                     </Box>
                   </Stack>
                   <IconButton
+                    size='small'
                     disableFocusRipple
                     disableRipple
-                    onClick={() => handleDelete(item.id)}
+                    onClick={() => {
+                      setIdToDelete(item.id);
+                      handleDelete(item.id);
+                    }}
                   >
                     <HighlightOffRounded />
                   </IconButton>
@@ -101,6 +119,24 @@ const PlanList = () => {
           </Tooltip>
         </Grid>
       ))}
+      {/* confirmation box */}
+      {openDialog && (
+        <SimpleModal
+          title={'Confirm deletion'}
+          handleClose={reset}
+          showSubmit={false}
+          maxSize={'sm'}
+        >
+          <Typography variant='caption'>
+            Confirm deletion of maintenance plan? Deletion is permanent and
+            cannot be undone.
+          </Typography>
+          <Stack direction={'row'}>
+            <Button onClick={reset}>Go back</Button>
+            <Button onClick={() => confirmDelete(idToDelete)}>Confirm</Button>
+          </Stack>
+        </SimpleModal>
+      )}
     </Grid>
   );
 };
