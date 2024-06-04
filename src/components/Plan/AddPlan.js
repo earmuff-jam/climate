@@ -1,9 +1,20 @@
-import { Box, Button, Stack, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useUser } from '@supabase/auth-helpers-react';
 import React, { useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { BLANK_MAINTENANCE_PLAN } from './constants';
 import { useUpsertMaintenancePlanDetails } from '@/features/maintenancePlan';
+import dayjs from 'dayjs';
 
 const AddPlan = ({ handleCloseAddNewPlan }) => {
   const user = useUser();
@@ -11,6 +22,7 @@ const AddPlan = ({ handleCloseAddNewPlan }) => {
   const upsertMaintenancePlanDetailsMutation =
     useUpsertMaintenancePlanDetails();
 
+  const [planType, setPlanType] = useState('7');
   const [formData, setFormData] = useState({
     ...BLANK_MAINTENANCE_PLAN,
   });
@@ -36,6 +48,16 @@ const AddPlan = ({ handleCloseAddNewPlan }) => {
     setFormData(updatedFormData);
   };
 
+  const resetData = () => {
+    setFormData({ ...BLANK_MAINTENANCE_PLAN });
+    setPlanType('7'); // annual
+    handleCloseAddNewPlan();
+  };
+
+  const handlePlanChange = (event) => {
+    setPlanType(event.target.value);
+  };
+
   const handleSubmit = () => {
     const containsErr = Object.values(formData).reduce((acc, el) => {
       if (el.errorMsg) {
@@ -51,12 +73,7 @@ const AddPlan = ({ handleCloseAddNewPlan }) => {
       (el) => el.value.trim() === ''
     );
 
-    if (
-      containsErr ||
-      isRequiredFieldsEmpty ||
-      storageLocation === null ||
-      Object.keys(storageLocation).length <= 0
-    ) {
+    if (containsErr || isRequiredFieldsEmpty) {
       return;
     }
 
@@ -69,7 +86,7 @@ const AddPlan = ({ handleCloseAddNewPlan }) => {
 
     const draftRequest = {
       ...formattedData,
-      location: storageLocation,
+      type: planType,
       created_by: user.id,
       created_on: dayjs().toISOString(),
     };
@@ -77,8 +94,7 @@ const AddPlan = ({ handleCloseAddNewPlan }) => {
     upsertMaintenancePlanDetailsMutation.mutate(draftRequest, {
       onSuccess: (response) => {
         queryClient.invalidateQueries(['maintenancePlanDetails']);
-        setFormData({ ...BLANK_MAINTENANCE_PLAN });
-        handleCloseAddNewPlan();
+        resetData();
       },
     });
   };
@@ -135,6 +151,29 @@ const AddPlan = ({ handleCloseAddNewPlan }) => {
               error={Boolean(formData.description['errorMsg'].length)}
               helperText={formData.description['errorMsg']}
             />
+            <Box sx={{ minWidth: 120 }}>
+              <FormControl fullWidth>
+                <InputLabel id='simple-select-label'>
+                  Maintenance plan *
+                </InputLabel>
+                <Select
+                  labelId='simple-select-label'
+                  id='simple-select'
+                  variant='standard'
+                  value={planType}
+                  label='Plan type'
+                  onChange={handlePlanChange}
+                >
+                  <MenuItem value={1}>Daily</MenuItem>
+                  <MenuItem value={2}>Weekly</MenuItem>
+                  <MenuItem value={3}>Bi-weekly</MenuItem>
+                  <MenuItem value={4}>Monthly</MenuItem>
+                  <MenuItem value={5}>Quaterly</MenuItem>
+                  <MenuItem value={6}>Semi-annually</MenuItem>
+                  <MenuItem value={7}>Annually</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
           </Stack>
           <Button
             onClick={handleSubmit}

@@ -10,45 +10,42 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import {
-  useDeleteSelectedCategory,
-  useFetchCategoryList,
-} from '@/features/categories';
 
 import { useQueryClient } from 'react-query';
-import { VIEW_CATEGORY_LIST } from './constants';
 import {
   DeleteRounded,
   HighlightOffRounded,
   TrendingUpRounded,
 } from '@mui/icons-material';
 import { DisplayNoMatchingRecordsComponent } from '@/util/util';
+import {
+  useDeleteSelectedMaintenancePlan,
+  useFetchMaintenanceList,
+} from '@/features/maintenancePlan';
 
 const PlanList = () => {
   const queryClient = useQueryClient();
-  //   const { data, isLoading } = useFetchCategoryList();
-  //   const deleteCategoryMutation = useDeleteSelectedCategory();
+  const { data, isLoading } = useFetchMaintenanceList();
+  const deleteMaintenancePlanMutation = useDeleteSelectedMaintenancePlan();
 
   const handleDelete = (id) => {
-    // deleteCategoryMutation.mutate(id, {
-    //   onSettled: (response) => {
-    //     queryClient.invalidateQueries(['maintenancePlanDetails']);
-    //   },
-    // });
+    deleteMaintenancePlanMutation.mutate(id, {
+      onSettled: (response) => {
+        queryClient.invalidateQueries(['maintenancePlanDetails']);
+      },
+    });
   };
 
-  //   if (isLoading) {
-  //     return (
-  //       <Skeleton
-  //         variant='rounded'
-  //         animation='wave'
-  //         height={'100%'}
-  //         width={'100%'}
-  //       />
-  //     );
-  //   }
-
-  const [data, setData] = useState([]);
+  if (isLoading) {
+    return (
+      <Skeleton
+        variant='rounded'
+        animation='wave'
+        height={'100%'}
+        width={'100%'}
+      />
+    );
+  }
 
   if (data.length <= 0) return <DisplayNoMatchingRecordsComponent />;
 
@@ -66,28 +63,36 @@ const PlanList = () => {
             >
               <CardContent>
                 <Stack direction={'row'}>
-                  <Typography variant='h6' component='h3'>
-                    {item.name}
-                  </Typography>
-                  <Box
-                    sx={{ px: 1, py: 0, borderRadius: 2, maxWidth: '4rem' }}
-                    bgcolor={'secondary.main'}
-                  >
-                    <Stack
-                      direction={'row'}
-                      alignItems={'center'}
-                      useFlexGap
-                      spacing={1}
+                  <Stack flexGrow={1}>
+                    <Typography variant='h6' component='h3'>
+                      {item.plan}
+                    </Typography>
+                    <Typography variant='caption'>{item.type}</Typography>
+
+                    <Box
+                      sx={{ px: 1, py: 0, borderRadius: 2, maxWidth: '4rem' }}
+                      bgcolor={'secondary.main'}
                     >
-                      <TrendingUpRounded
-                        color={index % 2 == 0 ? 'success' : 'error'}
-                      />
-                      <Typography variant='caption'>
-                        ${item.total_items ?? 0}%
-                      </Typography>
-                    </Stack>
-                  </Box>
-                  <IconButton onClick={() => handleDelete(item.id)}>
+                      <Stack
+                        direction={'row'}
+                        alignItems={'center'}
+                        useFlexGap
+                        spacing={1}
+                      >
+                        <TrendingUpRounded
+                          color={index % 2 == 0 ? 'success' : 'error'}
+                        />
+                        <Typography variant='caption'>
+                          ${item.total_items ?? 0}%
+                        </Typography>
+                      </Stack>
+                    </Box>
+                  </Stack>
+                  <IconButton
+                    disableFocusRipple
+                    disableRipple
+                    onClick={() => handleDelete(item.id)}
+                  >
                     <HighlightOffRounded />
                   </IconButton>
                 </Stack>

@@ -1,3 +1,16 @@
+/**
+ * Item type mapper fn is used to map the maintenance item types to respective indices
+ */
+export const ITEM_TYPE_MAPPER = {
+  1: 'Daily',
+  2: 'Weekly',
+  3: 'Bi-Weekly',
+  4: 'Monthly',
+  5: 'Quaterly',
+  6: 'Semi-annually',
+  7: 'Annually',
+};
+
 export const BLANK_MAINTENANCE_PLAN = {
   plan: {
     id: 'plan',
