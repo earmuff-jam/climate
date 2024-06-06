@@ -17,7 +17,14 @@ import {
 import { FileOpenRounded } from '@mui/icons-material';
 import { DisplayNoMatchingRecordsComponent } from '@/util/util';
 
-const InventoriesTable = ({ isLoading, columns, data, onRowSelect }) => {
+const InventoriesTable = ({
+  isLoading,
+  columns,
+  data,
+  onRowSelect,
+  rowSelected,
+  handleRowSelection,
+}) => {
   const columnHeaderFormatter = (column) => {
     return column.label;
   };
@@ -73,38 +80,46 @@ const InventoriesTable = ({ isLoading, columns, data, onRowSelect }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row, rowIndex) => (
-            <Tooltip key={rowIndex} title={row.description}>
-              <TableRow hover>
-                <TableCell padding='checkbox'>
-                  <Stack direction='row'>
-                    <Checkbox
-                      disabled={true}
-                      color='primary'
-                      size='small'
-                      inputProps={{ 'aria-labelledby': 'labelId' }}
-                    />
-                    <IconButton
-                      size='small'
-                      disableRipple={true}
-                      disableFocusRipple={true}
-                      onClick={() => onRowSelect(row)}
-                    >
-                      <FileOpenRounded color='primary' />
-                    </IconButton>
-                  </Stack>
-                </TableCell>
-                {Object.keys(columns).map((colKey) => {
-                  const column = columns[colKey];
-                  return (
-                    <TableCell key={column.id}>
-                      {rowFormatter(row, column.colName)}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            </Tooltip>
-          ))}
+          {data.map((row, rowIndex) => {
+            const isSelected = (id) => rowSelected.indexOf(id) !== -1;
+            const selectedID = row.id;
+            const isItemSelected = isSelected(selectedID);
+            return (
+              <Tooltip key={rowIndex} title={row.description}>
+                <TableRow hover>
+                  <TableCell padding='checkbox'>
+                    <Stack direction='row'>
+                      <Checkbox
+                        checked={isItemSelected}
+                        color='primary'
+                        size='small'
+                        inputProps={{ 'aria-labelledby': 'labelId' }}
+                        onClick={(event) =>
+                          handleRowSelection(event, selectedID)
+                        }
+                      />
+                      <IconButton
+                        size='small'
+                        disableRipple={true}
+                        disableFocusRipple={true}
+                        onClick={() => onRowSelect(row)}
+                      >
+                        <FileOpenRounded color='primary' />
+                      </IconButton>
+                    </Stack>
+                  </TableCell>
+                  {Object.keys(columns).map((colKey) => {
+                    const column = columns[colKey];
+                    return (
+                      <TableCell key={column.id}>
+                        {rowFormatter(row, column.colName)}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              </Tooltip>
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>
