@@ -1,7 +1,12 @@
 import PrivateLayout from '@/components/Auth/PrivateLayout';
+import MaintenancePlan from '@/components/Plan/MaintenancePlan';
 
 const Maintenance = () => {
-  return <div>maintenance</div>;
+  return (
+    <>
+      <MaintenancePlan />
+    </>
+  );
 };
 
 export default Maintenance;
