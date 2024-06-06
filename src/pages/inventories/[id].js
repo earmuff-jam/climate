@@ -1,16 +1,28 @@
-import { withRouter } from "next/router";
-import PublicLayout from "@/components/Auth/PublicLayout";
+import { Stack } from "@mui/material";
+import PrivateLayout from "@/components/Auth/PrivateLayout";
+import { useRouter } from "next/router";
+import InventoryItemDetails from "@/components/InventoryItem/InventoryItemDetails";
 
-const IndividualProperty = (props) => {
-  const propertyId = props.router.query.id;
+const InventoryItem = () => {
+  const router = useRouter();
+  const { id: inventoryID } = router.query;
 
-  if (!propertyId) return null;
+  if (!inventoryID) return null;
 
-  return <>Display property based on id - {propertyId}</>;
+  const displayDetails = (inventoryID) => {
+    switch (inventoryID) {
+      case "list":
+        return <InventoryItemDetails />;
+      default:
+        return <>Display property based on id - {inventoryID}</>;
+    }
+  };
+
+  return <Stack>{displayDetails(inventoryID)}</Stack>;
 };
 
-export default withRouter(IndividualProperty);
+export default InventoryItem;
 
-IndividualProperty.getLayout = function getLayout(page) {
-  return <PublicLayout>{page}</PublicLayout>;
+InventoryItem.getLayout = function getLayout(page) {
+  return <PrivateLayout>{page}</PrivateLayout>;
 };
