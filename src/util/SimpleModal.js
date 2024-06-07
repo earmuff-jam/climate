@@ -5,11 +5,20 @@ import {
   DialogContent,
   IconButton,
   Stack,
+  Typography,
 } from '@mui/material';
 import { CloseRounded } from '@mui/icons-material';
 
 const SimpleModal = (props) => {
-  const { title, handleClose, maxSize, children } = props;
+  const {
+    title,
+    subtitle = '',
+    redirectSubtitle = false,
+    subtitleLinkTo = '/',
+    handleClose,
+    maxSize,
+    children,
+  } = props;
 
   return (
     <Dialog
@@ -24,7 +33,14 @@ const SimpleModal = (props) => {
           justifyContent={'space-between'}
           alignItems={'center'}
         >
-          {title}
+          <Stack>
+            <Typography fontWeight={'bold'}>{title}</Typography>
+            {redirectSubtitle ? (
+              <Typography variant='caption'>{subtitle}</Typography>
+            ) : (
+              <Typography variant='caption'>{subtitle}</Typography>
+            )}
+          </Stack>
           <IconButton aria-label='close' onClick={handleClose} color='error'>
             <CloseRounded />
           </IconButton>

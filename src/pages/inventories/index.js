@@ -8,7 +8,8 @@ const Inventories = () => {
   return (
     <>
       <CategoryList />
-      <InventoryList />
+      {/* Main inventory page - displays bookmarked inventories */}
+      <InventoryList displayAllInventories={false} />
       <Collection title={'Learn more'} />
     </>
   );

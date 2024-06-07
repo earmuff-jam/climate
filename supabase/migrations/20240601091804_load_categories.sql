@@ -19,11 +19,11 @@ CREATE TABLE category
     sharable_groups             UUID[]
 );
 
-END;
-
 ALTER TABLE category ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "users can view their category list" ON category FOR SELECT USING (true);
 CREATE POLICY "users can insert new values to their category list" ON category FOR INSERT WITH CHECK(auth.uid() = created_by);
 CREATE POLICY "users can update their own category list" ON category FOR UPDATE USING(auth.uid() = created_by);
 CREATE POLICY "users can delete their own categories" ON category FOR DELETE USING (auth.uid() = created_by);
+
+END;

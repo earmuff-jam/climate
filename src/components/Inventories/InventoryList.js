@@ -25,6 +25,8 @@ import InventoriesTable from './InventoriesTable';
 import { VIEW_INVENTORY_LIST_HEADERS } from './constants';
 import { useFetchInventoriesList } from '@/features/inventories';
 import SelectedRowItem from './SelectedRowItem';
+import AssignCategory from '../Categories/AssignCategory';
+import AssignMaintenancePlan from '../Maintenance/AssignMaintenancePlan';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction='left' ref={ref} {...props} />;
@@ -87,7 +89,7 @@ const InventoryList = ({ displayAllInventories }) => {
 
   return (
     <Box sx={{ py: 8 }}>
-      <Container maxWidth='lg'>
+      <Container maxWidth={displayAllInventories ? 'xl' : 'lg'}>
         {/* bookmarked inventories section */}
         {displayAllInventories ? (
           <HeaderWithButton
@@ -235,18 +237,21 @@ const InventoryList = ({ displayAllInventories }) => {
           showSubmit={false}
           maxSize={'md'}
         >
-          <Box>Assign Category modal</Box>
+          <AssignCategory />
         </SimpleModal>
       )}
       {/* assign maintenance plan to selected inventory */}
       {modalState === MODAL_STATE.ASSIGN_MAINTENANCE_PLAN && (
         <SimpleModal
           title={'Assign maintenance plan'}
+          subtitle={'Create or add new maintenance plans'}
+          redirectSubtitle={true}
+          subtitleLinkTo={'/maintenance'}
           handleClose={handleCloseModal}
           showSubmit={false}
           maxSize={'md'}
         >
-          <Box>Assign maintenance modal</Box>
+          <AssignMaintenancePlan />
         </SimpleModal>
       )}
     </Box>

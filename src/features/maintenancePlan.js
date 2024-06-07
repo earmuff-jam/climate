@@ -17,6 +17,9 @@ const fetchMaintenancePlanList = (client, userID) => {
       updated_on,
       updated_by,
       sharable_groups,
+      creator_name:profiles!created_by(
+        username
+      ),
       updator_name:profiles!updated_by(
         username
       )
@@ -33,7 +36,12 @@ export const useFetchMaintenanceList = () => {
   const queryFn = async () => {
     const result = await fetchMaintenancePlanList(supabaseClient, user.id);
     const formattedResults = result.data.map((item) => {
-      return { ...item, type: ITEM_TYPE_MAPPER[item.type] };
+      return {
+        ...item,
+        creator_name: item.creator_name?.username,
+        updator_name: item.updator_name?.username,
+        type: ITEM_TYPE_MAPPER[item.type],
+      };
     });
     return formattedResults;
   };
