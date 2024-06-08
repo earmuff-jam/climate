@@ -1,12 +1,13 @@
 {
-  "name": "property-management",
-  "version": "0.1.0",
+  "name": "climate",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -17,16 +18,23 @@
     "@supabase/auth-helpers-react": "^0.3.1",
     "@supabase/auth-ui-react": "^0.3.5",
     "@supabase/supabase-js": "2.21.0",
-    "autoprefixer": "10.4.14",
     "dayjs": "^1.11.11",
     "eslint": "8.39.0",
-    "eslint-config-next": "13.3.2",
-    "next": "13.3.2",
-    "postcss": "8.4.23",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
     "react-query": "^3.39.3",
     "uuid": "^9.0.1",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "react": "^18.2.0",
+    "react-dom": "18.2.0",
+    "react-router-dom": "^6.15.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "vite": "^5.2.0"
   }
 }
