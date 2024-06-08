@@ -22,7 +22,7 @@ create table profiles
     last_name  TEXT,
     user_role  TEXT                                                           NOT NULL DEFAULT '7543',
     bio        TEXT,
-    created_on TIMESTAMP WITH TIME ZONE                                       NOT NULL,
+    created_on TIMESTAMP WITH TIME ZONE,
     updated_by UUID,
     updated_on TIMESTAMP WITH TIME ZONE
 );
