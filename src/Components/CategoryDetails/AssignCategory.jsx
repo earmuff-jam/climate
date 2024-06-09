@@ -2,16 +2,19 @@ import dayjs from 'dayjs';
 import { Box, Card, CardContent, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { DisplayNoMatchingRecordsComponent } from '../../util/util';
 import { useFetchCategoryList } from '../../features/categories';
+import { VIEW_CATEGORY_LIST } from './constants';
 
 const AssignCategory = () => {
   const { data, isLoading } = useFetchCategoryList();
 
+  // since we have some default categories we want to allow users to use them if possible
+  const allCategories = [...VIEW_CATEGORY_LIST, ...data];
   if (isLoading) return <Skeleton height="1" width="1" variant="rounded" />;
-  if (data.length <= 0) return <DisplayNoMatchingRecordsComponent subtitle="Add category to begin" />;
+  if (allCategories.length <= 0) return <DisplayNoMatchingRecordsComponent subtitle="Add category to begin" />;
   return (
     <Box>
       <Stack direction="row" spacing={2}>
-        {data.map((v) => (
+        {allCategories.map((v) => (
           <Card
             key={v.id}
             sx={{
@@ -49,7 +52,6 @@ const AssignCategory = () => {
                     <Typography variant="caption">{v.category_description}</Typography>
                   )}
                 </Stack>
-                <Typography></Typography>
               </Stack>
             </CardContent>
           </Card>
