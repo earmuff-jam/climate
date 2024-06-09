@@ -144,7 +144,6 @@ export const useUpsertInventoryDetails = () => {
   const supabaseClient = useSupabaseClient();
   return useMutation((data) => upsertInventoryDetails(supabaseClient, user.id, data), {
     onSuccess: () => {
-      // Invalidate the profile configuration query to refetch the data
       queryClient.invalidateQueries(['inventoryList']);
     },
   });
@@ -153,15 +152,20 @@ export const useUpsertInventoryDetails = () => {
 /**
  *
  * @param {Object} supabaseClient
- * @param {String} inventoryID - the inventory ID to delete
+ * @param {String} inventoryIDs - the inventory ID to delete
  * @returns
  */
-const deleteInventoryDetails = (client, inventoryID) => {
-  return client.from('inventories').delete().eq('id', inventoryID);
+const deleteInventoryDetails = (client, inventoryIDs) => {
+  return client.from('inventories').delete().in('id', inventoryIDs);
 };
 
 // delete selected inventory from db
 export const useDeleteSelectedInventory = () => {
+  const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
-  return useMutation((id) => deleteInventoryDetails(supabaseClient, id));
+  return useMutation((ids) => deleteInventoryDetails(supabaseClient, ids), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['inventoryList']);
+    },
+  });
 };

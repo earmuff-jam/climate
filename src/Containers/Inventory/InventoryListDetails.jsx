@@ -4,6 +4,7 @@ import {
   AddRounded,
   CategoryRounded,
   CloseRounded,
+  DeleteSweepRounded,
   LibraryAddRounded,
   SettingsSuggestRounded,
 } from '@mui/icons-material';
@@ -14,7 +15,7 @@ import SelectedRowItem from '../../Components/InventoryDetails/SelectedRowItem';
 import InventoryTable from '../../Components/InventoryDetails/InventoryTable';
 import AddInventory from '../../Components/AddInventory/AddInventory';
 import AddBulkUploadInventory from '../../Components/AddInventory/AddBulkUploadInventory';
-import { useFetchInventoriesList } from '../../features/inventories';
+import { useDeleteSelectedInventory, useFetchInventoriesList } from '../../features/inventories';
 import AssignCategory from '../../Components/CategoryDetails/AssignCategory';
 import AssignPlan from '../../Components/Maintenance/AssignPlan';
 
@@ -33,11 +34,16 @@ const MODAL_STATE = {
 
 const InventoryListDetails = ({ displayAllInventories }) => {
   const { data, isLoading } = useFetchInventoriesList();
+  const deleteSelectedInventoryMutation = useDeleteSelectedInventory();
   const [selectedRow, setSelectedRow] = useState([]);
   const [rowSelected, setRowSelected] = useState([]); // this is for checkbox and associated events
   const [modalState, setModalState] = useState(MODAL_STATE.NONE);
 
   const handleCloseModal = () => setModalState(MODAL_STATE.NONE);
+  const handleAddCategory = () => setModalState(MODAL_STATE.ASSIGN_CATEGORY);
+  const handleAddInventory = () => setModalState(MODAL_STATE.ASSIGN_MAINTENANCE_PLAN);
+  const handleDisplayAddSingleInventoryModal = () => setModalState(MODAL_STATE.ADD_ITEM);
+  const handleDisplayAddBulkInventoryModal = () => setModalState(MODAL_STATE.BULK_ITEM);
 
   // handleRowSelection for checkbox actions
   const handleRowSelection = (_, id) => {
@@ -65,11 +71,9 @@ const InventoryListDetails = ({ displayAllInventories }) => {
     handleCloseModal();
   };
 
-  const handleDisplayAddSingleInventoryModal = () => setModalState(MODAL_STATE.ADD_ITEM);
-  const handleDisplayAddBulkInventoryModal = () => setModalState(MODAL_STATE.BULK_ITEM);
-
-  const handleAddCategory = () => setModalState(MODAL_STATE.ASSIGN_CATEGORY);
-  const handleAddInventory = () => setModalState(MODAL_STATE.ASSIGN_MAINTENANCE_PLAN);
+  const handleDeleteInventory = () => {
+    deleteSelectedInventoryMutation.mutate(rowSelected);
+  };
 
   return (
     <Box sx={{ py: 8 }}>
@@ -120,7 +124,7 @@ const InventoryListDetails = ({ displayAllInventories }) => {
         )}
 
         {displayAllInventories && rowSelected.length > 0 ? (
-          <Stack direction={'row'} spacing={2}>
+          <Stack direction={'row'} spacing={2} justifyContent={'flex-end'}>
             <Button color={'primary'} variant={'outlined'} onClick={handleAddCategory} startIcon={<CategoryRounded />}>
               Assign category
             </Button>
@@ -132,6 +136,9 @@ const InventoryListDetails = ({ displayAllInventories }) => {
             >
               Assign maintenance plan
             </Button>
+            <IconButton onClick={handleDeleteInventory}>
+              <DeleteSweepRounded color="error" />
+            </IconButton>
           </Stack>
         ) : null}
 
