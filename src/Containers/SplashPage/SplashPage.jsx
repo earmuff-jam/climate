@@ -1,14 +1,12 @@
-import React from 'react';
+import { ThemeProvider } from '@emotion/react';
 import PromoSection from '../../Components/SplashPage/PromoSection';
-import InfoSection from '../../Components/SplashPage/InfoSection';
+import { lightTheme } from '../../util/theme';
 
 const SplashPage = () => {
-  console.log('called');
   return (
-    <>
+    <ThemeProvider theme={lightTheme}>
       <PromoSection />
-      <InfoSection />
-    </>
+    </ThemeProvider>
   );
 };
 

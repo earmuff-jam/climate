@@ -1,7 +1,7 @@
-const { v4: uuidv4, validate } = require('uuid');
-import { useMutation, useQuery } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 import dayjs from 'dayjs';
+import { validate } from 'uuid';
 
 // supabase fn to retrieve list of inventories for a selected user
 const fetchInventoriesList = (client, userID) => {
@@ -69,12 +69,11 @@ const upsertInventoryDetails = async (client, userID, data) => {
 
   try {
     let storageLocationID = '';
-    const { data: storageLocationDetails, error: storageLocationDetailsError } =
-      await client
-        .from('storage_locations')
-        .select('id, location')
-        .eq('location', location.location)
-        .single();
+    const { data: storageLocationDetails, error: storageLocationDetailsError } = await client
+      .from('storage_locations')
+      .select('id, location')
+      .eq('location', location.location)
+      .single();
 
     if (storageLocationDetailsError) {
       throw storageLocationDetailsError;
@@ -87,17 +86,16 @@ const upsertInventoryDetails = async (client, userID, data) => {
 
     if (!storageLocationDetails) {
       // Create a new storage location
-      const { data: storageLocationData, error: storageLocationError } =
-        await client
-          .from('storage_locations')
-          .insert({
-            location: location.location,
-            created_by: createdByUUID,
-            created_on: dayjs().toISOString(),
-            sharable_groups: [createdByUUID],
-          })
-          .select()
-          .single();
+      const { data: storageLocationData, error: storageLocationError } = await client
+        .from('storage_locations')
+        .insert({
+          location: location.location,
+          created_by: createdByUUID,
+          created_on: dayjs().toISOString(),
+          sharable_groups: [createdByUUID],
+        })
+        .select()
+        .single();
 
       if (storageLocationError) throw storageLocationError;
 
@@ -142,10 +140,14 @@ const upsertInventoryDetails = async (client, userID, data) => {
 // upsert inventory details mutation fn
 export const useUpsertInventoryDetails = () => {
   const user = useUser();
+  const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
-  return useMutation((data) =>
-    upsertInventoryDetails(supabaseClient, user.id, data)
-  );
+  return useMutation((data) => upsertInventoryDetails(supabaseClient, user.id, data), {
+    onSuccess: () => {
+      // Invalidate the profile configuration query to refetch the data
+      queryClient.invalidateQueries(['inventoryList']);
+    },
+  });
 };
 
 /**

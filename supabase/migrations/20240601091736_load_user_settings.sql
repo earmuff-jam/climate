@@ -13,7 +13,8 @@ CREATE TABLE user_settings
     notify_due_items            BOOLEAN,
     notify_settings_privacy     BOOLEAN,
     display_mode                BOOLEAN,
-    created_on                  TIMESTAMP WITH TIME ZONE                                       NOT NULL,
+    created_by                  UUID,
+    created_on                  TIMESTAMP WITH TIME ZONE,
     updated_by                  UUID,
     updated_on                  TIMESTAMP WITH TIME ZONE
 );

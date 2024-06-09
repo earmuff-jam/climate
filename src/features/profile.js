@@ -1,5 +1,14 @@
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+
+// static query options for tanstack query
+const useQueryOptions = {
+  refetchOnWindowFocus: false,
+};
+
+/************************
+ * Notification details *
+ ************************/
 
 // supabase fn to retrieve config details for a selected user
 const fetchConfigDetails = (client, userID) => {
@@ -27,16 +36,36 @@ export const useFetchProfileConfigDetails = () => {
   const supabaseClient = useSupabaseClient();
 
   const queryFn = async () => {
-    return fetchConfigDetails(supabaseClient, user.id).then(
-      (result) => result.data
-    );
+    return fetchConfigDetails(supabaseClient, user.id).then((result) => result.data);
   };
 
   return useQuery({
-    queryFn: queryFn,
+    queryFn,
     queryKey: ['profileConfig', user.id],
+    useQueryOptions,
   });
 };
+
+// supabase fn to update profile configuration settings
+const upsertProfileConfigurationDetails = (client, data) => {
+  return client.from('user_settings').upsert(data).select();
+};
+
+// fn used to update profile configuration settings
+export const useUpsertProfileConfigurationDetails = () => {
+  const queryClient = useQueryClient();
+  const supabaseClient = useSupabaseClient();
+  return useMutation((data) => upsertProfileConfigurationDetails(supabaseClient, data), {
+    onSuccess: () => {
+      // Invalidate the profile configuration query to refetch the data
+      queryClient.invalidateQueries(['profileConfig']);
+    },
+  });
+};
+
+/*******************
+ * Profile details *
+ *******************/
 
 // supabase fn to retrieve config details for a selected user
 const fetchProfileDetails = (client, userID) => {
@@ -65,28 +94,14 @@ export const useFetchProfileDetails = () => {
   const supabaseClient = useSupabaseClient();
 
   const queryFn = async () => {
-    return fetchProfileDetails(supabaseClient, user.id).then(
-      (result) => result.data
-    );
+    return fetchProfileDetails(supabaseClient, user.id).then((result) => result.data);
   };
 
   return useQuery({
-    queryFn: queryFn,
+    queryFn,
     queryKey: ['profileDetails', user.id],
+    useQueryOptions,
   });
-};
-
-// supabase fn to update profile notification settings
-const upsertProfileNotificationDetails = (client, data) => {
-  return client.from('user_settings').upsert(data).select();
-};
-
-// fn used to update profile notification settings
-export const useUpsertProfileNotificationDetails = () => {
-  const supabaseClient = useSupabaseClient();
-  return useMutation((data) =>
-    upsertProfileNotificationDetails(supabaseClient, data)
-  );
 };
 
 // supabase fn to update profile details
@@ -96,6 +111,12 @@ const upsertProfileDetails = (client, data) => {
 
 // fn used to update profile details
 export const useUpsertProfileDetails = () => {
+  const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
-  return useMutation((data) => upsertProfileDetails(supabaseClient, data));
+  return useMutation((data) => upsertProfileDetails(supabaseClient, data), {
+    onSuccess: () => {
+      // Invalidate the profile configuration query to refetch the data
+      queryClient.invalidateQueries(['profileDetails']);
+    },
+  });
 };

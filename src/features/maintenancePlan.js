@@ -1,6 +1,6 @@
-import { ITEM_TYPE_MAPPER } from '@/components/Plan/constants';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { ITEM_TYPE_MAPPER } from '../Components/Maintenance/constants';
 
 // supabase fn to retrieve all maintenance list for a selected user
 const fetchMaintenancePlanList = (client, userID) => {
@@ -56,10 +56,13 @@ const upsertMaintenancePlanDetails = (client, data) => {
 
 // upsert maintenance plan mutation fn
 export const useUpsertMaintenancePlanDetails = () => {
+  const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
-  return useMutation((data) =>
-    upsertMaintenancePlanDetails(supabaseClient, data)
-  );
+  return useMutation((data) => upsertMaintenancePlanDetails(supabaseClient, data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['maintenance_plan']);
+    },
+  });
 };
 
 /**
@@ -73,6 +76,11 @@ const deleteMaintenancePlan = (client, maintenancePlanID) => {
 };
 
 export const useDeleteSelectedMaintenancePlan = () => {
+  const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
-  return useMutation((id) => deleteMaintenancePlan(supabaseClient, id));
+  return useMutation((id) => deleteMaintenancePlan(supabaseClient, id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['maintenance_plan']);
+    },
+  });
 };
