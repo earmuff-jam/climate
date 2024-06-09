@@ -32,6 +32,9 @@ const fetchInventoriesList = (client, userID) => {
       updated_by,
       sharable_groups,
       storage_locations (id),
+      creator_name:profiles!created_by(
+        username
+      ),
       updator_name:profiles!updated_by(
         username
       )
@@ -72,8 +75,7 @@ const upsertInventoryDetails = async (client, userID, data) => {
     const { data: storageLocationDetails, error: storageLocationDetailsError } = await client
       .from('storage_locations')
       .select('id, location')
-      .eq('location', location.location)
-      .single();
+      .eq('location', location.location);
 
     if (storageLocationDetailsError) {
       throw storageLocationDetailsError;
@@ -84,8 +86,8 @@ const upsertInventoryDetails = async (client, userID, data) => {
       createdByUUID = userID;
     }
 
-    if (!storageLocationDetails) {
-      // Create a new storage location
+    // if no existing storage location is found, create a new storage location
+    if (storageLocationDetails.length <= 0) {
       const { data: storageLocationData, error: storageLocationError } = await client
         .from('storage_locations')
         .insert({
@@ -150,16 +152,37 @@ export const useUpsertInventoryDetails = () => {
 };
 
 /**
+ * Method to update the selected inventory
  *
+ * @param {Object} client - supabaseClient
+ * @param {UUID} inventoryID - the inventory id of the selected item
+ * @param {Object} data - the data to update
+ */
+const updateSelectedInventory = (client, inventoryID, data) => {
+  return client.from('inventories').update(data).eq('id', inventoryID);
+};
+
+// update selected inventory from db
+export const useUpdateSelectedInventory = () => {
+  const queryClient = useQueryClient();
+  const supabaseClient = useSupabaseClient();
+  return useMutation((data) => updateSelectedInventory(supabaseClient, data.id, data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['inventoryList']);
+    },
+  });
+};
+
+/**
+ * Method to delete the selected inventories
  * @param {Object} supabaseClient
  * @param {String} inventoryIDs - the inventory ID to delete
- * @returns
  */
 const deleteInventoryDetails = (client, inventoryIDs) => {
   return client.from('inventories').delete().in('id', inventoryIDs);
 };
 
-// delete selected inventory from db
+// delete selected inventories from db
 export const useDeleteSelectedInventory = () => {
   const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();

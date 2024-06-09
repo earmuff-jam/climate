@@ -7,9 +7,9 @@ const fetchStorageLocations = (client) => {
     `
       id,
       location,
-      created_at,
+      created_on,
       created_by,
-      updated_at,
+      updated_on,
       updated_by,
       sharable_groups
     `

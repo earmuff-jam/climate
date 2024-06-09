@@ -19,6 +19,8 @@ const Login = () => {
               },
               input: {
                 padding: '0.5rem',
+                border: 'none',
+                borderBottom: '1px solid',
                 borderRadius: '0.2rem',
                 fontFamily: 'Nunito, sans-serif',
                 fontSize: lightTheme.spacing(1.8),

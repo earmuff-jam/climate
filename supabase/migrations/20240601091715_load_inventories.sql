@@ -26,9 +26,9 @@ CREATE TABLE IF NOT EXISTS inventories
     min_weight            VARCHAR(10) , -- weight distribution is in kg
     max_height            VARCHAR(10) , -- height distribution is in inches
     min_height            VARCHAR(10) , -- height distribution is in inches
-    created_on            TIMESTAMP WITH TIME ZONE                                                         NOT NULL DEFAULT NOW(),
+    created_on            TIMESTAMP WITH TIME ZONE,
     created_by            UUID REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    updated_on            TIMESTAMP WITH TIME ZONE                                                         NOT NULL DEFAULT NOW(),
+    updated_on            TIMESTAMP WITH TIME ZONE,
     updated_by            UUID REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE,
     sharable_groups       UUID[]
 );
@@ -39,5 +39,13 @@ COMMENT
 
 DROP INDEX IF EXISTS inventories_id_idx;
 CREATE INDEX IF NOT EXISTS inventories_id_idx ON inventories (id);
+
+--- RLS POLICY FOR INVENTORIES TABLE ---
+ALTER TABLE inventories ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "users can view their inventories" ON inventories FOR SELECT USING (true);
+CREATE POLICY "users can insert new values to their inventories" ON inventories FOR INSERT WITH CHECK(auth.uid() = created_by);
+CREATE POLICY "users can update their own inventories" ON inventories FOR UPDATE USING(auth.uid() = updated_by);
+CREATE POLICY "users can delete their own categories" ON inventories FOR DELETE USING (auth.uid() = created_by);
 
 END;

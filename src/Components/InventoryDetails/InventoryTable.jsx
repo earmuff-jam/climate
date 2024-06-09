@@ -13,10 +13,10 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { FileOpenRounded } from '@mui/icons-material';
+import { CheckRounded, CloseRounded, EditNoteRounded, FileOpenRounded } from '@mui/icons-material';
 import { DisplayNoMatchingRecordsComponent } from '../../util/util';
 
-const InventoryTable = ({ isLoading, columns, data, rowSelected, onRowSelect, handleRowSelection }) => {
+const InventoryTable = ({ isLoading, columns, data, rowSelected, onRowSelect, handleRowSelection, handleEdit }) => {
   const columnHeaderFormatter = (column) => {
     return column.label;
   };
@@ -30,6 +30,9 @@ const InventoryTable = ({ isLoading, columns, data, rowSelected, onRowSelect, ha
     }
     if (['updator_name', 'creator_name'].includes(column)) {
       return row[column]?.username ?? '-';
+    }
+    if (['is_returnable'].includes(column)) {
+      return row[column] ? <CheckRounded color="primary" /> : <CloseRounded color="error" />;
     }
     return row[column] ?? '-';
   };
@@ -48,14 +51,17 @@ const InventoryTable = ({ isLoading, columns, data, rowSelected, onRowSelect, ha
         <TableHead>
           <TableRow>
             <TableCell padding="checkbox" align="center">
-              <Stack direction="row">
+              <Stack direction="row" alignItems="center" justifyContent="space-between">
                 <Checkbox disabled size="small" />
+                <Typography fontWeight={'bold'} align="center">
+                  Action
+                </Typography>
               </Stack>
             </TableCell>
             {Object.keys(columns).map((colKey) => {
               const column = columns[colKey];
               return (
-                <TableCell key={column.id}>
+                <TableCell key={column.id} align="center">
                   <Typography fontWeight={'bold'}>{columnHeaderFormatter(column)}</Typography>
                 </TableCell>
               );
@@ -70,8 +76,8 @@ const InventoryTable = ({ isLoading, columns, data, rowSelected, onRowSelect, ha
             return (
               <Tooltip key={rowIndex} title={row.description}>
                 <TableRow hover>
-                  <TableCell padding="checkbox">
-                    <Stack direction="row">
+                  <TableCell padding="checkbox" align="center">
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
                       <Checkbox
                         checked={isItemSelected}
                         color="primary"
@@ -79,19 +85,21 @@ const InventoryTable = ({ isLoading, columns, data, rowSelected, onRowSelect, ha
                         onClick={(event) => handleRowSelection(event, selectedID)}
                         inputProps={{ 'aria-labelledby': 'labelId' }}
                       />
-                      <IconButton
-                        size="small"
-                        disableRipple={true}
-                        disableFocusRipple={true}
-                        onClick={() => onRowSelect(row)}
-                      >
+                      <IconButton size="small" onClick={() => onRowSelect(row)}>
                         <FileOpenRounded color="primary" />
+                      </IconButton>
+                      <IconButton onClick={() => handleEdit(selectedID)}>
+                        <EditNoteRounded color="primary" />
                       </IconButton>
                     </Stack>
                   </TableCell>
                   {Object.keys(columns).map((colKey) => {
                     const column = columns[colKey];
-                    return <TableCell key={column.id}>{rowFormatter(row, column.colName)}</TableCell>;
+                    return (
+                      <TableCell key={column.id} align="center">
+                        {rowFormatter(row, column.colName)}
+                      </TableCell>
+                    );
                   })}
                 </TableRow>
               </Tooltip>

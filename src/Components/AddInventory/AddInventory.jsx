@@ -89,8 +89,6 @@ export default function AddInventory({ handleClose }) {
       return acc;
     }, {});
 
-    console.log(formattedData);
-
     const draftRequest = {
       ...formattedData,
       location: storageLocation,
