@@ -18,6 +18,7 @@ import AddBulkUploadInventory from '../../Components/AddInventory/AddBulkUploadI
 import { useDeleteSelectedInventory, useFetchInventoriesList } from '../../features/inventories';
 import AssignCategory from '../../Components/CategoryDetails/AssignCategory';
 import AssignPlan from '../../Components/Maintenance/AssignPlan';
+import { useNavigate } from 'react-router-dom';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
@@ -33,6 +34,7 @@ const MODAL_STATE = {
 };
 
 const InventoryListDetails = ({ displayAllInventories }) => {
+  const navigate = useNavigate();
   const { data, isLoading } = useFetchInventoriesList();
   const deleteSelectedInventoryMutation = useDeleteSelectedInventory();
   const [selectedRow, setSelectedRow] = useState([]);
@@ -73,6 +75,10 @@ const InventoryListDetails = ({ displayAllInventories }) => {
 
   const handleDeleteInventory = () => {
     deleteSelectedInventoryMutation.mutate(rowSelected);
+  };
+
+  const handleEdit = (itemID) => {
+    navigate(`/inventories/${itemID}/update`);
   };
 
   return (
@@ -146,14 +152,11 @@ const InventoryListDetails = ({ displayAllInventories }) => {
         <InventoryTable
           isLoading={isLoading}
           data={displayAllInventories ? data?.result : data?.bookmarkedItems}
-          columns={
-            displayAllInventories
-              ? Object.values(VIEW_INVENTORY_LIST_HEADERS)
-              : Object.values(VIEW_INVENTORY_LIST_HEADERS).filter((v) => v.displayConcise)
-          }
+          columns={Object.values(VIEW_INVENTORY_LIST_HEADERS).filter((v) => v.displayConcise)}
           rowSelected={rowSelected}
-          handleRowSelection={handleRowSelection}
           onRowSelect={onRowSelect}
+          handleRowSelection={handleRowSelection}
+          handleEdit={handleEdit}
         />
       </Container>
       {modalState === MODAL_STATE.ADD_ITEM && (

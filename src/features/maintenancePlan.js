@@ -60,7 +60,7 @@ export const useUpsertMaintenancePlanDetails = () => {
   const supabaseClient = useSupabaseClient();
   return useMutation((data) => upsertMaintenancePlanDetails(supabaseClient, data), {
     onSuccess: () => {
-      queryClient.invalidateQueries(['maintenance_plan']);
+      queryClient.invalidateQueries(['maintenancePlanDetails']);
     },
   });
 };
@@ -80,7 +80,7 @@ export const useDeleteSelectedMaintenancePlan = () => {
   const supabaseClient = useSupabaseClient();
   return useMutation((id) => deleteMaintenancePlan(supabaseClient, id), {
     onSuccess: () => {
-      queryClient.invalidateQueries(['maintenance_plan']);
+      queryClient.invalidateQueries(['maintenancePlanDetails']);
     },
   });
 };

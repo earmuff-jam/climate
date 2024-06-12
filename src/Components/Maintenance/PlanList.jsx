@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Box, Button, Card, CardContent, Grid, IconButton, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Card, CardContent, Grid, IconButton, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { HighlightOffRounded, TrendingUpRounded } from '@mui/icons-material';
-import { DisplayNoMatchingRecordsComponent } from '../../util/util';
+import { ConfirmationBoxModal, DisplayNoMatchingRecordsComponent } from '../../util/util';
 import { useDeleteSelectedMaintenancePlan, useFetchMaintenanceList } from '../../features/maintenancePlan';
-import SimpleModal from '../../util/SimpleModal';
 
 const PlanList = () => {
   const { data, isLoading } = useFetchMaintenanceList();
@@ -79,18 +78,17 @@ const PlanList = () => {
           </Tooltip>
         </Grid>
       ))}
-      {/* confirmation box */}
-      {openDialog && (
-        <SimpleModal title={'Confirm deletion'} handleClose={reset} showSubmit={false} maxSize={'sm'}>
-          <Typography variant="caption">
-            Confirm deletion of maintenance plan? Deletion is permanent and cannot be undone.
-          </Typography>
-          <Stack direction={'row'}>
-            <Button onClick={reset}>Go back</Button>
-            <Button onClick={() => confirmDelete(idToDelete)}>Confirm</Button>
-          </Stack>
-        </SimpleModal>
-      )}
+      <ConfirmationBoxModal
+        openDialog={openDialog}
+        title="Confirm deletion"
+        text="Confirm deletion of maintenance plan? Deletion is permanent and cannot be undone."
+        textVariant="body2"
+        handleClose={reset}
+        showSubmit={false}
+        maxSize={'sm'}
+        deleteID={idToDelete}
+        confirmDelete={confirmDelete}
+      />
     </Grid>
   );
 };

@@ -2,13 +2,33 @@ import { useDeleteSelectedCategory, useFetchCategoryList } from '../../features/
 import { Box, Card, CardContent, Grid, IconButton, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { VIEW_CATEGORY_LIST } from './constants';
 import { DeleteRounded, TrendingUpRounded } from '@mui/icons-material';
+import { ConfirmationBoxModal } from '../../util/util';
+import { useState } from 'react';
 
 const Categories = () => {
   const { data, isLoading } = useFetchCategoryList();
   const deleteCategoryMutation = useDeleteSelectedCategory();
 
+  const [openDialog, setOpenDialog] = useState(false);
+  const [idToDelete, setIdToDelete] = useState(-1);
+
   const handleDelete = (id) => {
+    setOpenDialog(true);
+    setIdToDelete(id);
+  };
+
+  const reset = () => {
+    setOpenDialog(false);
+    setIdToDelete(-1);
+  };
+
+  const confirmDelete = (id) => {
+    if (id === -1) {
+      // unknown id to delete. protect from confirmation box
+      return;
+    }
     deleteCategoryMutation.mutate(id);
+    reset();
   };
 
   if (isLoading) {
@@ -52,6 +72,17 @@ const Categories = () => {
           </Tooltip>
         </Grid>
       ))}
+      <ConfirmationBoxModal
+        openDialog={openDialog}
+        title="Confirm deletion"
+        text="Confirm deletion of category item? Deletion is permanent and cannot be undone."
+        textVariant="body2"
+        handleClose={reset}
+        showSubmit={false}
+        maxSize={'sm'}
+        deleteID={idToDelete}
+        confirmDelete={confirmDelete}
+      />
     </Grid>
   );
 };

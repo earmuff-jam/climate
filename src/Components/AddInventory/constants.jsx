@@ -2,6 +2,7 @@
 export const BLANK_INVENTORY_FORM = {
   name: {
     id: 'name',
+    label: 'Item name',
     value: '',
     isRequired: true,
     errorMsg: '',
@@ -18,6 +19,7 @@ export const BLANK_INVENTORY_FORM = {
   },
   description: {
     id: 'description',
+    label: 'Item description',
     value: '',
     isRequired: true,
     errorMsg: '',
@@ -34,6 +36,7 @@ export const BLANK_INVENTORY_FORM = {
   },
   price: {
     id: 'price',
+    label: 'Item price (per unit)',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -50,6 +53,7 @@ export const BLANK_INVENTORY_FORM = {
   },
   barcode: {
     id: 'barcode',
+    label: 'Barcode of item',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -62,6 +66,7 @@ export const BLANK_INVENTORY_FORM = {
   },
   sku: {
     id: 'sku',
+    label: 'Sku of item',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -74,6 +79,7 @@ export const BLANK_INVENTORY_FORM = {
   },
   quantity: {
     id: 'quantity',
+    label: 'Item quantity',
     value: '',
     isRequired: true,
     errorMsg: '',
@@ -90,6 +96,7 @@ export const BLANK_INVENTORY_FORM = {
   },
   bought_at: {
     id: 'bought_at',
+    label: 'Where did you buy the item',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -97,6 +104,7 @@ export const BLANK_INVENTORY_FORM = {
   },
   location: {
     id: 'location',
+    label: 'Where do you want to store the item',
     isRequired: false,
     errorMsg: '',
     validators: [],
@@ -117,6 +125,7 @@ export const BLANK_INVENTORY_FORM = {
   },
   return_location: {
     id: 'return_location',
+    label: 'Where to return the item',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -130,6 +139,7 @@ export const BLANK_INVENTORY_FORM = {
   return_datetime: {
     id: 'return_datetime',
     value: '',
+    type: 'datetime',
     isRequired: false,
     errorMsg: '',
     validators: [
@@ -141,6 +151,7 @@ export const BLANK_INVENTORY_FORM = {
   },
   max_weight: {
     id: 'max_weight',
+    label: 'Max weight in kg',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -153,6 +164,7 @@ export const BLANK_INVENTORY_FORM = {
   },
   min_weight: {
     id: 'min_weight',
+    label: 'Min weight in kg',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -165,6 +177,7 @@ export const BLANK_INVENTORY_FORM = {
   },
   max_height: {
     id: 'max_height',
+    label: 'Max height in kg',
     value: '',
     isRequired: false,
     errorMsg: '',
@@ -177,6 +190,7 @@ export const BLANK_INVENTORY_FORM = {
   },
   min_height: {
     id: 'min_height',
+    label: 'Min height in kg',
     value: '',
     isRequired: false,
     errorMsg: '',

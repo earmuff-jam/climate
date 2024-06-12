@@ -39,7 +39,7 @@ ALTER TABLE maintenance_plan ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "users can view their maintenance plan" ON maintenance_plan FOR SELECT USING (true);
 CREATE POLICY "users can insert new values to their maintenance plan" ON maintenance_plan FOR INSERT WITH CHECK(auth.uid() = created_by);
-CREATE POLICY "users can update their own maintenance plan" ON maintenance_plan FOR UPDATE USING(auth.uid() = created_by);
+CREATE POLICY "users can update their own maintenance plan" ON maintenance_plan FOR UPDATE USING(auth.uid() = updated_by);
 CREATE POLICY "users can delete their own categories" ON maintenance_plan FOR DELETE USING (auth.uid() = created_by);
 
 END;
