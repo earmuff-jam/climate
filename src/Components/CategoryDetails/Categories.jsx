@@ -75,7 +75,7 @@ const Categories = () => {
       <ConfirmationBoxModal
         openDialog={openDialog}
         title="Confirm deletion"
-        text="Confirm deletion of category item? Deletion is permanent and cannot be undone."
+        text="Confirm deletion of selected category ? Deletion is permanent and cannot be undone."
         textVariant="body2"
         handleClose={reset}
         showSubmit={false}

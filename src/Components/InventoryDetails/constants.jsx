@@ -150,7 +150,7 @@ export const VIEW_INVENTORY_LIST_HEADERS = {
   },
   updated_at: {
     id: 15,
-    colName: 'updated_at',
+    colName: 'updated_on',
     label: 'Updated At',
     displayConcise: true,
     modifier: (value) => `${dayjs(value).fromNow()}`,

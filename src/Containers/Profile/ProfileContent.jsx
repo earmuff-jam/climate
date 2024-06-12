@@ -65,6 +65,8 @@ const ProfileContent = () => {
       draftProfileDetails.first_name.value = data.first_name;
       draftProfileDetails.last_name.value = data.last_name;
       draftProfileDetails.bio.value = data.bio;
+      draftProfileDetails.created_on = data.created_on;
+      draftProfileDetails.updated_on = data.updated_on;
       setFormData(draftProfileDetails);
     }
     // eslint-disable-next-line
@@ -157,7 +159,7 @@ const ProfileContent = () => {
             variant="outlined"
             color="primary"
             onClick={submit}
-            disabled={Object.values(formData).some((v) => v.errorMsg.length > 0)}
+            disabled={Object.values(formData).some((v) => v.errorMsg?.length > 0)}
           >
             Update profile
           </Button>

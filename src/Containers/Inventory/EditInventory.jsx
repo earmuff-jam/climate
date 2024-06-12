@@ -137,6 +137,7 @@ const EditInventory = () => {
             .filter((v, index) => index < 2)
             .map((v) => (
               <TextField
+                key={v.id}
                 id={v.id}
                 label={v.label}
                 value={v.value}
@@ -154,6 +155,7 @@ const EditInventory = () => {
             .filter((v, index) => index >= 2 && index < 5)
             .map((v) => (
               <TextField
+                key={v.id}
                 id={v.id}
                 label={v.label}
                 value={v.value}
@@ -172,6 +174,7 @@ const EditInventory = () => {
             .filter((v, index) => index >= 5 && index < 7)
             .map((v) => (
               <TextField
+                key={v.id}
                 id={v.id}
                 label={v.label}
                 value={v.value}
@@ -221,7 +224,7 @@ const EditInventory = () => {
           clearOnBlur
           handleHomeEndKeys
           id="autocomplete-storage-location"
-          options={options}
+          options={options || []}
           getOptionLabel={(option) => {
             if (typeof option === 'string') {
               return option;
@@ -231,7 +234,11 @@ const EditInventory = () => {
             }
             return option.location;
           }}
-          renderOption={(props, option) => <li {...props}>{option.location}</li>}
+          renderOption={(props, option) => (
+            <li {...props} key={option.location}>
+              {option.location}
+            </li>
+          )}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -286,6 +293,7 @@ const EditInventory = () => {
               .filter((v, index) => index >= 10 && index < 11)
               .map((v) => (
                 <TextField
+                  key={v.id}
                   id={v.id}
                   label={v.label}
                   value={v.value}
@@ -322,6 +330,7 @@ const EditInventory = () => {
             .filter((v, index) => index >= 12 && index < 14)
             .map((v) => (
               <TextField
+                key={v.id}
                 id={v.id}
                 label={v.label}
                 value={v.value}
@@ -339,6 +348,7 @@ const EditInventory = () => {
             .filter((v, index) => index >= 14 && index < 16)
             .map((v) => (
               <TextField
+                key={v.id}
                 id={v.id}
                 label={v.label}
                 value={v.value}
@@ -360,6 +370,7 @@ const EditInventory = () => {
             .filter((v, index) => index >= 16 && index < 18)
             .map((v) => (
               <TextField
+                key={v.id}
                 id={v.id}
                 label={v.id === 'created_on' && 'Created'}
                 value={
@@ -380,6 +391,7 @@ const EditInventory = () => {
             .filter((v, index) => index >= 18 && index < 20)
             .map((v) => (
               <TextField
+                key={v.id}
                 id={v.id}
                 label={v.id === 'updated_on' && 'Last updated around'}
                 value={
