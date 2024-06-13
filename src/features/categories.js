@@ -1,5 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import dayjs from 'dayjs';
+
+// static query options for tanstack query
+const useQueryOptions = {
+  refetchOnWindowFocus: false,
+};
 
 // supabase fn to retrieve list of categories for a selected user
 const fetchCategoriesList = (client, userID) => {
@@ -15,7 +21,16 @@ const fetchCategoriesList = (client, userID) => {
         created_by,
         updated_on,
         updated_by,
-        sharable_groups
+        sharable_groups,
+        totalAssignedItems:category_item!id(
+          id
+        ),
+        creator_name:profiles!created_by(
+          username
+        ),
+        updator_name:profiles!updated_by(
+          username
+        )
         `
     )
     .eq('created_by', userID);
@@ -33,6 +48,7 @@ export const useFetchCategoryList = () => {
   return useQuery({
     queryFn: queryFn,
     queryKey: ['categoryList', user.id],
+    useQueryOptions,
   });
 };
 
@@ -76,4 +92,45 @@ export const useDeleteSelectedCategory = () => {
       queryClient.invalidateQueries(['categoryList']);
     },
   });
+};
+
+/**
+ * Assign maintenance plan to selected inventory item
+ * @param {Object} supabaseClient
+ * @param {String} userID - the ID of the user making the request
+ * @param {String} categoryID - the category ID to associate the inventory item against
+ * @param {String} categoryName - the category name to associate the inventory item against
+ * @param {Array<String>} selectedItemIDs - the IDs of the selected inventory items
+ * @returns {Promise<Array>} - a promise that resolves when all upsert operations are complete
+ */
+const assignInventoryItemToCategory = async (client, userID, categoryID, categoryName, selectedItemIDs) => {
+  const promises = selectedItemIDs.map((element) => {
+    return client
+      .from('category_item')
+      .upsert({
+        category_id: categoryID,
+        category_name: categoryName,
+        item_id: element,
+        created_on: dayjs(),
+        created_by: userID,
+        sharable_groups: [userID],
+      })
+      .select();
+  });
+  return Promise.all(promises);
+};
+
+export const useAssignInventoryItemToCategory = () => {
+  const user = useUser();
+  const queryClient = useQueryClient();
+  const supabaseClient = useSupabaseClient();
+  return useMutation(
+    ({ categoryID, categoryName, selectedItemIDs }) =>
+      assignInventoryItemToCategory(supabaseClient, user?.id, categoryID, categoryName, selectedItemIDs),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['categoryList', 'inventoryList']);
+      },
+    }
+  );
 };

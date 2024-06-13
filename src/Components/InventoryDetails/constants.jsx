@@ -78,6 +78,7 @@ export const VIEW_INVENTORY_LIST_HEADERS = {
     colName: 'description',
     label: 'Item Description',
     displayName: 'Description',
+    displayConcise: true,
     modifier: (value) => `${value || '-'}`,
   },
   price: {

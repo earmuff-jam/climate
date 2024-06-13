@@ -19,7 +19,12 @@ const ProfileContent = () => {
   const submit = (ev) => {
     ev.preventDefault();
     const draftFormattedData = Object.entries(formData).reduce((acc, [key, valueObj]) => {
-      acc[key] = valueObj.value;
+      // handle time differently
+      if (['created_on', 'updated_on'].includes(key)) {
+        acc[key] = valueObj;
+      } else {
+        acc[key] = valueObj.value;
+      }
       return acc;
     }, {});
 
@@ -159,7 +164,7 @@ const ProfileContent = () => {
             variant="outlined"
             color="primary"
             onClick={submit}
-            disabled={Object.values(formData).some((v) => v.errorMsg?.length > 0)}
+            disabled={Object.values(formData).some((v) => v?.errorMsg?.length > 0)}
           >
             Update profile
           </Button>

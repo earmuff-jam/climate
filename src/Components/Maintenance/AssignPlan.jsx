@@ -1,18 +1,26 @@
 import { Box, Card, CardContent, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import { useFetchMaintenanceList } from '../../features/maintenancePlan';
+import { useAssignInventoryItemToMaintenancePlan, useFetchMaintenanceList } from '../../features/maintenancePlan';
 import { DisplayNoMatchingRecordsComponent } from '../../util/util';
 
-const AssignPlan = () => {
+const AssignPlan = ({ rowSelected, handleCloseAssignFn }) => {
   const { data, isLoading } = useFetchMaintenanceList();
+  const assignInventoryItemToMaintenancePlanMutation = useAssignInventoryItemToMaintenancePlan();
   if (isLoading) return <Skeleton height="1" width="1" variant="rounded" />;
   if (data.length <= 0) return <DisplayNoMatchingRecordsComponent subtitle="Add maintenance plan to begin" />;
+
+  const handleAssignMaintenancePlan = (planID, planName, rowSelected) => {
+    assignInventoryItemToMaintenancePlanMutation.mutate({ planID, planName, selectedIDs: rowSelected });
+    handleCloseAssignFn();
+  };
+
   return (
     <Box>
       <Stack direction="row" spacing={2}>
         {data.map((v) => (
           <Card
             key={v.id}
+            onClick={() => handleAssignMaintenancePlan(v.id, v.plan, rowSelected)}
             sx={{
               height: '100%',
               display: 'flex',
@@ -30,7 +38,7 @@ const AssignPlan = () => {
                     <Typography>{v.plan}</Typography>
                   </Tooltip>
                   <Typography variant="caption" color="text.secondary">
-                    Created around {dayjs(v?.created_on).fromNow()} by {v.creator_name}
+                    Created around {dayjs(v?.created_on).fromNow()} by {v.creator_name || 'Anonymous'}
                   </Typography>
                   {v.updated_on === null ? (
                     <Typography variant="caption" color="text.secondary">

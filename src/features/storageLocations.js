@@ -1,6 +1,11 @@
 import { useQuery } from 'react-query';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 
+// static query options for tanstack query
+const useQueryOptions = {
+  refetchOnWindowFocus: false,
+};
+
 // supabase fn to retrieve list of storage locations
 const fetchStorageLocations = (client) => {
   return client.from('storage_locations').select(
@@ -28,5 +33,6 @@ export const useFetchStorageLocationList = () => {
   return useQuery({
     queryFn: queryFn,
     queryKey: ['storageLocationList', user.id],
+    useQueryOptions,
   });
 };

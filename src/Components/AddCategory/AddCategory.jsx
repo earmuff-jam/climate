@@ -71,13 +71,10 @@ const AddCategory = ({ handleCloseAddCategory }) => {
       sharable_groups: [user.id],
     };
 
-    upsertCategoryDetailsMutation.mutate(draftRequest, {
-      onSuccess: (response) => {
-        setCategoryDetails({ ...BLANK_CATEGORY_DETAILS });
-        setCategoryDetailsTouched({ ...BLANK_CATEGORY_DETAILS_TOUCHED });
-        handleCloseAddCategory();
-      },
-    });
+    upsertCategoryDetailsMutation.mutate(draftRequest);
+    setCategoryDetails({ ...BLANK_CATEGORY_DETAILS });
+    setCategoryDetailsTouched({ ...BLANK_CATEGORY_DETAILS_TOUCHED });
+    handleCloseAddCategory();
   };
 
   return (

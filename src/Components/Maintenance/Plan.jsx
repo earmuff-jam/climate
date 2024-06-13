@@ -29,6 +29,9 @@ const Plan = () => {
           primaryStartIcon={<AddRounded />}
           showSecondaryButton={false}
           handleClickPrimaryButton={handleAddNewPlan}
+          showSecondaryTitle={true}
+          showRedirectLink={false}
+          secondaryTitle={'Select total items in each maintenance plan(s) to view all items associated that plan'}
         />
         <PlanList /> {/* plan component */}
       </Container>
