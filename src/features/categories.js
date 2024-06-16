@@ -134,3 +134,52 @@ export const useAssignInventoryItemToCategory = () => {
     }
   );
 };
+
+/**
+ * fetch inventories relative to categories. Eg, items marked with bookmarked categories
+ */
+
+export const fetchInvItemsForCategory = (client, userID, catID) => {
+  return client
+    .from('inventories')
+    .select(
+      `
+      id,
+      name,
+      description,
+      price,
+      barcode,
+      sku,
+      quantity,
+      bought_at,
+      location,
+      is_bookmarked,
+      is_returnable,
+      return_location,
+      return_datetime,
+      max_weight,
+      min_weight,
+      max_height,
+      min_height,
+      created_on,
+      created_by,
+      updated_on,
+      updated_by,
+      sharable_groups,
+      storage_locations (id),
+      category_item!inner (
+        category_id,
+        category_name,
+        associated_color
+      ),
+      creator_name:profiles!created_by(
+        username
+      ),
+      updator_name:profiles!updated_by(
+        username
+      )
+        `
+    )
+    .eq('category_item.category_id', catID)
+    .eq('created_by', userID);
+};

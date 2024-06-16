@@ -23,11 +23,11 @@ export const DEFAULT_INVENTORIES_LANDING_PAGE_TEXT = [
     href: 'inventories/forecast/list',
   },
   {
-    name: 'Stay in sync with your inventory items',
+    name: 'Categories inventories and stay in sync',
     description: 'Understand your inventories better. Keep tabs on more important inventories',
     imageSrc: 'images/kitchen-items.jpg',
     imageAlt: 'default-bookmarked-inventory-items-img',
-    href: '/inventories/list',
+    href: '/inventories/categories/list',
   },
 ];
 

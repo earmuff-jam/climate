@@ -13,6 +13,7 @@ CREATE TABLE category_item
     category_id                 UUID REFERENCES category (id) ON UPDATE CASCADE ON DELETE CASCADE       NOT NULL,
     category_name               VARCHAR(500)                                                            NOT NULL,
     item_id                     UUID REFERENCES inventories (id) ON UPDATE CASCADE ON DELETE CASCADE    NOT NULL,
+    associated_color            VARCHAR(50),
     comments                    VARCHAR(500),
     created_on                  TIMESTAMP WITH TIME ZONE,
     created_by                  UUID REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE,

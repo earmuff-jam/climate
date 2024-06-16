@@ -4,6 +4,7 @@ import ProfileDetails from '../Containers/Profile/ProfileDetails';
 import Layout from './Layout';
 import Plan from '../Components/Maintenance/Plan';
 import EditInventory from '../Containers/Inventory/EditInventory';
+import CategoriesList from '../Components/CategoryDetails/CategoriesList';
 
 /**
  * Authorized routes are available here. Due to the nature of the logged in state of authentication from supabase, after the user logs in, we redirect
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
       {
         path: '/inventories/maintenance/list',
         element: <Plan />,
+      },
+      {
+        path: '/inventories/categories/list',
+        element: <CategoriesList />,
       },
       {
         path: '/profile',
