@@ -140,6 +140,7 @@ const CategoryDetails = () => {
         >
           <InventoryTable
             plainView={true}
+            isCategory={true}
             isLoading={inventoryLoading}
             data={inventoryData?.data || []}
             rowSelected={[]}

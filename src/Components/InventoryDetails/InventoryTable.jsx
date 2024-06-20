@@ -18,8 +18,9 @@ import { CheckRounded, CircleRounded, CloseRounded, EditNoteRounded, FileOpenRou
 
 /**
  * InventoryTable React Function - Displays the inventory table
- * @param {boolean} plainView - determines if extra functionality should be present, like selection of rows, defaults to false
+ * @param {boolean} plainView - determines if extra functionality should be present, like selection of rows, defaults: false
  * @param {boolean} isLoading - determines if the selected data is still in loading state
+ * @param {boolean} isCategory - determines if the view mode is from the category side instead of maintenance plan side. default: false
  * @param {Array<Object>} columns - the columns to display for the table
  * @param {Array<Object>} data - the data to display for each row in the table
  * @param {Array<String>} rowSelected - the array of IDs that represent each item
@@ -30,6 +31,7 @@ import { CheckRounded, CircleRounded, CloseRounded, EditNoteRounded, FileOpenRou
 const InventoryTable = ({
   plainView = false,
   isLoading,
+  isCategory = false,
   columns,
   data,
   rowSelected,
@@ -58,7 +60,7 @@ const InventoryTable = ({
       // support for assigned maintenance item
       return (
         <Stack direction="row" alignItems="center" justifyContent="flex-start" spacing={2}>
-          <CircleRounded sx={{ height: '0.75rem', width: '0.75rem', color: `${color}` }} />
+          <CircleRounded sx={{ height: '0.75rem', width: '0.75rem', color: color ? `${color}` : 'transparent' }} />
           <Typography>{row[column] || '-'}</Typography>
         </Stack>
       );
@@ -104,12 +106,21 @@ const InventoryTable = ({
             const isSelected = (id) => rowSelected.indexOf(id) !== -1;
             const selectedID = row.id;
             const isItemSelected = isSelected(selectedID);
-            const assignedMaintenancePlanTitle =
-              row?.maintenance_item.length > 0 && `Assigned ${row?.maintenance_item[0].maintenance_plan_name}`;
-            const associatedColor =
-              row?.maintenance_item.length > 0 ? row?.maintenance_item[0].associated_color : '#fff';
+            let title = '';
+            let color = null;
+            if (row?.category_item?.length <= 0 || row?.maintenance_item?.length <= 0) {
+              title = null;
+              color = null;
+            } else if (isCategory) {
+              title = row?.category_item.length > 0 && `Assigned ${row?.category_item[0].category_name}`;
+              color = row?.category_item.length > 0 && row?.category_item[0].associated_color;
+            } else {
+              title = row?.maintenance_item.length > 0 && `Assigned ${row?.maintenance_item[0].maintenance_plan_name}`;
+              color = row?.maintenance_item.length > 0 && row?.maintenance_item[0].associated_color;
+            }
+
             return (
-              <Tooltip key={rowIndex} title={assignedMaintenancePlanTitle}>
+              <Tooltip key={rowIndex} title={title}>
                 <TableRow hover>
                   {!plainView ? (
                     <TableCell padding="checkbox" align="center">
@@ -134,7 +145,7 @@ const InventoryTable = ({
                     const column = columns[colKey];
                     return (
                       <TableCell key={column.id} align="center" sx={{ width: '2rem' }}>
-                        {rowFormatter(row, column.colName, associatedColor)}
+                        {rowFormatter(row, column.colName, color)}
                       </TableCell>
                     );
                   })}

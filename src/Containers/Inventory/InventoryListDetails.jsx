@@ -168,15 +168,17 @@ const InventoryListDetails = ({ displayAllInventories }) => {
         ) : null}
 
         {/* bookmarked inventories has less column headers */}
-        <InventoryTable
-          isLoading={isLoading}
-          data={displayAllInventories ? data?.result : data?.bookmarkedItems}
-          columns={Object.values(VIEW_INVENTORY_LIST_HEADERS).filter((v) => v.displayConcise)}
-          rowSelected={rowSelected}
-          onRowSelect={onRowSelect}
-          handleRowSelection={handleRowSelection}
-          handleEdit={handleEdit}
-        />
+        <Box sx={{ maxHeight: '40vh', overflow: 'auto' }}>
+          <InventoryTable
+            isLoading={isLoading}
+            data={displayAllInventories ? data?.result : data?.bookmarkedItems}
+            columns={Object.values(VIEW_INVENTORY_LIST_HEADERS).filter((v) => v.displayConcise)}
+            rowSelected={rowSelected}
+            onRowSelect={onRowSelect}
+            handleRowSelection={handleRowSelection}
+            handleEdit={handleEdit}
+          />
+        </Box>
       </Container>
       {modalState === MODAL_STATE.ADD_ITEM && (
         <SimpleModal title={'Add New Item'} handleClose={handleCloseModal} showSubmit={false}>

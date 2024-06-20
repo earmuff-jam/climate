@@ -26,7 +26,7 @@ CREATE TRIGGER handle_maintenance_plan_color_to_item_trigger
     AFTER INSERT ON public.maintenance_item
     FOR EACH ROW
     EXECUTE FUNCTION public.handle_maintenance_plan_color_to_item_fn();
-END;
+
 
 -- TRIGGER TO UPDATE OVERFLOW STATUS TO TRUE IF THE DATE IS CROSSED THE TERM LIMIT --
 CREATE OR REPLACE FUNCTION public.handle_overdue_inventory_items_fn()
