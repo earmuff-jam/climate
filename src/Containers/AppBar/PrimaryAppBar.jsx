@@ -25,7 +25,7 @@ const PrimaryAppBar = ({ isUserLoggedIn }) => {
       <AppBar position="static">
         <Toolbar>
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <Typography variant="h6" component="div">
+            <Typography variant="h6" component="div" onClick={() => navigate("/")} sx={{cursor: 'pointer'}}>
               Climate
             </Typography>
           </Box>
@@ -36,7 +36,7 @@ const PrimaryAppBar = ({ isUserLoggedIn }) => {
               </Button>
             ) : (
               <Stack direction={'row'}>
-                <Button color="inherit" onClick={() => navigate('/')}>
+                <Button color="inherit" onClick={() => navigate('/inventories/list')}>
                   Inventories
                 </Button>
                 <Button color="inherit" onClick={() => navigate('/profile')}>

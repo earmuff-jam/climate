@@ -4,5 +4,11 @@
   "editor.defaultFormatter": "denoland.vscode-deno",
   "[sql]": {
     "editor.defaultFormatter": "bradymholt.pgformatter"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }

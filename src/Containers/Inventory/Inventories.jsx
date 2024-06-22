@@ -1,12 +1,14 @@
 import CategoryListDetails from '../../Components/CategoryDetails/CategoryListDetails';
 import Collection from '../../Components/Collection/Collection';
 import InventoryListDetails from './InventoryListDetails';
+import InventoryOverview from './InventoryOverview';
 
-const Inventories = ({ displayAllInventories }) => {
+const Inventories = ({ displayAllInventories, plainView }) => {
   return (
     <>
-      <CategoryListDetails />
-      <InventoryListDetails displayAllInventories={displayAllInventories} />
+      {displayAllInventories ? <CategoryListDetails /> : <InventoryOverview />}
+
+      <InventoryListDetails displayAllInventories={displayAllInventories} plainView={plainView} />
       {!displayAllInventories ? <Collection title={'Learn more'} /> : null}
     </>
   );

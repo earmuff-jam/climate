@@ -34,7 +34,7 @@ const MODAL_STATE = {
   ASSIGN_MAINTENANCE_PLAN: 'assign_maintenance_plan',
 };
 
-const InventoryListDetails = ({ displayAllInventories }) => {
+const InventoryListDetails = ({ displayAllInventories, plainView }) => {
   const navigate = useNavigate();
   const { data, isLoading } = useFetchInventoriesList();
   const deleteSelectedInventoryMutation = useDeleteSelectedInventory();
@@ -52,19 +52,26 @@ const InventoryListDetails = ({ displayAllInventories }) => {
 
   // handleRowSelection for checkbox actions
   const handleRowSelection = (_, id) => {
-    const selectedIndex = rowSelected.indexOf(id);
-    let draftSelected = [];
-
-    if (selectedIndex === -1) {
-      draftSelected = draftSelected.concat(rowSelected, id);
-    } else if (selectedIndex === 0) {
-      draftSelected = draftSelected.concat(rowSelected.slice(1));
-    } else if (selectedIndex === rowSelected.length - 1) {
-      draftSelected = draftSelected.concat(rowSelected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      draftSelected = draftSelected.concat(rowSelected.slice(0, selectedIndex), rowSelected.slice(selectedIndex + 1));
+    if (id === 'all') {
+      if (rowSelected.length === 0) {
+        setRowSelected(data.result.map((v) => v.id));
+      } else {
+        setRowSelected([]);
+      }
+    } else {
+      const selectedIndex = rowSelected.indexOf(id);
+      let draftSelected = [];
+      if (selectedIndex === -1) {
+        draftSelected = draftSelected.concat(rowSelected, id);
+      } else if (selectedIndex === 0) {
+        draftSelected = draftSelected.concat(rowSelected.slice(1));
+      } else if (selectedIndex === rowSelected.length - 1) {
+        draftSelected = draftSelected.concat(rowSelected.slice(0, -1));
+      } else if (selectedIndex > 0) {
+        draftSelected = draftSelected.concat(rowSelected.slice(0, selectedIndex), rowSelected.slice(selectedIndex + 1));
+      }
+      setRowSelected(draftSelected);
     }
-    setRowSelected(draftSelected);
   };
 
   const onRowSelect = (row) => {
@@ -103,7 +110,6 @@ const InventoryListDetails = ({ displayAllInventories }) => {
   return (
     <Box sx={{ py: 8 }}>
       <Container maxWidth={displayAllInventories ? 'xl' : 'lg'}>
-        {/* bookmarked inventories section */}
         {displayAllInventories ? (
           <HeaderWithButton
             title="Inventories"
@@ -126,7 +132,7 @@ const InventoryListDetails = ({ displayAllInventories }) => {
           />
         ) : (
           <HeaderWithButton
-            title="Bookmarked Inventories"
+            title="Recently edited"
             showSecondaryTitle={true}
             secondaryTitle={'View all your inventories'}
             showRedirectLink={true}
@@ -167,11 +173,11 @@ const InventoryListDetails = ({ displayAllInventories }) => {
           </Stack>
         ) : null}
 
-        {/* bookmarked inventories has less column headers */}
         <Box sx={{ maxHeight: '40vh', overflow: 'auto' }}>
           <InventoryTable
             isLoading={isLoading}
-            data={displayAllInventories ? data?.result : data?.bookmarkedItems}
+            plainView={plainView}
+            data={displayAllInventories ? data?.result : data?.result.filter((v, index) => index < 3)}
             columns={Object.values(VIEW_INVENTORY_LIST_HEADERS).filter((v) => v.displayConcise)}
             rowSelected={rowSelected}
             onRowSelect={onRowSelect}

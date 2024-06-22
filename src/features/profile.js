@@ -6,9 +6,9 @@ const useQueryOptions = {
   refetchOnWindowFocus: false,
 };
 
-/************************
- * Notification details *
- ************************/
+/****************************************
+ * FETCH FUNCTIONS PROFILE CONF DETAILS *
+ ****************************************/
 
 // supabase fn to retrieve config details for a selected user
 const fetchConfigDetails = (client, userID) => {
@@ -45,27 +45,6 @@ export const useFetchProfileConfigDetails = () => {
     useQueryOptions,
   });
 };
-
-// supabase fn to update profile configuration settings
-const upsertProfileConfigurationDetails = (client, data) => {
-  return client.from('user_settings').upsert(data).select();
-};
-
-// fn used to update profile configuration settings
-export const useUpsertProfileConfigurationDetails = () => {
-  const queryClient = useQueryClient();
-  const supabaseClient = useSupabaseClient();
-  return useMutation((data) => upsertProfileConfigurationDetails(supabaseClient, data), {
-    onSuccess: () => {
-      // Invalidate the profile configuration query to refetch the data
-      queryClient.invalidateQueries(['profileConfig']);
-    },
-  });
-};
-
-/*******************
- * Profile details *
- *******************/
 
 // supabase fn to retrieve config details for a selected user
 const fetchProfileDetails = (client, userID) => {
@@ -115,8 +94,23 @@ export const useUpsertProfileDetails = () => {
   const supabaseClient = useSupabaseClient();
   return useMutation((data) => upsertProfileDetails(supabaseClient, data), {
     onSuccess: () => {
-      // Invalidate the profile configuration query to refetch the data
       queryClient.invalidateQueries(['profileDetails']);
+    },
+  });
+};
+
+// supabase fn to update profile configuration settings
+const upsertProfileConfigurationDetails = (client, data) => {
+  return client.from('user_settings').upsert(data).select();
+};
+
+// fn used to update profile configuration settings
+export const useUpsertProfileConfigurationDetails = () => {
+  const queryClient = useQueryClient();
+  const supabaseClient = useSupabaseClient();
+  return useMutation((data) => upsertProfileConfigurationDetails(supabaseClient, data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['profileConfig']);
     },
   });
 };

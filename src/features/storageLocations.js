@@ -6,6 +6,10 @@ const useQueryOptions = {
   refetchOnWindowFocus: false,
 };
 
+/*************************************
+ * FETCH FUNCTIONS STORAGE LOCATIONS *
+ *************************************/
+
 // supabase fn to retrieve list of storage locations
 const fetchStorageLocations = (client) => {
   return client.from('storage_locations').select(

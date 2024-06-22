@@ -1,5 +1,5 @@
 import { useDeleteSelectedCategory, useFetchCategoryList } from '../../features/categories';
-import { Box, Card, CardContent, Grid, IconButton, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Card, CardContent, IconButton, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { DeleteRounded, TrendingUpRounded } from '@mui/icons-material';
 import { ConfirmationBoxModal, DisplayNoMatchingRecordsComponent } from '../../util/util';
 import { useState } from 'react';
@@ -38,42 +38,48 @@ const Categories = () => {
   }
 
   return (
-    <Grid container spacing={4}>
-      {data.map((item, index) => (
-        <Grid item key={index} xs={12} sm={6} md={4}>
-          <Tooltip title={item.category_description}>
-            <Card
-              sx={{
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <CardContent>
-                <Stack direction={'row'}>
-                  <IconButton disabled>{item.icon}</IconButton>
-                  <Stack flexGrow={1}>
-                    <Typography variant="h6" component="h3">
-                      {item.category_name}
-                    </Typography>
-                    <Box sx={{ px: 1, py: 0, borderRadius: 2 }}>
-                      <Stack direction={'row'} alignItems={'center'} useFlexGap spacing={1}>
-                        <TrendingUpRounded color={index % 2 == 0 ? 'success' : 'error'} />
-                        <Typography variant="caption">Total {item?.totalAssignedItems.length ?? 0} items</Typography>
+    <>
+      <Stack spacing={'2rem'}>
+        <Stack spacing={{ xs: 1, sm: 2 }} direction="row" useFlexGap flexWrap="wrap">
+          {data.map((item, index) => (
+            <Stack key={index} flexGrow={1}>
+              <Tooltip title={item.category_description}>
+                <Card
+                  sx={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <CardContent>
+                    <Stack direction={'row'}>
+                      <IconButton disabled>{item.icon}</IconButton>
+                      <Stack flexGrow={1}>
+                        <Typography variant="h6" component="h3">
+                          {item.category_name}
+                        </Typography>
+                        <Box sx={{ px: 1, py: 0, borderRadius: 2 }}>
+                          <Stack direction={'row'} alignItems={'center'} useFlexGap spacing={1}>
+                            <TrendingUpRounded color={index % 2 == 0 ? 'success' : 'error'} />
+                            <Typography variant="caption">
+                              Total {item?.totalAssignedItems.length ?? 0} items
+                            </Typography>
+                          </Stack>
+                        </Box>
                       </Stack>
-                    </Box>
-                  </Stack>
-                  {item.is_deleteable && (
-                    <IconButton onClick={() => item?.is_deleteable && handleDelete(item.id)}>
-                      <DeleteRounded />
-                    </IconButton>
-                  )}
-                </Stack>
-              </CardContent>
-            </Card>
-          </Tooltip>
-        </Grid>
-      ))}
+                      {item.is_deleteable && (
+                        <IconButton onClick={() => item?.is_deleteable && handleDelete(item.id)}>
+                          <DeleteRounded />
+                        </IconButton>
+                      )}
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </Tooltip>
+            </Stack>
+          ))}
+        </Stack>
+      </Stack>
       <ConfirmationBoxModal
         openDialog={openDialog}
         title="Confirm deletion"
@@ -85,7 +91,7 @@ const Categories = () => {
         deleteID={idToDelete}
         confirmDelete={confirmDelete}
       />
-    </Grid>
+    </>
   );
 };
 

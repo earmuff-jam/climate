@@ -3,7 +3,6 @@ import { Typography, Button, Box, Stack, Divider, Checkbox, FormControlLabel, Sk
 import { AssignmentLateRounded, BookmarkRounded, SettingsSuggestRounded } from '@mui/icons-material';
 import { useQueryClient } from 'react-query';
 import { BLANK_NOTIFICATION_DETAILS } from './constants';
-// import { useFetchProfileConfigDetails, useUpsertProfileNotificationDetails } from '@/features/profile';
 import { useNavigate } from 'react-router-dom';
 import { useFetchProfileConfigDetails, useUpsertProfileConfigurationDetails } from '../../features/profile';
 

@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import HeaderWithButton from '../../util/HeaderWithButton';
-import BarChart from './BarChart';
+import PieBarChart from './PieBarChart';
 import { useState } from 'react';
 import { ChangeCircleRounded } from '@mui/icons-material';
 
@@ -29,7 +29,7 @@ const MaintenanceChart = ({ data }) => {
         handleClickPrimaryButton={handleDisplaySelection}
         showSecondaryButton={false}
       />
-      <BarChart
+      <PieBarChart
         legendLabel={!displayOverflow ? 'Plan vs total item(s)' : 'Overdue vs total items(s)'}
         data={
           !displayOverflow

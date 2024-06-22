@@ -57,16 +57,13 @@ const CategoryDetails = () => {
 
   const confirmDelete = (id) => {
     if (id === -1) {
-      // unknown id to delete. protect from confirmation box
       return;
     }
     deleteSelectedCategory.mutate(id);
     resetConfirmationBox();
   };
 
-  if (isLoading) {
-    return <Skeleton variant="rounded" animation="wave" height={'100%'} width={'100%'} />;
-  }
+  if (isLoading) return <Skeleton variant="rounded" animation="wave" height={'100%'} width={'100%'} />;
 
   if (data.length <= 0) return <DisplayNoMatchingRecordsComponent />;
 
@@ -75,7 +72,7 @@ const CategoryDetails = () => {
       <Stack spacing={'2rem'}>
         <Stack spacing={{ xs: 1, sm: 2 }} direction="row" useFlexGap flexWrap="wrap">
           {data.map((item, index) => (
-            <Stack key={index} sx={{ flexGrow: 1 }}>
+            <Stack key={index} flexGrow={1}>
               <Tooltip title={item.description}>
                 <Card
                   sx={{

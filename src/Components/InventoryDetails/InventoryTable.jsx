@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { DisplayNoMatchingRecordsComponent } from '../../util/util';
-import { CheckRounded, CircleRounded, CloseRounded, EditNoteRounded, FileOpenRounded } from '@mui/icons-material';
+import { CheckRounded, CircleRounded, CloseRounded, EditRounded, FileOpenRounded } from '@mui/icons-material';
 
 /**
  * InventoryTable React Function - Displays the inventory table
@@ -84,7 +84,7 @@ const InventoryTable = ({
             {!plainView ? (
               <TableCell padding="checkbox" align="center">
                 <Stack direction="row" alignItems="center">
-                  <Checkbox disabled size="small" />
+                  <Checkbox size="small" onClick={(ev) => handleRowSelection(ev, 'all')} />
                   <Typography fontWeight={'bold'} align="center">
                     Action
                   </Typography>
@@ -132,11 +132,11 @@ const InventoryTable = ({
                           onClick={(event) => handleRowSelection(event, selectedID)}
                           inputProps={{ 'aria-labelledby': 'labelId' }}
                         />
-                        <IconButton size="small" onClick={() => onRowSelect(row)}>
-                          <FileOpenRounded color="primary" />
+                        <IconButton onClick={() => handleEdit(selectedID)} size="small">
+                          <EditRounded color="primary" fontSize="small" />
                         </IconButton>
-                        <IconButton onClick={() => handleEdit(selectedID)}>
-                          <EditNoteRounded color="primary" />
+                        <IconButton size="small" onClick={() => onRowSelect(row)}>
+                          <FileOpenRounded color="primary" fontSize="small" />
                         </IconButton>
                       </Stack>
                     </TableCell>
