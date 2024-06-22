@@ -4,11 +4,13 @@ import { BLANK_CATEGORY_DETAILS, BLANK_CATEGORY_DETAILS_ERROR, BLANK_CATEGORY_DE
 import { useUpsertCategoryDetails } from '../../features/categories';
 import { useUser } from '@supabase/auth-helpers-react';
 import dayjs from 'dayjs';
+import ColorPicker from '../../util/ColorPicker';
 
 const AddCategory = ({ handleCloseAddCategory }) => {
   const user = useUser();
   const upsertCategoryDetailsMutation = useUpsertCategoryDetails();
 
+  const [planColor, setPlanColor] = useState('#fff');
   const [categoryDetails, setCategoryDetails] = useState({
     ...BLANK_CATEGORY_DETAILS,
   });
@@ -20,7 +22,10 @@ const AddCategory = ({ handleCloseAddCategory }) => {
     ...BLANK_CATEGORY_DETAILS_TOUCHED,
   });
 
-  const handleInputChange = (ev) => {
+  const handleColorChange = (newValue) => {
+    setPlanColor(newValue);
+  };
+  const handleInputChange = (event) => {
     const { id, value } = event.target;
 
     const draftErrorElements = { ...categoryDetailsError };
@@ -66,18 +71,17 @@ const AddCategory = ({ handleCloseAddCategory }) => {
     const draftRequest = {
       ...categoryDetails,
       is_deleteable: true,
+      color: planColor,
       created_by: user.id,
       created_on: dayjs(),
       sharable_groups: [user.id],
     };
 
-    upsertCategoryDetailsMutation.mutate(draftRequest, {
-      onSuccess: (response) => {
-        setCategoryDetails({ ...BLANK_CATEGORY_DETAILS });
-        setCategoryDetailsTouched({ ...BLANK_CATEGORY_DETAILS_TOUCHED });
-        handleCloseAddCategory();
-      },
-    });
+    upsertCategoryDetailsMutation.mutate(draftRequest);
+    setCategoryDetails({ ...BLANK_CATEGORY_DETAILS });
+    setCategoryDetailsTouched({ ...BLANK_CATEGORY_DETAILS_TOUCHED });
+    setPlanColor('#fff');
+    handleCloseAddCategory();
   };
 
   return (
@@ -115,6 +119,7 @@ const AddCategory = ({ handleCloseAddCategory }) => {
               error={Boolean(categoryDetailsError.category_description['errorMsg'].length)}
               helperText={categoryDetailsError.category_description['errorMsg']}
             />
+            <ColorPicker value={planColor} handleChange={handleColorChange} />
           </Stack>
           <Button
             onClick={handleSubmit}

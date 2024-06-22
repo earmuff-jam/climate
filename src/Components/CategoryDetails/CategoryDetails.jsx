@@ -2,46 +2,47 @@ import { useState } from 'react';
 import { Box, Card, CardContent, IconButton, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { HighlightOffRounded, TrendingUpRounded } from '@mui/icons-material';
 import { ConfirmationBoxModal, DisplayNoMatchingRecordsComponent } from '../../util/util';
-import {
-  fetchInventoryItemsAgainstSelectedMaintenancePlan,
-  useDeleteSelectedMaintenancePlan,
-  useFetchMaintenanceList,
-} from '../../features/maintenancePlan';
 import SimpleModal from '../../util/SimpleModal';
 import InventoryTable from '../InventoryDetails/InventoryTable';
 import { VIEW_INVENTORY_LIST_HEADERS } from '../InventoryDetails/constants';
 import { useQuery } from 'react-query';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
-import MaintenanceChart from '../Chart/MaintenanceChart';
-import dayjs from 'dayjs';
+import { fetchInvItemsForCategory, useDeleteSelectedCategory, useFetchCategoryList } from '../../features/categories';
+import CategoryChart from '../Chart/CategoryChart';
 
-const PlanList = () => {
+const MODAL_STATE = {
+  NONE: 'none',
+  ADD_CATEGORY: 'add_category',
+  ITEM_SELECTION: 'item_selection',
+};
+
+const CategoryDetails = () => {
   const user = useUser();
   const supabaseClient = useSupabaseClient();
-  const { data, isLoading } = useFetchMaintenanceList();
-  const deleteMaintenancePlanMutation = useDeleteSelectedMaintenancePlan();
+  const { data, isLoading } = useFetchCategoryList();
+  const deleteSelectedCategory = useDeleteSelectedCategory();
 
-  const [displayModal, setDisplayModal] = useState(false);
-  const [selectedMaintenancePlan, setSelectedMaintenancePlan] = useState(null);
+  const [modalState, setModalState] = useState(MODAL_STATE.NONE);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
   const { data: inventoryData, isLoading: inventoryLoading } = useQuery(
-    ['maintenanceItems', selectedMaintenancePlan?.id],
-    () => fetchInventoryItemsAgainstSelectedMaintenancePlan(supabaseClient, user.id, selectedMaintenancePlan.id),
+    ['categoryList', selectedCategory?.id],
+    () => fetchInvItemsForCategory(supabaseClient, user.id, selectedCategory.id),
     {
-      enabled: !!selectedMaintenancePlan?.id,
+      enabled: !!selectedCategory?.id,
     }
   );
 
   const handleSelection = (item) => {
-    setDisplayModal(true);
-    setSelectedMaintenancePlan(item);
+    setModalState(MODAL_STATE.ITEM_SELECTION);
+    setSelectedCategory(item);
   };
 
   const handleClose = () => {
-    setDisplayModal(false);
-    setSelectedMaintenancePlan(null);
+    setModalState(MODAL_STATE.NONE);
+    setSelectedCategory(null);
   };
 
   const handleDelete = () => {
@@ -50,6 +51,7 @@ const PlanList = () => {
 
   const resetConfirmationBox = () => {
     setOpenDialog(false);
+    setModalState(MODAL_STATE.NONE);
     setIdToDelete(-1);
   };
 
@@ -58,13 +60,14 @@ const PlanList = () => {
       // unknown id to delete. protect from confirmation box
       return;
     }
-    deleteMaintenancePlanMutation.mutate(id);
+    deleteSelectedCategory.mutate(id);
     resetConfirmationBox();
   };
 
   if (isLoading) {
     return <Skeleton variant="rounded" animation="wave" height={'100%'} width={'100%'} />;
   }
+
   if (data.length <= 0) return <DisplayNoMatchingRecordsComponent />;
 
   return (
@@ -85,9 +88,9 @@ const PlanList = () => {
                     <Stack direction={'row'}>
                       <Stack flexGrow={1}>
                         <Typography variant="h6" component="h3">
-                          {item.plan}
+                          {item.category_name}
                         </Typography>
-                        <Typography variant="caption">{item.type}</Typography>
+                        <Typography variant="caption">{item.category_description}</Typography>
 
                         <Box sx={{ px: 1, py: 0, borderRadius: 2 }}>
                           <Stack
@@ -100,8 +103,9 @@ const PlanList = () => {
                           >
                             <TrendingUpRounded color={index % 2 == 0 ? 'success' : 'error'} />
                             <Stack>
-                              <Typography variant="caption">Total items {item.maintenanceItems.length ?? 0}</Typography>
-                              <Typography variant="caption">Due {dayjs(item.term_limit).fromNow()}</Typography>
+                              <Typography variant="caption">
+                                Total items {item.totalAssignedItems.length ?? 0}
+                              </Typography>
                             </Stack>
                           </Stack>
                         </Box>
@@ -124,18 +128,19 @@ const PlanList = () => {
             </Stack>
           ))}
         </Stack>
-        <MaintenanceChart data={data} />
+        <CategoryChart data={data} />
       </Stack>
       {/* display list of inventories associated with the selected maintenance plan when selected */}
-      {displayModal && (
+      {modalState === MODAL_STATE.ITEM_SELECTION && (
         <SimpleModal
-          title={`Item(s) under ${selectedMaintenancePlan?.plan}`}
+          title={`Item(s) under ${selectedCategory?.category_name}`}
           handleClose={handleClose}
           showSubmit={false}
           maxSize={'md'}
         >
           <InventoryTable
             plainView={true}
+            isCategory={true}
             isLoading={inventoryLoading}
             data={inventoryData?.data || []}
             rowSelected={[]}
@@ -146,7 +151,7 @@ const PlanList = () => {
       <ConfirmationBoxModal
         openDialog={openDialog}
         title="Confirm deletion"
-        text="Confirm deletion of maintenance plan? Deletion is permanent and cannot be undone."
+        text="Confirm deletion of category? Deletion is permanent and cannot be undone."
         textVariant="body2"
         handleClose={resetConfirmationBox}
         showSubmit={false}
@@ -158,4 +163,4 @@ const PlanList = () => {
   );
 };
 
-export default PlanList;
+export default CategoryDetails;

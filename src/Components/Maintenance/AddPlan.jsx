@@ -2,17 +2,23 @@ import { Box, Button, FormControl, InputLabel, MenuItem, Select, Stack, TextFiel
 import { useUser } from '@supabase/auth-helpers-react';
 import dayjs from 'dayjs';
 import { useState } from 'react';
-import { BLANK_MAINTENANCE_PLAN } from './constants';
+import { BLANK_MAINTENANCE_PLAN, ITEM_TYPE_MAPPER } from './constants';
 import { useUpsertMaintenancePlanDetails } from '../../features/maintenancePlan';
+import ColorPicker from '../../util/ColorPicker';
 
 const AddPlan = ({ handleCloseAddNewPlan }) => {
   const user = useUser();
   const upsertMaintenancePlanDetailsMutation = useUpsertMaintenancePlanDetails();
 
-  const [planType, setPlanType] = useState('7');
+  const [planColor, setPlanColor] = useState('#fff');
+  const [planType, setPlanType] = useState('7'); // default annual maintenance plan
   const [formData, setFormData] = useState({
     ...BLANK_MAINTENANCE_PLAN,
   });
+
+  const handleColorChange = (newValue) => {
+    setPlanColor(newValue);
+  };
 
   const handleInputChange = (ev) => {
     const { id, value } = ev.target;
@@ -38,6 +44,7 @@ const AddPlan = ({ handleCloseAddNewPlan }) => {
   const resetData = () => {
     setFormData({ ...BLANK_MAINTENANCE_PLAN });
     setPlanType('7'); // annual
+    setPlanColor('#fff');
     handleCloseAddNewPlan();
   };
 
@@ -70,7 +77,9 @@ const AddPlan = ({ handleCloseAddNewPlan }) => {
     const draftRequest = {
       ...formattedData,
       type: planType,
+      color: planColor,
       created_by: user.id,
+      term_limit: dayjs().add(ITEM_TYPE_MAPPER[planType].add, 'day'),
       created_on: dayjs().toISOString(),
     };
 
@@ -127,6 +136,7 @@ const AddPlan = ({ handleCloseAddNewPlan }) => {
               error={Boolean(formData.description['errorMsg'].length)}
               helperText={formData.description['errorMsg']}
             />
+            <ColorPicker value={planColor} handleChange={handleColorChange} />
             <Box sx={{ minWidth: 120 }}>
               <FormControl fullWidth>
                 <InputLabel id="simple-select-label">Maintenance plan *</InputLabel>

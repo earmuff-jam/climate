@@ -11,7 +11,7 @@ import {
   Typography,
   createFilterOptions,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useFetchInventoriesList, useUpdateSelectedInventory } from '../../features/inventories';
 import { BLANK_INVENTORY_FORM } from '../../Components/AddInventory/constants';
@@ -111,8 +111,8 @@ const EditInventory = () => {
       draftInventoryForm.min_height.value = selectedInventory.min_height || '';
       draftInventoryForm.price.value = selectedInventory.price || '';
       draftInventoryForm.quantity.value = selectedInventory.quantity || '';
-      draftInventoryForm.is_bookmarked.value = selectedInventory.is_bookmarked || '';
-      draftInventoryForm.is_returnable.value = selectedInventory.is_returnable || '';
+      draftInventoryForm.is_bookmarked.value = selectedInventory.is_bookmarked || false;
+      draftInventoryForm.is_returnable.value = selectedInventory.is_returnable || false;
       draftInventoryForm.return_datetime.value = selectedInventory.return_datetime || '';
       draftInventoryForm.created_by.value = selectedInventory.created_by || '';
       draftInventoryForm.created_on.value = selectedInventory.created_on || '';
@@ -126,7 +126,7 @@ const EditInventory = () => {
       setStorageLocation(selectedInventory.location);
       setFormData(draftInventoryForm);
     }
-  }, [isLoading]);
+  }, [isLoading, isStorageLocationOptionsLoading]);
 
   return (
     <Container sx={{ marginTop: '1rem' }}>

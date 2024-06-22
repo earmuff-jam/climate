@@ -13,15 +13,37 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { CheckRounded, CloseRounded, EditNoteRounded, FileOpenRounded } from '@mui/icons-material';
 import { DisplayNoMatchingRecordsComponent } from '../../util/util';
+import { CheckRounded, CircleRounded, CloseRounded, EditNoteRounded, FileOpenRounded } from '@mui/icons-material';
 
-const InventoryTable = ({ isLoading, columns, data, rowSelected, onRowSelect, handleRowSelection, handleEdit }) => {
+/**
+ * InventoryTable React Function - Displays the inventory table
+ * @param {boolean} plainView - determines if extra functionality should be present, like selection of rows, defaults: false
+ * @param {boolean} isLoading - determines if the selected data is still in loading state
+ * @param {boolean} isCategory - determines if the view mode is from the category side instead of maintenance plan side. default: false
+ * @param {Array<Object>} columns - the columns to display for the table
+ * @param {Array<Object>} data - the data to display for each row in the table
+ * @param {Array<String>} rowSelected - the array of IDs that represent each item
+ * @param {Array<Object>} onRowSelect - the array of inventory items that is selected
+ * @param {Function} handleRowSelection - the function that is used to handle selection of rows
+ * @param {Function} handleEdit - the function that is used to handle editing capabilities
+ */
+const InventoryTable = ({
+  plainView = false,
+  isLoading,
+  isCategory = false,
+  columns,
+  data,
+  rowSelected,
+  onRowSelect,
+  handleRowSelection,
+  handleEdit,
+}) => {
   const columnHeaderFormatter = (column) => {
     return column.label;
   };
 
-  const rowFormatter = (row, column) => {
+  const rowFormatter = (row, column, color) => {
     if (['created_on', 'updated_on'].includes(column)) {
       return dayjs(row[column]).fromNow();
     }
@@ -33,6 +55,15 @@ const InventoryTable = ({ isLoading, columns, data, rowSelected, onRowSelect, ha
     }
     if (['is_returnable'].includes(column)) {
       return row[column] ? <CheckRounded color="primary" /> : <CloseRounded color="error" />;
+    }
+    if (['name'].includes(column)) {
+      // support for assigned maintenance item
+      return (
+        <Stack direction="row" alignItems="center" justifyContent="flex-start" spacing={2}>
+          <CircleRounded sx={{ height: '0.75rem', width: '0.75rem', color: color ? `${color}` : 'transparent' }} />
+          <Typography>{row[column] || '-'}</Typography>
+        </Stack>
+      );
     }
     return row[column] ?? '-';
   };
@@ -50,14 +81,16 @@ const InventoryTable = ({ isLoading, columns, data, rowSelected, onRowSelect, ha
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell padding="checkbox" align="center">
-              <Stack direction="row" alignItems="center" justifyContent="space-between">
-                <Checkbox disabled size="small" />
-                <Typography fontWeight={'bold'} align="center">
-                  Action
-                </Typography>
-              </Stack>
-            </TableCell>
+            {!plainView ? (
+              <TableCell padding="checkbox" align="center">
+                <Stack direction="row" alignItems="center">
+                  <Checkbox disabled size="small" />
+                  <Typography fontWeight={'bold'} align="center">
+                    Action
+                  </Typography>
+                </Stack>
+              </TableCell>
+            ) : null}
             {Object.keys(columns).map((colKey) => {
               const column = columns[colKey];
               return (
@@ -73,31 +106,46 @@ const InventoryTable = ({ isLoading, columns, data, rowSelected, onRowSelect, ha
             const isSelected = (id) => rowSelected.indexOf(id) !== -1;
             const selectedID = row.id;
             const isItemSelected = isSelected(selectedID);
+            let title = '';
+            let color = null;
+            if (row?.category_item?.length <= 0 || row?.maintenance_item?.length <= 0) {
+              title = null;
+              color = null;
+            } else if (isCategory) {
+              title = row?.category_item.length > 0 && `Assigned ${row?.category_item[0].category_name}`;
+              color = row?.category_item.length > 0 && row?.category_item[0].associated_color;
+            } else {
+              title = row?.maintenance_item.length > 0 && `Assigned ${row?.maintenance_item[0].maintenance_plan_name}`;
+              color = row?.maintenance_item.length > 0 && row?.maintenance_item[0].associated_color;
+            }
+
             return (
-              <Tooltip key={rowIndex} title={row.description}>
+              <Tooltip key={rowIndex} title={title}>
                 <TableRow hover>
-                  <TableCell padding="checkbox" align="center">
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Checkbox
-                        checked={isItemSelected}
-                        color="primary"
-                        size="small"
-                        onClick={(event) => handleRowSelection(event, selectedID)}
-                        inputProps={{ 'aria-labelledby': 'labelId' }}
-                      />
-                      <IconButton size="small" onClick={() => onRowSelect(row)}>
-                        <FileOpenRounded color="primary" />
-                      </IconButton>
-                      <IconButton onClick={() => handleEdit(selectedID)}>
-                        <EditNoteRounded color="primary" />
-                      </IconButton>
-                    </Stack>
-                  </TableCell>
+                  {!plainView ? (
+                    <TableCell padding="checkbox" align="center">
+                      <Stack direction="row" alignItems="center">
+                        <Checkbox
+                          checked={isItemSelected}
+                          color="primary"
+                          size="small"
+                          onClick={(event) => handleRowSelection(event, selectedID)}
+                          inputProps={{ 'aria-labelledby': 'labelId' }}
+                        />
+                        <IconButton size="small" onClick={() => onRowSelect(row)}>
+                          <FileOpenRounded color="primary" />
+                        </IconButton>
+                        <IconButton onClick={() => handleEdit(selectedID)}>
+                          <EditNoteRounded color="primary" />
+                        </IconButton>
+                      </Stack>
+                    </TableCell>
+                  ) : null}
                   {Object.keys(columns).map((colKey) => {
                     const column = columns[colKey];
                     return (
-                      <TableCell key={column.id} align="center">
-                        {rowFormatter(row, column.colName)}
+                      <TableCell key={column.id} align="center" sx={{ width: '2rem' }}>
+                        {rowFormatter(row, column.colName, color)}
                       </TableCell>
                     );
                   })}

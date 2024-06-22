@@ -355,7 +355,14 @@ export const loadAddFormBasedOnStepNumber = (
                 }
                 return option.location;
               }}
-              renderOption={(props, option) => <li {...props}>{option.location}</li>}
+              renderOption={(props, option) => {
+                const { key, ...rest } = props;
+                return (
+                  <li key={key} {...rest}>
+                    {option.location}
+                  </li>
+                );
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}

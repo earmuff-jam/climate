@@ -19,6 +19,7 @@ import { useDeleteSelectedInventory, useFetchInventoriesList } from '../../featu
 import AssignCategory from '../../Components/CategoryDetails/AssignCategory';
 import AssignPlan from '../../Components/Maintenance/AssignPlan';
 import { useNavigate } from 'react-router-dom';
+import { ConfirmationBoxModal } from '../../util/util';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
@@ -37,8 +38,10 @@ const InventoryListDetails = ({ displayAllInventories }) => {
   const navigate = useNavigate();
   const { data, isLoading } = useFetchInventoriesList();
   const deleteSelectedInventoryMutation = useDeleteSelectedInventory();
-  const [selectedRow, setSelectedRow] = useState([]);
+  const [selectedRow, setSelectedRow] = useState([]); // to display more details
   const [rowSelected, setRowSelected] = useState([]); // this is for checkbox and associated events
+  const [openDialog, setOpenDialog] = useState(false);
+  const [idToDelete, setIdToDelete] = useState(-1);
   const [modalState, setModalState] = useState(MODAL_STATE.NONE);
 
   const handleCloseModal = () => setModalState(MODAL_STATE.NONE);
@@ -74,7 +77,23 @@ const InventoryListDetails = ({ displayAllInventories }) => {
   };
 
   const handleDeleteInventory = () => {
+    setOpenDialog(true);
+    setIdToDelete(rowSelected);
+  };
+
+  const reset = () => {
+    setOpenDialog(false);
+    setRowSelected([]);
+    setIdToDelete(-1);
+  };
+
+  const confirmDelete = (id) => {
+    if (id === -1) {
+      // unknown id to delete. protect from confirmation box
+      return;
+    }
     deleteSelectedInventoryMutation.mutate(rowSelected);
+    reset();
   };
 
   const handleEdit = (itemID) => {
@@ -149,15 +168,17 @@ const InventoryListDetails = ({ displayAllInventories }) => {
         ) : null}
 
         {/* bookmarked inventories has less column headers */}
-        <InventoryTable
-          isLoading={isLoading}
-          data={displayAllInventories ? data?.result : data?.bookmarkedItems}
-          columns={Object.values(VIEW_INVENTORY_LIST_HEADERS).filter((v) => v.displayConcise)}
-          rowSelected={rowSelected}
-          onRowSelect={onRowSelect}
-          handleRowSelection={handleRowSelection}
-          handleEdit={handleEdit}
-        />
+        <Box sx={{ maxHeight: '40vh', overflow: 'auto' }}>
+          <InventoryTable
+            isLoading={isLoading}
+            data={displayAllInventories ? data?.result : data?.bookmarkedItems}
+            columns={Object.values(VIEW_INVENTORY_LIST_HEADERS).filter((v) => v.displayConcise)}
+            rowSelected={rowSelected}
+            onRowSelect={onRowSelect}
+            handleRowSelection={handleRowSelection}
+            handleEdit={handleEdit}
+          />
+        </Box>
       </Container>
       {modalState === MODAL_STATE.ADD_ITEM && (
         <SimpleModal title={'Add New Item'} handleClose={handleCloseModal} showSubmit={false}>
@@ -197,7 +218,7 @@ const InventoryListDetails = ({ displayAllInventories }) => {
       {/* assign category to selected inventory */}
       {modalState === MODAL_STATE.ASSIGN_CATEGORY && (
         <SimpleModal title={'Assign category'} handleClose={handleCloseModal} showSubmit={false} maxSize={'md'}>
-          <AssignCategory />
+          <AssignCategory rowSelected={rowSelected} handleCloseAssignFn={handleCloseModal} />
         </SimpleModal>
       )}
       {/* assign maintenance plan to selected inventory */}
@@ -211,9 +232,20 @@ const InventoryListDetails = ({ displayAllInventories }) => {
           showSubmit={false}
           maxSize={'md'}
         >
-          <AssignPlan />
+          <AssignPlan rowSelected={rowSelected} handleCloseAssignFn={handleCloseModal} />
         </SimpleModal>
       )}
+      <ConfirmationBoxModal
+        openDialog={openDialog}
+        title="Confirm deletion"
+        text="Confirm deletion of selected item(s) ? Deletion is permanent and cannot be undone."
+        textVariant="body2"
+        handleClose={reset}
+        showSubmit={false}
+        maxSize={'sm'}
+        deleteID={idToDelete}
+        confirmDelete={confirmDelete}
+      />
     </Box>
   );
 };

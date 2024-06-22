@@ -1,22 +1,27 @@
 import dayjs from 'dayjs';
 import { Box, Card, CardContent, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { DisplayNoMatchingRecordsComponent } from '../../util/util';
-import { useFetchCategoryList } from '../../features/categories';
-import { VIEW_CATEGORY_LIST } from './constants';
+import { useAssignInventoryItemToCategory, useFetchCategoryList } from '../../features/categories';
 
-const AssignCategory = () => {
+const AssignCategory = ({ rowSelected, handleCloseAssignFn }) => {
   const { data, isLoading } = useFetchCategoryList();
+  const assignInventoryItemToCategory = useAssignInventoryItemToCategory();
 
-  // since we have some default categories we want to allow users to use them if possible
-  const allCategories = [...VIEW_CATEGORY_LIST, ...data];
   if (isLoading) return <Skeleton height="1" width="1" variant="rounded" />;
-  if (allCategories.length <= 0) return <DisplayNoMatchingRecordsComponent subtitle="Add category to begin" />;
+  if (data.length <= 0) return <DisplayNoMatchingRecordsComponent subtitle="Add category to begin" />;
+
+  const handleAssignCategory = (categoryID, categoryName, rowSelected) => {
+    assignInventoryItemToCategory.mutate({ categoryID, categoryName, selectedItemIDs: rowSelected });
+    handleCloseAssignFn();
+  };
+
   return (
     <Box>
       <Stack direction="row" spacing={2}>
-        {allCategories.map((v) => (
+        {data.map((v) => (
           <Card
             key={v.id}
+            onClick={() => handleAssignCategory(v.id, v.category_name, rowSelected)}
             sx={{
               height: '100%',
               display: 'flex',
@@ -36,7 +41,7 @@ const AssignCategory = () => {
                   {v?.is_deleteable ? (
                     <>
                       <Typography variant="caption" color="text.secondary">
-                        Created around {dayjs(v?.created_on).fromNow()} by {v.creator_name}
+                        Created around {dayjs(v?.created_on).fromNow()} by {v.creator_name?.username || 'Anonymous'}
                       </Typography>
                       {v.updated_on === null ? (
                         <Typography variant="caption" color="text.secondary">

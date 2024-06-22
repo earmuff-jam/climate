@@ -1,6 +1,6 @@
 
 
---- 0004 - load categories --- 
+--- 0005 - load categories --- 
 --- Description: load categories for a logged in user --- 
 
 BEGIN;
@@ -11,6 +11,7 @@ CREATE TABLE category
     id                          UUID PRIMARY KEY                                                        NOT NULL DEFAULT gen_random_uuid(),
     category_name               VARCHAR(100)                                                            NOT NULL,
     category_description        VARCHAR(500),
+    color                       VARCHAR(50)                                                             NOT NULL,
     is_deleteable               BOOLEAN                                                                          DEFAULT true,
     created_on                  TIMESTAMP WITH TIME ZONE                                                NOT NULL DEFAULT NOW(),
     created_by                  UUID REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -19,7 +20,6 @@ CREATE TABLE category
     sharable_groups             UUID[]
 );
 
-END;
 
 ALTER TABLE category ENABLE ROW LEVEL SECURITY;
 
@@ -27,3 +27,5 @@ CREATE POLICY "users can view their category list" ON category FOR SELECT USING 
 CREATE POLICY "users can insert new values to their category list" ON category FOR INSERT WITH CHECK(auth.uid() = created_by);
 CREATE POLICY "users can update their own category list" ON category FOR UPDATE USING(auth.uid() = created_by);
 CREATE POLICY "users can delete their own categories" ON category FOR DELETE USING (auth.uid() = created_by);
+
+END;

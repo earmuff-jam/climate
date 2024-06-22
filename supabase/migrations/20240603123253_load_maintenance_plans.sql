@@ -1,6 +1,6 @@
 
 
---- 0004 - load maintenance plans --- 
+--- 0006 - load maintenance plans --- 
 --- Description: load maintenance plans  --- 
 
 BEGIN;
@@ -15,7 +15,9 @@ CREATE TABLE maintenance_plan
     id                          UUID PRIMARY KEY                                                        NOT NULL DEFAULT gen_random_uuid(),
     plan                        VARCHAR(100)                                                            NOT NULL,
     type                        df_maintenance_plan_type,
+    color                       VARCHAR(50)                                                             NOT NULL,
     description                 VARCHAR(500),
+    term_limit                  TIMESTAMP WITH TIME ZONE,
     created_on                  TIMESTAMP WITH TIME ZONE                                                NOT NULL DEFAULT NOW(),
     created_by                  UUID REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE,
     updated_on                  TIMESTAMP WITH TIME ZONE,
@@ -26,7 +28,11 @@ CREATE TABLE maintenance_plan
 COMMENT
     ON TABLE maintenance_plan IS 'table is used to for performing actions on a select maintenance plan';
 COMMENT
-    ON COLUMN maintenance_plan.created_by IS 'the creator of the maintenance plan item.';
+    ON COLUMN maintenance_plan.color IS 'creators can create custom color for their maintenance plan';
+COMMENT
+    ON COLUMN maintenance_plan.term_limit IS 'the time the inspection is due';
+COMMENT
+    ON COLUMN maintenance_plan.created_by IS 'the creator of the maintenance plan item';
 COMMENT
     ON COLUMN maintenance_plan.type IS 'the type of maintenance plan - day, week, biweek, month, quater, semi-annual, annual';
 
