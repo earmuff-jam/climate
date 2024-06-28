@@ -1,0 +1,22 @@
+name: CI
+
+on: [push]
+
+env:
+  DOCKER_DRIVER: overlay
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build frontend
+        uses: docker://node:latest
+        with:
+          args: |
+            echo "Building the ui"
+            cd frontend && yarn
+            CI=false yarn build # stop build failure for warnings.
+            echo "Frontend build successful."
