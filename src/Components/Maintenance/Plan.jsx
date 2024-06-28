@@ -22,25 +22,24 @@ const Plan = () => {
         <HeaderWithButton
           title="Maintenance Plans"
           showPrimaryButton={true}
-          primaryButtonVariant={'outlined'}
-          primaryButtonColor={'primary'}
-          primaryButtonTextLabel={'Add Plan'}
+          primaryButtonVariant="outlined"
+          primaryButtonColor="primary"
+          primaryButtonTextLabel="Add Plan"
           showPrimaryStartIcon={true}
           primaryStartIcon={<AddRounded />}
           showSecondaryButton={false}
           handleClickPrimaryButton={handleAddNewPlan}
           showSecondaryTitle={true}
           showRedirectLink={false}
-          secondaryTitle={'Select total items in each maintenance plan(s) to view all items associated that plan'}
+          secondaryTitle="Select total items in each maintenance plan(s) to view all items associated that plan"
         />
         <PlanList /> {/* plan component */}
       </Container>
       {displayModal && (
         <SimpleModal
-          title={'Add new maintenance plan'}
+          title="Add new maintenance plan"
           handleClose={handleCloseAddNewPlan}
-          showSubmit={false}
-          maxSize={'md'}
+          maxSize="md"
         >
           <AddPlan handleCloseAddNewPlan={handleCloseAddNewPlan} />
         </SimpleModal>

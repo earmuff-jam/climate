@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Card, CardContent, IconButton, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
+import { Card, CardContent, IconButton, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { HighlightOffRounded, TrendingUpRounded } from '@mui/icons-material';
 import { ConfirmationBoxModal, DisplayNoMatchingRecordsComponent } from '../../util/util';
 import SimpleModal from '../../util/SimpleModal';
@@ -57,58 +57,48 @@ const CategoryDetails = () => {
 
   const confirmDelete = (id) => {
     if (id === -1) {
-      // unknown id to delete. protect from confirmation box
       return;
     }
     deleteSelectedCategory.mutate(id);
     resetConfirmationBox();
   };
 
-  if (isLoading) {
-    return <Skeleton variant="rounded" animation="wave" height={'100%'} width={'100%'} />;
-  }
-
+  if (isLoading) return <Skeleton variant="rounded" animation="wave" height="100%" width="100%" />;
   if (data.length <= 0) return <DisplayNoMatchingRecordsComponent />;
 
   return (
     <>
-      <Stack spacing={'2rem'}>
-        <Stack spacing={{ xs: 1, sm: 2 }} direction="row" useFlexGap flexWrap="wrap">
+      <Stack spacing="2rem">
+        <Stack spacing={{ xs: 1 }} direction="row" useFlexGap flexWrap="wrap">
           {data.map((item, index) => (
-            <Stack key={index} sx={{ flexGrow: 1 }}>
+            <Stack key={index} flexGrow={1}>
               <Tooltip title={item.description}>
                 <Card
                   sx={{
-                    height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                   }}
                 >
                   <CardContent>
-                    <Stack direction={'row'}>
+                    <Stack direction="row">
                       <Stack flexGrow={1}>
                         <Typography variant="h6" component="h3">
                           {item.category_name}
                         </Typography>
                         <Typography variant="caption">{item.category_description}</Typography>
-
-                        <Box sx={{ px: 1, py: 0, borderRadius: 2 }}>
-                          <Stack
-                            direction={'row'}
-                            alignItems={'center'}
-                            useFlexGap
-                            spacing={1}
-                            sx={{ cursor: 'pointer' }}
-                            onClick={() => handleSelection(item)}
-                          >
-                            <TrendingUpRounded color={index % 2 == 0 ? 'success' : 'error'} />
-                            <Stack>
-                              <Typography variant="caption">
-                                Total items {item.totalAssignedItems.length ?? 0}
-                              </Typography>
-                            </Stack>
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          useFlexGap
+                          spacing={1}
+                          sx={{ cursor: 'pointer' }}
+                          onClick={() => handleSelection(item)}
+                        >
+                          <TrendingUpRounded color={index % 2 == 0 ? 'success' : 'error'} />
+                          <Stack>
+                            <Typography variant="caption">Total items {item.totalAssignedItems.length ?? 0}</Typography>
                           </Stack>
-                        </Box>
+                        </Stack>
                       </Stack>
                       <IconButton
                         size="small"
@@ -132,12 +122,7 @@ const CategoryDetails = () => {
       </Stack>
       {/* display list of inventories associated with the selected maintenance plan when selected */}
       {modalState === MODAL_STATE.ITEM_SELECTION && (
-        <SimpleModal
-          title={`Item(s) under ${selectedCategory?.category_name}`}
-          handleClose={handleClose}
-          showSubmit={false}
-          maxSize={'md'}
-        >
+        <SimpleModal title={`Item(s) under ${selectedCategory?.category_name}`} handleClose={handleClose} maxSize="md">
           <InventoryTable
             plainView={true}
             isCategory={true}
@@ -155,7 +140,7 @@ const CategoryDetails = () => {
         textVariant="body2"
         handleClose={resetConfirmationBox}
         showSubmit={false}
-        maxSize={'sm'}
+        maxSize="sm"
         deleteID={idToDelete}
         confirmDelete={confirmDelete}
       />

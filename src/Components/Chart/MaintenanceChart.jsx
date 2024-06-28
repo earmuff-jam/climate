@@ -1,6 +1,6 @@
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import HeaderWithButton from '../../util/HeaderWithButton';
-import BarChart from './BarChart';
+import PieBarChart from './PieBarChart';
 import { useState } from 'react';
 import { ChangeCircleRounded } from '@mui/icons-material';
 
@@ -9,13 +9,13 @@ const MaintenanceChart = ({ data }) => {
   const handleDisplaySelection = () => setDisplayOverflow(!displayOverflow);
 
   return (
-    <Box>
+    <>
       <HeaderWithButton
         title="More details"
         showPrimaryButton={true}
-        primaryButtonVariant={'outlined'}
-        primaryButtonColor={'primary'}
-        primaryButtonTextLabel={'Display overdue'}
+        primaryButtonVariant="outlined"
+        primaryButtonColor="primary"
+        primaryButtonTextLabel="Display overdue"
         showPrimaryStartIcon={true}
         primaryStartIcon={<ChangeCircleRounded color="warning" />}
         showSecondaryTitle={true}
@@ -23,23 +23,22 @@ const MaintenanceChart = ({ data }) => {
           !displayOverflow ? (
             <Typography variant="caption">Switch to overdue view to see items that require attention</Typography>
           ) : (
-            <Typography variant="caption">{'Switch selection to view all plan vs total item(s)'}</Typography>
+            <Typography variant="caption">Switch selection to view all plan vs total item(s)</Typography>
           )
         }
         handleClickPrimaryButton={handleDisplaySelection}
-        showSecondaryButton={false}
       />
-      <BarChart
+      <PieBarChart
         legendLabel={!displayOverflow ? 'Plan vs total item(s)' : 'Overdue vs total items(s)'}
         data={
           !displayOverflow
             ? data.map((v) => ({ name: v.type, value: v.maintenanceItems.length }))
             : data.map((v) => ({ name: v.type, value: v.maintenanceItems.filter((el) => el.overflow).length }))
         }
-        backgroundColor={`rgba(75, 192, 192, 0.4)`}
-        borderColor={`rgba(75, 192, 192, 1)`}
+        backgroundColor="rgba(75, 192, 192, 0.4)"
+        borderColor="rgba(75, 192, 192, 1)"
       />
-    </Box>
+    </>
   );
 };
 

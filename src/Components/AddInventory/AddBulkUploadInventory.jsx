@@ -58,13 +58,13 @@ const AddBulkUploadInventory = ({ handleClose }) => {
 
   return (
     <>
-      <Stack paddingBottom={'2rem'}>
+      <Stack paddingBottom="2rem">
         <Typography fontWeight="bold">Upload inventory items in bulk</Typography>
-        <Stack direction={'column'}>
+        <Stack direction="column">
           <Typography variant="caption" component={Box}>
             Please use the provided template so that all fields are added in the system.
             <Stack
-              direction={'row'}
+              direction="row"
               sx={{ cursor: 'pointer', alignItems: 'flex-end' }}
               onClick={downloadBulkUploadTemplate}
             >
@@ -76,7 +76,7 @@ const AddBulkUploadInventory = ({ handleClose }) => {
           </Typography>
         </Stack>
       </Stack>
-      <Stack alignItems={'center'}>
+      <Stack alignItems="center">
         <Box
           component="form"
           onSubmit={submit}
@@ -90,7 +90,7 @@ const AddBulkUploadInventory = ({ handleClose }) => {
           <Input type="file" onChange={handleFileChange} />
           <Typography variant="caption">Uploading excel data must contain required headers</Typography>
         </Box>
-        <Stack direction={'row'} spacing={2} useFlexGap sx={{ py: 4 }}>
+        <Stack direction="row" spacing={2} useFlexGap sx={{ py: 4 }}>
           <Button endIcon={<SaveRounded />} onClick={submit}>
             Save
           </Button>

@@ -5,6 +5,7 @@ import Layout from './Layout';
 import Plan from '../Components/Maintenance/Plan';
 import EditInventory from '../Containers/Inventory/EditInventory';
 import CategoriesList from '../Components/CategoryDetails/CategoriesList';
+import Forecast from '../Containers/Forecast/Forecast';
 
 /**
  * Authorized routes are available here. Due to the nature of the logged in state of authentication from supabase, after the user logs in, we redirect
@@ -19,7 +20,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Inventories displayAllInventories={false} />,
+        element: <Inventories displayAllInventories={false} plainView={true} />,
       },
       {
         path: '/inventories/list',
@@ -28,6 +29,10 @@ export const router = createBrowserRouter([
       {
         path: '/inventories/:id/update',
         element: <EditInventory />,
+      },
+      {
+        path: '/inventories/forecast/list',
+        element: <Forecast />,
       },
       {
         path: '/inventories/maintenance/list',

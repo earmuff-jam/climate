@@ -1,4 +1,4 @@
-import { Typography, Button, Box, Stack, Divider, Checkbox, FormControlLabel, Skeleton } from '@mui/material';
+import { Box, Button, Checkbox, Divider, FormControlLabel, Skeleton, Stack, Typography } from '@mui/material';
 import { DarkModeRounded } from '@mui/icons-material';
 import { useFetchProfileConfigDetails, useUpsertProfileConfigurationDetails } from '../../features/profile';
 import { useEffect, useState } from 'react';
@@ -28,11 +28,11 @@ const AppearanceSettings = () => {
     if (!isLoading) {
       setDisplayMode(data?.display_mode);
     }
-    // eslint-disable-next-line
+     
   }, [isLoading]);
 
   if (isLoading) {
-    return <Skeleton variant="rounded" animation="wave" height={'100%'} width={'100%'} />;
+    return <Skeleton variant="rounded" animation="wave" height="100%" width="100%" />;
   }
   return (
     <>
@@ -50,7 +50,7 @@ const AppearanceSettings = () => {
           control={<Checkbox checked={displayMode} onChange={() => setDisplayMode(!displayMode)} color="primary" />}
           label={
             <Stack>
-              <Stack direction={'row'} alignItems={'center'} spacing={1}>
+              <Stack direction="row" alignItems="center" spacing={1}>
                 <DarkModeRounded color={displayMode ? 'primary' : 'secondary'} />
                 <Typography variant="caption">Enable dark mode</Typography>
               </Stack>

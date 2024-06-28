@@ -86,11 +86,11 @@ const AddCategory = ({ handleCloseAddCategory }) => {
 
   return (
     <Stack>
-      <Stack paddingBottom={'2rem'}>
+      <Stack paddingBottom="2rem">
         <Typography> Fill in the necessary details</Typography>
         <Typography variant="caption">Add new category.</Typography>
       </Stack>
-      <Stack alignItems={'center'}>
+      <Stack alignItems="center">
         <Box component="form" sx={{ maxWidth: 600, width: '100%' }}>
           <Stack spacing={2} useFlexGap>
             <TextField

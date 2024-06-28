@@ -5,7 +5,6 @@ import {
     ListItemText,
     Stack,
   } from '@mui/material';
-  import React from 'react';
   
   export const PROFILE_DRAWER_NAVIGATION_ITEMS = [
     'Profile',

@@ -8,6 +8,10 @@ const useQueryOptions = {
   refetchOnWindowFocus: false,
 };
 
+/***********************************************
+ * FETCH FUNCTIONS MAINTENANCE PLAN DETAILS *
+ ***********************************************/
+
 // supabase fn to retrieve all maintenance list for a selected user
 const fetchMaintenancePlanList = (client, userID) => {
   return client
@@ -56,6 +60,132 @@ export const useFetchMaintenanceList = () => {
     useQueryOptions,
   });
 };
+
+
+/**
+ * fn to retrieve the count of items associated with at least one maintenance plan created by the user
+ * @param {Object} supabaseClient
+ * @param {String} userID - the userID of the user
+ */
+const fetchItemMaintenancePlanCount = (client, userID) => {
+  return client.from('maintenance_item').select(`id`).eq('created_by', userID);
+};
+
+export const useFetchMaintenancePlanItemsCount = () => {
+  const user = useUser();
+  const supabaseClient = useSupabaseClient();
+  const queryFn = async () => {
+    return fetchItemMaintenancePlanCount(supabaseClient, user.id).then((result) => result.data.length);
+  };
+
+  return useQuery({
+    queryFn: queryFn,
+    queryKey: ['maintenance_plan_item_count', user.id],
+    useQueryOptions,
+  });
+};
+
+/**
+ * fn to retrieve the count of maintenance plans created by the user
+ * @param {Object} supabaseClient
+ * @param {String} userID - the userID of the user
+ */
+const fetchMaintenancePlansCount = (client, userID) => {
+  return client.from('maintenance_plan').select(`id`).eq('created_by', userID);
+};
+
+export const useFetchMaintenancePlansCount = () => {
+  const user = useUser();
+  const supabaseClient = useSupabaseClient();
+  const queryFn = async () => {
+    return fetchMaintenancePlansCount(supabaseClient, user.id).then((result) => result.data.length);
+  };
+
+  return useQuery({
+    queryFn: queryFn,
+    queryKey: ['maintenance_plan_count', user.id],
+    useQueryOptions,
+  });
+};
+
+/**
+ * fn to retrieve the count of items that need attention created by the user
+ * @param {Object} supabaseClient
+ * @param {String} userID - the userID of the user
+ */
+const fetchItemMaintenancePlanOverdueCount = (client, userID) => {
+  return client.from('maintenance_item').select(`id`).eq('overflow', true).eq('created_by', userID);
+};
+
+export const useFetchItemMaintenancePlanOverdueCount = () => {
+  const user = useUser();
+  const supabaseClient = useSupabaseClient();
+  const queryFn = async () => {
+    return fetchItemMaintenancePlanOverdueCount(supabaseClient, user.id).then((result) => result.data.length);
+  };
+
+  return useQuery({
+    queryFn: queryFn,
+    queryKey: ['maintenance_plan_overdue_item_count', user.id],
+    useQueryOptions,
+  });
+};
+
+/**
+ * fetch inventories relative to maintenance plan. Eg, annual maintenance plan will return all inventories
+ * items that are associated against annual maintenance plan
+ */
+
+export const fetchInventoryItemsAgainstSelectedMaintenancePlan = (client, userID, planID) => {
+  return client
+    .from('inventories')
+    .select(
+      `
+      id,
+      name,
+      description,
+      price,
+      barcode,
+      sku,
+      quantity,
+      bought_at,
+      location,
+      is_bookmarked,
+      is_returnable,
+      return_location,
+      return_datetime,
+      max_weight,
+      min_weight,
+      max_height,
+      min_height,
+      created_on,
+      created_by,
+      updated_on,
+      updated_by,
+      sharable_groups,
+      storage_locations (id),
+      maintenance_item!inner (
+        maintenance_id,
+        maintenance_plan_name,
+        overflow,
+        associated_color
+      ),
+      creator_name:profiles!created_by(
+        username
+      ),
+      updator_name:profiles!updated_by(
+        username
+      )
+        `
+    )
+    .eq('maintenance_item.maintenance_id', planID)
+    .eq('created_by', userID);
+};
+
+
+/***********************************************
+ * MUTATION FUNCTIONS MAINTENANCE PLAN DETAILS *
+ ***********************************************/
 
 /**
  * upsert maintenance plan data from the logged in user
@@ -139,53 +269,3 @@ export const useAssignInventoryItemToMaintenancePlan = () => {
   );
 };
 
-/**
- * fetch inventories relative to maintenance plan. Eg, annual maintenance plan will return all inventories
- * items that are associated against annual maintenance plan
- */
-
-export const fetchInventoryItemsAgainstSelectedMaintenancePlan = (client, userID, planID) => {
-  return client
-    .from('inventories')
-    .select(
-      `
-      id,
-      name,
-      description,
-      price,
-      barcode,
-      sku,
-      quantity,
-      bought_at,
-      location,
-      is_bookmarked,
-      is_returnable,
-      return_location,
-      return_datetime,
-      max_weight,
-      min_weight,
-      max_height,
-      min_height,
-      created_on,
-      created_by,
-      updated_on,
-      updated_by,
-      sharable_groups,
-      storage_locations (id),
-      maintenance_item!inner (
-        maintenance_id,
-        maintenance_plan_name,
-        overflow,
-        associated_color
-      ),
-      creator_name:profiles!created_by(
-        username
-      ),
-      updator_name:profiles!updated_by(
-        username
-      )
-        `
-    )
-    .eq('maintenance_item.maintenance_id', planID)
-    .eq('created_by', userID);
-};

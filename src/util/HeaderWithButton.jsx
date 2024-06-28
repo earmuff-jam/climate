@@ -1,8 +1,9 @@
-import { Box, Button, Stack, Typography, Link } from '@mui/material';
+import { Box, Button, Link, Stack, Typography } from '@mui/material';
 
 const HeaderWithButton = (props) => {
   const {
     title,
+    titleVariant = 'h4',
     showSecondaryTitle,
     secondaryTitle,
     showRedirectLink,
@@ -25,7 +26,7 @@ const HeaderWithButton = (props) => {
   return (
     <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
       <Stack>
-        <Typography variant="h4" component="h2">
+        <Typography variant={titleVariant} component="h2">
           {title}
         </Typography>
         {showSecondaryTitle ? (

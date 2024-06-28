@@ -24,7 +24,7 @@ export default function PromoSection() {
             <Typography variant="h2" color="primary.main" fontWeight="bold">
               Manage inventories with a single click.
             </Typography>
-            <Stack useFlexGap spacing={3} direction="row" alignSelf={'flex-end'}>
+            <Stack useFlexGap spacing={3} direction="row" alignSelf="flex-end">
               <Button variant="contained"> Learn more </Button>
               <Button variant="contained" onClick={() => setOpenModal(true)}>
                 Sign in
@@ -37,11 +37,10 @@ export default function PromoSection() {
       {/* log in modal */}
       {openModal && (
         <SimpleModal
-          title={`Welcome. Glad to see you. 👋`}
-          subtitle={'Complete the activity below so we know who you are.'}
+          title="Welcome. Glad to see you. 👋"
+          subtitle="Complete the activity below so we know who you are."
           handleClose={() => setOpenModal(false)}
-          showSubmit={false}
-          maxSize={'sm'}
+          maxSize="sm"
         >
           <Login />
         </SimpleModal>

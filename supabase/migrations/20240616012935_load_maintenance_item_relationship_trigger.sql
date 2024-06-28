@@ -54,8 +54,10 @@ RETURNS void AS
 $$
 BEGIN
     UPDATE public.maintenance_item
-    SET overflow = true
-    WHERE term_limit < CURRENT_TIMESTAMP AND overflow = false;
+        SET overflow = true
+        FROM public.maintenance_plan
+            WHERE maintenance_plan.term_limit < CURRENT_TIMESTAMP
+        AND maintenance_item.overflow = false;
 END;
 $$ LANGUAGE plpgsql;
 

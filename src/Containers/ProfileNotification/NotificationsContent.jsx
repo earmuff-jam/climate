@@ -1,32 +1,22 @@
 import { useEffect, useState } from 'react';
-import { Typography, Button, Box, Stack, Divider, Checkbox, FormControlLabel, Skeleton } from '@mui/material';
+import { Box, Button, Checkbox, Divider, FormControlLabel, Skeleton, Stack, Typography } from '@mui/material';
 import { AssignmentLateRounded, BookmarkRounded, SettingsSuggestRounded } from '@mui/icons-material';
-import { useQueryClient } from 'react-query';
 import { BLANK_NOTIFICATION_DETAILS } from './constants';
-// import { useFetchProfileConfigDetails, useUpsertProfileNotificationDetails } from '@/features/profile';
 import { useNavigate } from 'react-router-dom';
 import { useFetchProfileConfigDetails, useUpsertProfileConfigurationDetails } from '../../features/profile';
 
 const NotificationsContent = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const { data, isLoading, isError } = useFetchProfileConfigDetails();
   const upsertProfileConfigDetailsMutation = useUpsertProfileConfigurationDetails();
-
   const [userProfileNotificationSettings, setUserProfileNotificationSettings] = useState({
     ...BLANK_NOTIFICATION_DETAILS,
   });
 
   const submit = (ev) => {
     ev.preventDefault();
-    upsertProfileConfigDetailsMutation.mutate(userProfileNotificationSettings, {
-      onSuccess: (response) => {
-        queryClient.invalidateQueries(['profileConfig']);
-        const selectedNotification = response.data.find(Boolean);
-        setUserProfileNotificationSettings({ ...selectedNotification });
-        navigate('/');
-      },
-    });
+    upsertProfileConfigDetailsMutation.mutate(userProfileNotificationSettings);
+    navigate('/');
   };
 
   const handleCheckbox = (selection, value) => {
@@ -39,17 +29,15 @@ const NotificationsContent = () => {
     if (!isLoading && !isError) {
       setUserProfileNotificationSettings(data);
     }
-    // eslint-disable-next-line
+     
   }, [isLoading]);
 
-  if (isLoading) {
-    return <Skeleton variant="rounded" animation="wave" height={'100%'} width={'100%'} />;
-  }
+  if (isLoading) return <Skeleton variant="rounded" animation="wave" height="100%" width="100%" />;
 
   return (
     <>
       <Box sx={{ pb: 2 }}>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h4">
           Notification Center
         </Typography>
         <Typography variant="caption" gutterBottom>
@@ -69,7 +57,7 @@ const NotificationsContent = () => {
           }
           label={
             <Stack>
-              <Stack direction={'row'} alignItems={'center'} spacing={1}>
+              <Stack direction="row" alignItems="center" spacing={1}>
                 <BookmarkRounded
                   color={userProfileNotificationSettings.notify_bookmarked_items ? 'primary' : 'secondary'}
                 />
@@ -91,7 +79,7 @@ const NotificationsContent = () => {
           }
           label={
             <Stack>
-              <Stack direction={'row'} alignItems={'center'} spacing={1}>
+              <Stack direction="row" alignItems="center" spacing={1}>
                 <AssignmentLateRounded
                   color={userProfileNotificationSettings.notify_due_items ? 'warning' : 'secondary'}
                 />
@@ -113,7 +101,7 @@ const NotificationsContent = () => {
           }
           label={
             <Stack>
-              <Stack direction={'row'} alignItems={'center'} spacing={1}>
+              <Stack direction="row" alignItems="center" spacing={1}>
                 <SettingsSuggestRounded
                   color={userProfileNotificationSettings.notify_settings_privacy ? 'primary' : 'secondary'}
                 />
@@ -126,7 +114,7 @@ const NotificationsContent = () => {
           }
         />
       </Stack>
-      <Box sx={{ textAlign: 'center', mt: 3 }}>
+      <Box sx={{ mt: 2 }}>
         <Button variant="outlined" color="primary" onClick={submit}>
           Save
         </Button>

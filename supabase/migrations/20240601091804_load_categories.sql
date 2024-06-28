@@ -13,6 +13,7 @@ CREATE TABLE category
     category_description        VARCHAR(500),
     color                       VARCHAR(50)                                                             NOT NULL,
     is_deleteable               BOOLEAN                                                                          DEFAULT true,
+    thresholdLimit              INT                                                                                  DEFAULT 1,
     created_on                  TIMESTAMP WITH TIME ZONE                                                NOT NULL DEFAULT NOW(),
     created_by                  UUID REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE,
     updated_on                  TIMESTAMP WITH TIME ZONE,

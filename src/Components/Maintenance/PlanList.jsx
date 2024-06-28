@@ -63,13 +63,13 @@ const PlanList = () => {
   };
 
   if (isLoading) {
-    return <Skeleton variant="rounded" animation="wave" height={'100%'} width={'100%'} />;
+    return <Skeleton variant="rounded" animation="wave" height="100%" width="100%" />;
   }
   if (data.length <= 0) return <DisplayNoMatchingRecordsComponent />;
 
   return (
     <>
-      <Stack spacing={'2rem'}>
+      <Stack spacing="2rem">
         <Stack spacing={{ xs: 1, sm: 2 }} direction="row" useFlexGap flexWrap="wrap">
           {data.map((item, index) => (
             <Stack key={index} sx={{ flexGrow: 1 }}>
@@ -82,7 +82,7 @@ const PlanList = () => {
                   }}
                 >
                   <CardContent>
-                    <Stack direction={'row'}>
+                    <Stack direction="row">
                       <Stack flexGrow={1}>
                         <Typography variant="h6" component="h3">
                           {item.plan}
@@ -91,8 +91,8 @@ const PlanList = () => {
 
                         <Box sx={{ px: 1, py: 0, borderRadius: 2 }}>
                           <Stack
-                            direction={'row'}
-                            alignItems={'center'}
+                            direction="row"
+                            alignItems="center"
                             useFlexGap
                             spacing={1}
                             sx={{ cursor: 'pointer' }}
@@ -131,8 +131,7 @@ const PlanList = () => {
         <SimpleModal
           title={`Item(s) under ${selectedMaintenancePlan?.plan}`}
           handleClose={handleClose}
-          showSubmit={false}
-          maxSize={'md'}
+          maxSize="md"
         >
           <InventoryTable
             plainView={true}
@@ -150,7 +149,7 @@ const PlanList = () => {
         textVariant="body2"
         handleClose={resetConfirmationBox}
         showSubmit={false}
-        maxSize={'sm'}
+        maxSize="sm"
         deleteID={idToDelete}
         confirmDelete={confirmDelete}
       />

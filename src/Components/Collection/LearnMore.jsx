@@ -1,4 +1,4 @@
-import { Card, CardMedia, CardContent, Typography, Grid } from '@mui/material';
+import { Card, CardContent, CardMedia, Grid, Typography } from '@mui/material';
 import { DEFAULT_INVENTORIES_LANDING_PAGE_TEXT } from '../InventoryDetails/constants';
 
 const LearnMore = () => {

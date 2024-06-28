@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Typography, TextField, Button, Box, Stack, Divider } from '@mui/material';
+import { Box, Button, Divider, Stack, TextField, Typography } from '@mui/material';
 import { BLANK_PROFILE_DETAILS } from './constants';
 import dayjs from 'dayjs';
 import { useQueryClient } from 'react-query';
@@ -74,7 +74,7 @@ const ProfileContent = () => {
       draftProfileDetails.updated_on = data.updated_on;
       setFormData(draftProfileDetails);
     }
-    // eslint-disable-next-line
+     
   }, [isLoading]);
 
   return (
@@ -89,7 +89,7 @@ const ProfileContent = () => {
         <Divider />
       </Box>
       <Stack spacing={2}>
-        <Typography variant="body1" fontWeight={'bold'}>
+        <Typography variant="body1" fontWeight="bold">
           User name
         </Typography>
         <TextField
@@ -105,7 +105,7 @@ const ProfileContent = () => {
           helperText={formData.username['errorMsg']}
         />
         <Typography variant="caption">Your display name throughout the application.</Typography>
-        <Typography variant="body1" fontWeight={'bold'}>
+        <Typography variant="body1" fontWeight="bold">
           First name
         </Typography>
         <TextField
@@ -120,7 +120,7 @@ const ProfileContent = () => {
           error={Boolean(formData.first_name['errorMsg'].length)}
           helperText={formData.first_name['errorMsg']}
         />
-        <Typography variant="body1" fontWeight={'bold'}>
+        <Typography variant="body1" fontWeight="bold">
           Last name
         </Typography>
         <TextField
@@ -136,7 +136,7 @@ const ProfileContent = () => {
           helperText={formData.last_name['errorMsg']}
         />
 
-        <Typography variant="body1" fontWeight={'bold'}>
+        <Typography variant="body1" fontWeight="bold">
           Bio
         </Typography>
         <TextField

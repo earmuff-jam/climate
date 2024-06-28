@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 import dayjs from 'dayjs';
 import { validate } from 'uuid';
@@ -8,9 +8,55 @@ const useQueryOptions = {
   refetchOnWindowFocus: false,
 };
 
-/***************************
- * FETCH INVENTORY DETAILS *
- ***************************/
+/*************************************
+ * FETCH FUNCTIONS INVENTORY DETAILS *
+ *************************************/
+
+/**
+ * fn to retrieve the count of inventories created by the user
+ * @param {Object} supabaseClient
+ * @param {String} userID - the userID of the user
+ */
+const fetchInventoriesCount = (client, userID) => {
+  return client.from('inventories').select(`id`).eq('created_by', userID);
+};
+
+export const useFetchInventoriesCount = () => {
+  const user = useUser();
+  const supabaseClient = useSupabaseClient();
+  const queryFn = async () => {
+    return fetchInventoriesCount(supabaseClient, user.id).then((result) => result.data.length);
+  };
+
+  return useQuery({
+    queryFn: queryFn,
+    queryKey: ['item_count', user.id],
+    useQueryOptions,
+  });
+};
+
+/**
+ * fn to retrieve the total estimated cost of items. returns count of items that has cost assigned created by the user
+ * @param {Object} supabaseClient
+ * @param {String} userID - the userID of the user
+ */
+const fetchInventoryItemsCost = (client, userID) => {
+  return client.from('inventories').select(`id, price`).eq('created_by', userID);
+};
+
+export const useFetchInventoryItemsCost = () => {
+  const user = useUser();
+  const supabaseClient = useSupabaseClient();
+  const queryFn = async () => {
+    return fetchInventoryItemsCost(supabaseClient, user.id).then((result) => result.data);
+  };
+
+  return useQuery({
+    queryFn: queryFn,
+    queryKey: ['item_cost', user.id],
+    useQueryOptions,
+  });
+};
 
 // supabase fn to retrieve list of inventories for a selected user
 const fetchInventoriesList = (client, userID) => {
@@ -75,11 +121,10 @@ export const useFetchInventoriesList = () => {
   });
 };
 
-/********************************
- * INSERT BULK INVENTORY ITEM *
- ********************************/
+/****************************************
+ * MUTATION FUNCTIONS INVENTORY DETAILS *
+ ****************************************/
 
-// loop fn to update all inventories one at a time
 const upsertInventoryDetailsInBulk = async (client, userID, data) => {
   if (Array.isArray(data) && data.length > 0) {
     data.forEach((element) => {
@@ -95,7 +140,6 @@ const upsertInventoryDetailsInBulk = async (client, userID, data) => {
   }
 };
 
-// upsert inventory details mutation fn
 export const useUpsertInventoryDetailsInBulk = () => {
   const user = useUser();
   const queryClient = useQueryClient();
@@ -107,10 +151,6 @@ export const useUpsertInventoryDetailsInBulk = () => {
   });
 };
 
-/********************************
- * INSERT SINGLE INVENTORY ITEM *
- ********************************/
-
 /**
  * upsert inventory data from the logged in user
  * @param {Object} supabaseClient
@@ -119,7 +159,7 @@ export const useUpsertInventoryDetailsInBulk = () => {
  */
 const upsertInventoryDetails = async (client, userID, data) => {
   // remove id, so the application can generate itself
-  const { id, price, quantity, location, ...inventoryData } = data;
+  const { price, quantity, location, ...inventoryData } = data;
   const storageLocationID = upsertStorageLocationForSelectInventory(client, userID, location);
 
   let createdByUUID = '';
@@ -155,7 +195,6 @@ const upsertInventoryDetails = async (client, userID, data) => {
   return { data: inventoryDataResult, error: null };
 };
 
-// upsert inventory details mutation fn
 export const useUpsertInventoryDetails = () => {
   const user = useUser();
   const queryClient = useQueryClient();
@@ -166,10 +205,6 @@ export const useUpsertInventoryDetails = () => {
     },
   });
 };
-
-/********************************
- * UPDATE SINGLE INVENTORY ITEM *
- ********************************/
 
 /**
  * Method to update the selected inventory
@@ -192,10 +227,6 @@ export const useUpdateSelectedInventory = () => {
     },
   });
 };
-
-/********************************
- * DELETE SINGLE INVENTORY ITEM *
- ********************************/
 
 /**
  * Method to delete the selected inventories
