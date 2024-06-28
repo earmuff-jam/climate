@@ -104,6 +104,59 @@ export const useFetchCategoriesCount = () => {
   });
 };
 
+const fetchLowThresholdItemsWithCategory = (client, userID) => {
+  return client
+    .from('category_item')
+    .select(
+      `
+      id,
+      item_id,
+      comments,
+      category(
+        id,
+        category_name,
+        color,
+        thresholdlimit
+      ),
+      inventories(
+        name,
+        description,
+        location,
+        price,
+        quantity,
+        updated_on,
+        updator_name:profiles!updated_by(
+          username
+        )
+      )
+      `
+    )
+    .eq('created_by', userID);
+};
+
+export const useFetchLowThresholdItemsWithCategory = () => {
+  const user = useUser();
+  const supabaseClient = useSupabaseClient();
+
+  const queryFn = async () => {
+    const { data } = await fetchLowThresholdItemsWithCategory(supabaseClient, user.id);
+    const aboveThresholdLimit = data.reduce((acc, el) => {
+      const thresholdLimit = el.category.thresholdlimit;
+      if (el.inventories.quantity >= thresholdLimit) {
+        acc.push(el);
+      }
+      return acc;
+    }, []);
+    return aboveThresholdLimit || [];
+  };
+
+  return useQuery({
+    queryFn: queryFn,
+    queryKey: ['low_threshold_items_with_categories', user.id],
+    useQueryOptions,
+  });
+};
+
 /**
  * fetch inventories relative to categories. Eg, items marked with bookmarked categories
  */
@@ -209,7 +262,7 @@ export const useUpsertCategoryThresholdsLimit = () => {
         queryClient.setQueryData(['categoryList'], context.previousCategoryData);
       },
       onSettled: () => {
-        queryClient.invalidateQueries(['categoryList']);
+        queryClient.invalidateQueries(['categoryList', 'low_threshold_items_with_categories']);
       },
     }
   );
@@ -230,8 +283,7 @@ export const useDeleteSelectedCategory = () => {
   const supabaseClient = useSupabaseClient();
   return useMutation((id) => deleteCategoryDetails(supabaseClient, id), {
     onSuccess: () => {
-      // Invalidate the profile configuration query to refetch the data
-      queryClient.invalidateQueries(['categoryList', 'inventoryList']);
+      queryClient.invalidateQueries(['categoryList']);
     },
   });
 };
@@ -271,7 +323,7 @@ export const useAssignInventoryItemToCategory = () => {
       assignInventoryItemToCategory(supabaseClient, user?.id, categoryID, categoryName, selectedItemIDs),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(['categoryList', 'inventoryList']);
+        queryClient.invalidateQueries(['categoryList', 'low_threshold_items_with_categories', 'inventoryList']);
       },
     }
   );

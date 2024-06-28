@@ -11,11 +11,10 @@ const Forecast = () => {
 
   return (
     <Box sx={{ py: 4 }}>
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Stack spacing="1rem">
           <HeaderWithButton
             title="Forecast"
-            showSecondaryTitle={true}
             showRedirectLink={true}
             redirectTo="/inventories/categories/list"
             secondaryTitle="Create or update categories"

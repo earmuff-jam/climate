@@ -1,25 +1,20 @@
-import React, { useState } from 'react';
-import { Box, Button, Container, Dialog, DialogTitle, IconButton, Slide, Stack } from '@mui/material';
-import {
-  AddRounded,
-  CategoryRounded,
-  CloseRounded,
-  DeleteSweepRounded,
-  LibraryAddRounded,
-  SettingsSuggestRounded,
-} from '@mui/icons-material';
+import React, { useEffect, useState } from 'react';
+import { Autocomplete, Container, Dialog, DialogTitle, IconButton, Slide, Stack, TextField } from '@mui/material';
+import { AddRounded, CloseRounded, GridViewRounded, LibraryAddRounded, ViewListRounded } from '@mui/icons-material';
 import HeaderWithButton from '../../util/HeaderWithButton';
 import SimpleModal from '../../util/SimpleModal';
 import { VIEW_INVENTORY_LIST_HEADERS } from '../../Components/InventoryDetails/constants';
 import SelectedRowItem from '../../Components/InventoryDetails/SelectedRowItem';
-import InventoryTable from '../../Components/InventoryDetails/InventoryTable';
+import TableComponent from '../../Components/InventoryDetails/TableComponent';
 import AddInventory from '../../Components/AddInventory/AddInventory';
 import AddBulkUploadInventory from '../../Components/AddInventory/AddBulkUploadInventory';
 import { useDeleteSelectedInventory, useFetchInventoriesList } from '../../features/inventories';
 import AssignCategory from '../../Components/CategoryDetails/AssignCategory';
 import AssignPlan from '../../Components/Maintenance/AssignPlan';
 import { useNavigate } from 'react-router-dom';
-import { ConfirmationBoxModal } from '../../util/util';
+import { AssignCategoryMaintenanceButton, ConfirmationBoxModal } from '../../util/util';
+import GridComponent from '../../Components/InventoryDetails/GridComponent';
+import { useFetchProfileConfigDetails } from '../../features/profile';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
@@ -37,9 +32,14 @@ const MODAL_STATE = {
 const InventoryListDetails = ({ displayAllInventories, plainView }) => {
   const navigate = useNavigate();
   const { data, isLoading } = useFetchInventoriesList();
+  const { data: userConfigDetails } = useFetchProfileConfigDetails();
   const deleteSelectedInventoryMutation = useDeleteSelectedInventory();
+
+  const [options, setOptions] = useState([]);
   const [selectedRow, setSelectedRow] = useState([]); // to display more details
   const [rowSelected, setRowSelected] = useState([]); // this is for checkbox and associated events
+  const [gridMode, setGridMode] = useState(userConfigDetails.inventory_layout || false);
+
   const [openDialog, setOpenDialog] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
   const [modalState, setModalState] = useState(MODAL_STATE.NONE);
@@ -54,7 +54,7 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
   const handleRowSelection = (_, id) => {
     if (id === 'all') {
       if (rowSelected.length === 0) {
-        setRowSelected(data.result.map((v) => v.id));
+        setRowSelected(data.map((v) => v.id));
       } else {
         setRowSelected([]);
       }
@@ -106,84 +106,82 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
     navigate(`/inventories/${itemID}/update`);
   };
 
+  useEffect(() => {
+    if (Array.isArray(data)) {
+      setOptions(data);
+    }
+  }, [isLoading]);
+
   return (
-    <Box sx={{ py: 8 }}>
-      <Container maxWidth={displayAllInventories ? 'xl' : 'lg'}>
+    <>
+      <Container maxWidth="xl">
+        <HeaderWithButton
+          title={`${displayAllInventories ? 'Inventories' : 'Recently edited'}`}
+          secondaryTitle={`${
+            displayAllInventories ? 'Select item/s to assign category or maintenance plan' : 'View all your inventories'
+          }`}
+          primaryButtonTextLabel="Add Item"
+          primaryStartIcon={<AddRounded />}
+          showRedirectLink={!displayAllInventories}
+          redirectTo="/inventories/list"
+          secondaryButtonTextLabel="Upload bulk"
+          secondaryStartIcon={<LibraryAddRounded />}
+          handleClickPrimaryButton={handleDisplayAddSingleInventoryModal}
+          handleClickSecondaryButton={handleDisplayAddBulkInventoryModal}
+        >
+          {displayAllInventories ? (
+            <>
+              <AssignCategoryMaintenanceButton
+                disabled={!rowSelected.length || !displayAllInventories}
+                options={[
+                  { label: 'Assign category', action: handleAddCategory },
+                  { label: 'Assign maintenance plan', action: handleAddInventory },
+                  { label: 'Delete inventory', action: handleDeleteInventory },
+                ]}
+              />
+              <IconButton onClick={() => setGridMode(!gridMode)}>
+                {gridMode ? <ViewListRounded /> : <GridViewRounded />}
+              </IconButton>
+            </>
+          ) : null}
+        </HeaderWithButton>
         {displayAllInventories ? (
-          <HeaderWithButton
-            title="Inventories"
-            showSecondaryTitle={true}
-            secondaryTitle="Select item/s to assign category or maintenance plan"
-            showPrimaryButton={true}
-            primaryButtonVariant="outlined"
-            primaryButtonColor="primary"
-            primaryButtonTextLabel="Add Item"
-            showPrimaryStartIcon={true}
-            primaryStartIcon={<AddRounded />}
-            showSecondaryButton={true}
-            secondaryButtonVariant="outlined"
-            secondaryButtonTextLabel="Upload bulk"
-            secondaryButtonColor="primary"
-            showSecondaryStartIcon={true}
-            secondaryStartIcon={<LibraryAddRounded />}
-            handleClickPrimaryButton={handleDisplayAddSingleInventoryModal}
-            handleClickSecondaryButton={handleDisplayAddBulkInventoryModal}
+          <Autocomplete
+            sx={{ maxWidth: '20rem', mb: 1 }}
+            id="inventory-items-autocomplete"
+            options={options}
+            autoHighlight
+            getOptionLabel={(option) => option.name}
+            onChange={(event, newValue) => {
+              if (newValue) {
+                setOptions(data.filter((option) => option.id === newValue.id));
+              } else {
+                setOptions(data);
+              }
+            }}
+            renderInput={(params) => <TextField variant="standard" {...params} label="Search ..." />}
+          />
+        ) : null}
+        {displayAllInventories && gridMode ? (
+          <GridComponent
+            isLoading={isLoading}
+            data={options}
+            rowSelected={rowSelected}
+            handleEdit={handleEdit}
+            handleRowSelection={handleRowSelection}
           />
         ) : (
-          <HeaderWithButton
-            title="Recently edited"
-            showSecondaryTitle={true}
-            secondaryTitle="View all your inventories"
-            showRedirectLink={true}
-            redirectTo="/inventories/list"
-            showPrimaryButton={true}
-            primaryButtonVariant="outlined"
-            primaryButtonColor="primary"
-            primaryButtonTextLabel="Add Item"
-            showPrimaryStartIcon={true}
-            primaryStartIcon={<AddRounded />}
-            showSecondaryButton={true}
-            secondaryButtonVariant="outlined"
-            secondaryButtonTextLabel="Upload bulk"
-            secondaryButtonColor="primary"
-            showSecondaryStartIcon={true}
-            secondaryStartIcon={<LibraryAddRounded />}
-            handleClickPrimaryButton={handleDisplayAddSingleInventoryModal}
-            handleClickSecondaryButton={handleDisplayAddBulkInventoryModal}
-          />
-        )}
-
-        {displayAllInventories && rowSelected.length > 0 ? (
-          <Stack direction="row" spacing={2} justifyContent="flex-end">
-            <Button color="primary" variant="outlined" onClick={handleAddCategory} startIcon={<CategoryRounded />}>
-              Assign category
-            </Button>
-            <Button
-              color="primary"
-              variant="outlined"
-              onClick={handleAddInventory}
-              startIcon={<SettingsSuggestRounded />}
-            >
-              Assign maintenance plan
-            </Button>
-            <IconButton onClick={handleDeleteInventory}>
-              <DeleteSweepRounded color="error" />
-            </IconButton>
-          </Stack>
-        ) : null}
-
-        <Box sx={{ maxHeight: '40vh', overflow: 'auto' }}>
-          <InventoryTable
+          <TableComponent
             isLoading={isLoading}
             plainView={plainView}
-            data={displayAllInventories ? data?.result : data?.result.filter((v, index) => index < 3)}
+            data={displayAllInventories ? options : options?.filter((_, index) => index < 3)}
             columns={Object.values(VIEW_INVENTORY_LIST_HEADERS).filter((v) => v.displayConcise)}
             rowSelected={rowSelected}
             onRowSelect={onRowSelect}
             handleRowSelection={handleRowSelection}
             handleEdit={handleEdit}
           />
-        </Box>
+        )}
       </Container>
       {modalState === MODAL_STATE.ADD_ITEM && (
         <SimpleModal title="Add New Item" handleClose={handleCloseModal}>
@@ -220,13 +218,11 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
           <SelectedRowItem selectedRow={selectedRow} columns={Object.values(VIEW_INVENTORY_LIST_HEADERS)} />
         </Dialog>
       )}
-      {/* assign category to selected inventory */}
       {modalState === MODAL_STATE.ASSIGN_CATEGORY && (
         <SimpleModal title="Assign category" handleClose={handleCloseModal} maxSize="md">
           <AssignCategory rowSelected={rowSelected} handleCloseAssignFn={handleCloseModal} />
         </SimpleModal>
       )}
-      {/* assign maintenance plan to selected inventory */}
       {modalState === MODAL_STATE.ASSIGN_MAINTENANCE_PLAN && (
         <SimpleModal
           title="Assign maintenance plan"
@@ -249,7 +245,7 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
         deleteID={idToDelete}
         confirmDelete={confirmDelete}
       />
-    </Box>
+    </>
   );
 };
 

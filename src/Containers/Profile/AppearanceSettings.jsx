@@ -1,5 +1,5 @@
 import { Box, Button, Checkbox, Divider, FormControlLabel, Skeleton, Stack, Typography } from '@mui/material';
-import { DarkModeRounded } from '@mui/icons-material';
+import { DarkModeRounded, GridViewRounded, ViewListRounded } from '@mui/icons-material';
 import { useFetchProfileConfigDetails, useUpsertProfileConfigurationDetails } from '../../features/profile';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,23 +12,25 @@ const AppearanceSettings = () => {
   const { data, isLoading } = useFetchProfileConfigDetails();
   const upsertProfileConfigDetailsMutation = useUpsertProfileConfigurationDetails();
   const [displayMode, setDisplayMode] = useState(false);
+  const [inventoryLayout, setInventoryLayout] = useState(false); // false is list view
 
   const handleSubmit = () => {
-    const draftFormattedData = { id: user?.id, display_mode: displayMode, updated_by: user?.id, updated_on: dayjs() };
-    upsertProfileConfigDetailsMutation.mutate(draftFormattedData, {
-      onSuccess: (response) => {
-        const displayMode = response.data?.display_mode;
-        setDisplayMode(displayMode);
-        navigate('/');
-      },
-    });
+    const draftFormattedData = {
+      id: user?.id,
+      display_mode: displayMode,
+      inventory_layout: inventoryLayout,
+      updated_by: user?.id,
+      updated_on: dayjs(),
+    };
+    upsertProfileConfigDetailsMutation.mutate(draftFormattedData);
+    navigate('/');
   };
 
   useEffect(() => {
     if (!isLoading) {
       setDisplayMode(data?.display_mode);
+      setInventoryLayout(data?.inventory_layout);
     }
-     
   }, [isLoading]);
 
   if (isLoading) {
@@ -56,6 +58,24 @@ const AppearanceSettings = () => {
               </Stack>
               <Typography variant="caption" gutterBottom>
                 Switch to dark mode.
+              </Typography>
+            </Stack>
+          }
+        />
+        <FormControlLabel
+          control={
+            <Checkbox checked={inventoryLayout} onChange={() => setInventoryLayout(!inventoryLayout)} color="primary" />
+          }
+          label={
+            <Stack>
+              <Stack direction="row" alignItems="center" spacing={1}>
+                {inventoryLayout ? <ViewListRounded color="primary" /> : <GridViewRounded color="primary" />}
+                <Typography variant="caption">
+                  Enable {inventoryLayout ? 'list mode' : 'grid mode'} for inventory items
+                </Typography>
+              </Stack>
+              <Typography variant="caption" gutterBottom>
+                Switch between list view and grid view for all inventory items.
               </Typography>
             </Stack>
           }

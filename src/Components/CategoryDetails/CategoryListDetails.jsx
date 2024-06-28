@@ -14,21 +14,15 @@ const CategoryListDetails = () => {
   const handleDisplayAddSingleInventoryModal = () => setDisplayModal(!displayModal);
 
   return (
-    <Box sx={{ py: 8 }}>
-      <Container maxWidth="lg">
-        {/* categories section */}
+    <Box sx={{ py: 2 }}>
+      <Container maxWidth="xl">
         <HeaderWithButton
           title="Categories"
-          showPrimaryButton={true}
-          primaryButtonVariant="outlined"
-          primaryButtonColor="primary"
           primaryButtonTextLabel="Add Category"
-          showPrimaryStartIcon={true}
           primaryStartIcon={<AddRounded />}
-          showSecondaryButton={false}
           handleClickPrimaryButton={handleDisplayAddSingleInventoryModal}
         />
-        <Categories /> {/* categories component */}
+        <Categories />
       </Container>
       {displayModal && (
         <SimpleModal title="Add New Category" handleClose={handleCloseAddCategory} maxSize="md">
