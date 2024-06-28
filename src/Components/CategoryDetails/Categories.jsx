@@ -16,7 +16,7 @@ const Categories = () => {
       return;
     }
     setOpenDialog(true);
-    setIdToDelete(id);
+    setIdToDelete(item.id);
   };
 
   const reset = () => {
@@ -34,7 +34,7 @@ const Categories = () => {
   };
 
   if (isLoading) {
-    return <Skeleton variant="rounded" animation="wave" height={'100%'} width={'100%'} />;
+    return <Skeleton variant="rounded" animation="wave" height="100%" width="100%" />;
   }
   if (data.length <= 0) {
     return <DisplayNoMatchingRecordsComponent />;
@@ -54,12 +54,12 @@ const Categories = () => {
                   }}
                 >
                   <CardContent>
-                    <Stack direction={'row'}>
+                    <Stack direction="row">
                       <Stack flexGrow={1}>
                         <Typography variant="h6" component="h3">
                           {item.category_name}
                         </Typography>
-                        <Stack direction={'row'} alignItems={'center'} useFlexGap spacing={1}>
+                        <Stack direction="row" alignItems="center" useFlexGap spacing={1}>
                           <TrendingUpRounded color={index % 2 == 0 ? 'success' : 'error'} />
                           <Typography variant="caption">Total {item?.totalAssignedItems.length ?? 0} items</Typography>
                         </Stack>
@@ -81,7 +81,7 @@ const Categories = () => {
         text="Confirm deletion of selected category? Deletion is permanent and cannot be undone."
         textVariant="body2"
         handleClose={reset}
-        maxSize={'sm'}
+        maxSize="sm"
         deleteID={idToDelete}
         confirmDelete={confirmDelete}
       />

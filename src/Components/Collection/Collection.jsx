@@ -1,4 +1,4 @@
-import { Typography, Container, Box } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 import LearnMore from './LearnMore';
 
 export default function Collection(props) {

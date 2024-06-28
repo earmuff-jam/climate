@@ -12,8 +12,23 @@ module.exports = {
   settings: { react: { version: '18.2' } },
   plugins: ['react-refresh'],
   rules: {
-    'react/prop-types': 0,
+    'react/prop-types': 'off',
+    'react-hooks/exhaustive-deps': 'off',
+    'react-refresh/only-export-components': 'off',
+    'react/display_name': 'off',
+    'sort-imports': [
+      'error',
+      {
+        ignoreDeclarationSort: true,
+      },
+    ],
+    'react/jsx-curly-brace-presence': [
+      'error',
+      {
+        props: 'never',
+        children: 'never',
+      },
+    ],
     'react/jsx-no-target-blank': 'off',
-    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
   },
 };

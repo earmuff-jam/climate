@@ -97,7 +97,7 @@ const EditInventory = () => {
 
   useEffect(() => {
     if (!isLoading && Array.isArray(data?.result)) {
-      const selectedInventory = data?.result.filter((v) => v.id === id).find((v) => true);
+      const selectedInventory = data?.result.filter((v) => v.id === id).find(() => true);
       const draftInventoryForm = { ...BLANK_INVENTORY_FORM };
       draftInventoryForm.name.value = selectedInventory.name || '';
       draftInventoryForm.description.value = selectedInventory.description || '';
@@ -132,7 +132,7 @@ const EditInventory = () => {
     <Container sx={{ marginTop: '1rem' }}>
       <HeaderWithButton title="Editing inventory" showPrimaryButton={false} showSecondaryButton={false} />
       <Stack spacing={2}>
-        <Stack direction={'row'} spacing={2}>
+        <Stack direction="row" spacing={2}>
           {Object.values(formData)
             .filter((v, index) => index < 2)
             .map((v) => (
@@ -150,7 +150,7 @@ const EditInventory = () => {
             ))}
         </Stack>
 
-        <Stack direction={'row'} spacing={2}>
+        <Stack direction="row" spacing={2}>
           {Object.values(formData)
             .filter((v, index) => index >= 2 && index < 5)
             .map((v) => (
@@ -168,7 +168,7 @@ const EditInventory = () => {
             ))}
         </Stack>
 
-        <Stack direction={'row'} spacing={2}>
+        <Stack direction="row" spacing={2}>
           {/* Ignore autocomplete for its own row */}
           {Object.values(formData)
             .filter((v, index) => index >= 5 && index < 7)
@@ -254,7 +254,7 @@ const EditInventory = () => {
           <Typography variant="caption">More information</Typography>
         </Divider>
 
-        <Stack direction={'row'} spacing={2} justifyContent="space-around">
+        <Stack direction="row" spacing={2} justifyContent="space-around">
           <FormControlLabel
             control={
               <Checkbox
@@ -264,7 +264,7 @@ const EditInventory = () => {
               />
             }
             label={
-              <Stack direction={'row'} alignItems={'center'}>
+              <Stack direction="row" alignItems="center">
                 <BookmarkAddedRounded color={formData.is_bookmarked.value ? 'primary' : 'secondary'} />
                 <Typography variant="caption">Bookmarked</Typography>
               </Stack>
@@ -279,7 +279,7 @@ const EditInventory = () => {
               />
             }
             label={
-              <Stack direction={'row'} alignItems={'center'}>
+              <Stack direction="row" alignItems="center">
                 <SwapHorizRounded color={formData.is_returnable.value ? 'primary' : 'secondary'} />
                 <Typography variant="caption">Returnable</Typography>
               </Stack>
@@ -288,7 +288,7 @@ const EditInventory = () => {
         </Stack>
         {/* display return location and return date time if the item is returnable */}
         {formData.is_returnable.value ? (
-          <Stack direction={'row'} spacing={2}>
+          <Stack direction="row" spacing={2}>
             {Object.values(formData)
               .filter((v, index) => index >= 10 && index < 11)
               .map((v) => (
@@ -325,7 +325,7 @@ const EditInventory = () => {
           <Typography variant="caption">Weight and Dimension</Typography>
         </Divider>
 
-        <Stack direction={'row'} spacing={2}>
+        <Stack direction="row" spacing={2}>
           {Object.values(formData)
             .filter((v, index) => index >= 12 && index < 14)
             .map((v) => (
@@ -343,7 +343,7 @@ const EditInventory = () => {
             ))}
         </Stack>
 
-        <Stack direction={'row'} spacing={2}>
+        <Stack direction="row" spacing={2}>
           {Object.values(formData)
             .filter((v, index) => index >= 14 && index < 16)
             .map((v) => (
@@ -365,7 +365,7 @@ const EditInventory = () => {
           <Typography variant="caption">User information</Typography>
         </Divider>
 
-        <Stack direction={'row'} spacing={2}>
+        <Stack direction="row" spacing={2}>
           {Object.values(formData)
             .filter((v, index) => index >= 16 && index < 18)
             .map((v) => (
@@ -386,7 +386,7 @@ const EditInventory = () => {
               />
             ))}
         </Stack>
-        <Stack direction={'row'} spacing={2}>
+        <Stack direction="row" spacing={2}>
           {Object.values(formData)
             .filter((v, index) => index >= 18 && index < 20)
             .map((v) => (

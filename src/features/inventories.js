@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 import dayjs from 'dayjs';
 import { validate } from 'uuid';
@@ -159,7 +159,7 @@ export const useUpsertInventoryDetailsInBulk = () => {
  */
 const upsertInventoryDetails = async (client, userID, data) => {
   // remove id, so the application can generate itself
-  const { id, price, quantity, location, ...inventoryData } = data;
+  const { price, quantity, location, ...inventoryData } = data;
   const storageLocationID = upsertStorageLocationForSelectInventory(client, userID, location);
 
   let createdByUUID = '';

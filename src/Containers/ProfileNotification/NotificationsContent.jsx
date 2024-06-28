@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Typography, Button, Box, Stack, Divider, Checkbox, FormControlLabel, Skeleton } from '@mui/material';
+import { Box, Button, Checkbox, Divider, FormControlLabel, Skeleton, Stack, Typography } from '@mui/material';
 import { AssignmentLateRounded, BookmarkRounded, SettingsSuggestRounded } from '@mui/icons-material';
 import { BLANK_NOTIFICATION_DETAILS } from './constants';
 import { useNavigate } from 'react-router-dom';
@@ -29,10 +29,10 @@ const NotificationsContent = () => {
     if (!isLoading && !isError) {
       setUserProfileNotificationSettings(data);
     }
-    // eslint-disable-next-line
+     
   }, [isLoading]);
 
-  if (isLoading) return <Skeleton variant="rounded" animation="wave" height={'100%'} width={'100%'} />;
+  if (isLoading) return <Skeleton variant="rounded" animation="wave" height="100%" width="100%" />;
 
   return (
     <>
@@ -57,7 +57,7 @@ const NotificationsContent = () => {
           }
           label={
             <Stack>
-              <Stack direction={'row'} alignItems={'center'} spacing={1}>
+              <Stack direction="row" alignItems="center" spacing={1}>
                 <BookmarkRounded
                   color={userProfileNotificationSettings.notify_bookmarked_items ? 'primary' : 'secondary'}
                 />
@@ -79,7 +79,7 @@ const NotificationsContent = () => {
           }
           label={
             <Stack>
-              <Stack direction={'row'} alignItems={'center'} spacing={1}>
+              <Stack direction="row" alignItems="center" spacing={1}>
                 <AssignmentLateRounded
                   color={userProfileNotificationSettings.notify_due_items ? 'warning' : 'secondary'}
                 />
@@ -101,7 +101,7 @@ const NotificationsContent = () => {
           }
           label={
             <Stack>
-              <Stack direction={'row'} alignItems={'center'} spacing={1}>
+              <Stack direction="row" alignItems="center" spacing={1}>
                 <SettingsSuggestRounded
                   color={userProfileNotificationSettings.notify_settings_privacy ? 'primary' : 'secondary'}
                 />

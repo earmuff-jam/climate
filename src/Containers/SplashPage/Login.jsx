@@ -1,4 +1,4 @@
-import { Stack, Card, Skeleton } from '@mui/material';
+import { Card, Skeleton, Stack } from '@mui/material';
 import { Auth } from '@supabase/auth-ui-react';
 import { supabaseClient } from '../../util/SupabaseClient';
 import { lightTheme } from '../../util/theme';
@@ -26,7 +26,7 @@ const Login = () => {
                 fontSize: lightTheme.spacing(1.8),
               },
               label: { fontFamily: 'Nunito, sans-serif' },
-              loader: <Skeleton width={'100%'} height={'100%'} />,
+              loader: <Skeleton width="100%" height="100%" />,
               message: {
                 color: lightTheme.palette.error.main,
                 fontFamily: 'Nunito, sans-serif',

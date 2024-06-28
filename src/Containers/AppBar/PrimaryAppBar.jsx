@@ -1,10 +1,9 @@
-import React from 'react';
 import { useQueryClient } from 'react-query';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { AppBar, Box, Button, Stack, Toolbar, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-const PrimaryAppBar = ({ isUserLoggedIn }) => {
+const PrimaryAppBar = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
@@ -30,7 +29,7 @@ const PrimaryAppBar = ({ isUserLoggedIn }) => {
             </Typography>
           </Box>
           <Stack direction="row">
-            <Stack direction={'row'}>
+            <Stack direction="row">
               <Button color="inherit" onClick={() => navigate('/inventories/list')}>
                 Inventories
               </Button>

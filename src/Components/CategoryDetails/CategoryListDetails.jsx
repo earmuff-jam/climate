@@ -20,9 +20,9 @@ const CategoryListDetails = () => {
         <HeaderWithButton
           title="Categories"
           showPrimaryButton={true}
-          primaryButtonVariant={'outlined'}
-          primaryButtonColor={'primary'}
-          primaryButtonTextLabel={'Add Category'}
+          primaryButtonVariant="outlined"
+          primaryButtonColor="primary"
+          primaryButtonTextLabel="Add Category"
           showPrimaryStartIcon={true}
           primaryStartIcon={<AddRounded />}
           showSecondaryButton={false}
@@ -31,7 +31,7 @@ const CategoryListDetails = () => {
         <Categories /> {/* categories component */}
       </Container>
       {displayModal && (
-        <SimpleModal title={'Add New Category'} handleClose={handleCloseAddCategory} maxSize={'md'}>
+        <SimpleModal title="Add New Category" handleClose={handleCloseAddCategory} maxSize="md">
           <AddCategory handleCloseAddCategory={handleCloseAddCategory} />
         </SimpleModal>
       )}

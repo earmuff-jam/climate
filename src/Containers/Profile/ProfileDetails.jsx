@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Container, Typography, Divider, Box, Stack } from '@mui/material';
+import { Box, Container, Divider, Stack, Typography } from '@mui/material';
 import ProfileDrawer from './ProfileDrawer';
 import ProfileContent from './ProfileContent';
 import AccountContent from '../../Components/Profile/AccountContent';
@@ -36,7 +36,7 @@ const ProfileDetails = () => {
         </Typography>
       </Box>
       <Divider sx={{ my: 3 }} />
-      <Stack direction={'row'}>
+      <Stack direction="row">
         <ProfileDrawer selectedRow={selectedRow} handleSelection={handleSelection} />
         <Box sx={{ flexGrow: 1 }}>{displaySelection(selectedRow)}</Box>
       </Stack>

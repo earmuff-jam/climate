@@ -1,16 +1,16 @@
 import dayjs from 'dayjs';
 import {
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
   Checkbox,
-  TableBody,
   IconButton,
   Skeleton,
-  Tooltip,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { DisplayNoMatchingRecordsComponent } from '../../util/util';
@@ -77,7 +77,7 @@ const InventoryTable = ({
     return row[column] ?? '-';
   };
 
-  if (isLoading) return <Skeleton variant="rounded" animation="wave" height={'100%'} width={'100%'} />;
+  if (isLoading) return <Skeleton variant="rounded" animation="wave" height="100%" width="100%" />;
 
   if (!data || data.length === 0) {
     return <DisplayNoMatchingRecordsComponent />;
@@ -92,7 +92,7 @@ const InventoryTable = ({
               <TableCell padding="checkbox" align="center">
                 <Stack direction="row" alignItems="center">
                   <Checkbox size="small" onClick={(ev) => handleRowSelection(ev, 'all')} />
-                  <Typography fontWeight={'bold'} align="center">
+                  <Typography fontWeight="bold" align="center">
                     Action
                   </Typography>
                 </Stack>
@@ -102,7 +102,7 @@ const InventoryTable = ({
               const column = columns[colKey];
               return (
                 <TableCell key={column.id} align="center">
-                  <Typography fontWeight={'bold'}>{column.label}</Typography>
+                  <Typography fontWeight="bold">{column.label}</Typography>
                 </TableCell>
               );
             })}

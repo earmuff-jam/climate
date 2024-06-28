@@ -13,9 +13,9 @@ const CategoryChart = ({ data }) => {
       <HeaderWithButton
         title="More details"
         showPrimaryButton={true}
-        primaryButtonVariant={'outlined'}
-        primaryButtonColor={'primary'}
-        primaryButtonTextLabel={'Display threshold'}
+        primaryButtonVariant="outlined"
+        primaryButtonColor="primary"
+        primaryButtonTextLabel="Display threshold"
         showPrimaryStartIcon={true}
         primaryStartIcon={<ChangeCircleRounded color="warning" />}
         showSecondaryTitle={true}
@@ -23,7 +23,7 @@ const CategoryChart = ({ data }) => {
           !chartVariant ? (
             <Typography variant="caption">Switch to threshold view to see items that require attention</Typography>
           ) : (
-            <Typography variant="caption">{'Switch selection to view all plan vs total item(s)'}</Typography>
+            <Typography variant="caption">Switch selection to view all plan vs total item(s)</Typography>
           )
         }
         handleClickPrimaryButton={handleDisplaySelection}
@@ -35,8 +35,8 @@ const CategoryChart = ({ data }) => {
             ? data.map((v) => ({ name: v.category_name, value: v.totalAssignedItems.length }))
             : data.map((v) => ({ name: v.category_name, value: v.thresholdlimit }))
         }
-        backgroundColor={`rgba(75, 192, 192, 0.4)`}
-        borderColor={`rgba(75, 192, 192, 1)`}
+        backgroundColor="rgba(75, 192, 192, 0.4)"
+        borderColor="rgba(75, 192, 192, 1)"
       />
     </>
   );

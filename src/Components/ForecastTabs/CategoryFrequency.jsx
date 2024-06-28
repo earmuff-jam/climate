@@ -8,14 +8,14 @@ import LimitMenu from './LimitMenu';
 const CategoryFrequency = () => {
   const { data, isLoading } = useFetchCategoryList();
 
-  if (isLoading) return <Skeleton height={100} width={'100%'} /> 
+  if (isLoading) return <Skeleton height={100} width="100%" /> 
   return (
     <Stack>
       <HeaderWithButton
         title="Thresholds against categories"
         titleVariant="h6"
         showSecondaryTitle="true"
-        secondaryTitle={'Adding threshold will setup alerts for items that fall below the provisioned limit'}
+        secondaryTitle="Adding threshold will setup alerts for items that fall below the provisioned limit"
       />
       {data?.length <= 0 ? (
         <DisplayNoMatchingRecordsComponent subtitle="Add categories to setup thresholds" />

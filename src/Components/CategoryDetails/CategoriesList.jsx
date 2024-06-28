@@ -16,20 +16,20 @@ const CategoriesList = () => {
         <HeaderWithButton
           title="Categories"
           showPrimaryButton={true}
-          primaryButtonVariant={'outlined'}
-          primaryButtonColor={'primary'}
-          primaryButtonTextLabel={'Add Category'}
+          primaryButtonVariant="outlined"
+          primaryButtonColor="primary"
+          primaryButtonTextLabel="Add Category"
           showPrimaryStartIcon={true}
           primaryStartIcon={<AddRounded />}
           showSecondaryButton={false}
           handleClickPrimaryButton={handleAddCategory}
           showSecondaryTitle={true}
           showRedirectLink={false}
-          secondaryTitle={'Select total items in each category(s) to view all associated items'}
+          secondaryTitle="Select total items in each category(s) to view all associated items"
         />
         <CategoryDetails />
         {displayModal && (
-          <SimpleModal title={'Add New Category'} handleClose={() => setDisplayModal(false)}>
+          <SimpleModal title="Add New Category" handleClose={() => setDisplayModal(false)}>
             <AddCategory handleCloseAddCategory={() => setDisplayModal(false)} />
           </SimpleModal>
         )}

@@ -13,9 +13,9 @@ const MaintenanceChart = ({ data }) => {
       <HeaderWithButton
         title="More details"
         showPrimaryButton={true}
-        primaryButtonVariant={'outlined'}
-        primaryButtonColor={'primary'}
-        primaryButtonTextLabel={'Display overdue'}
+        primaryButtonVariant="outlined"
+        primaryButtonColor="primary"
+        primaryButtonTextLabel="Display overdue"
         showPrimaryStartIcon={true}
         primaryStartIcon={<ChangeCircleRounded color="warning" />}
         showSecondaryTitle={true}
@@ -23,7 +23,7 @@ const MaintenanceChart = ({ data }) => {
           !displayOverflow ? (
             <Typography variant="caption">Switch to overdue view to see items that require attention</Typography>
           ) : (
-            <Typography variant="caption">{'Switch selection to view all plan vs total item(s)'}</Typography>
+            <Typography variant="caption">Switch selection to view all plan vs total item(s)</Typography>
           )
         }
         handleClickPrimaryButton={handleDisplaySelection}
@@ -35,8 +35,8 @@ const MaintenanceChart = ({ data }) => {
             ? data.map((v) => ({ name: v.type, value: v.maintenanceItems.length }))
             : data.map((v) => ({ name: v.type, value: v.maintenanceItems.filter((el) => el.overflow).length }))
         }
-        backgroundColor={`rgba(75, 192, 192, 0.4)`}
-        borderColor={`rgba(75, 192, 192, 1)`}
+        backgroundColor="rgba(75, 192, 192, 0.4)"
+        borderColor="rgba(75, 192, 192, 1)"
       />
     </>
   );

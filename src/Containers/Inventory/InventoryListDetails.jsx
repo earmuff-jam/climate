@@ -113,16 +113,16 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
           <HeaderWithButton
             title="Inventories"
             showSecondaryTitle={true}
-            secondaryTitle={'Select item/s to assign category or maintenance plan'}
+            secondaryTitle="Select item/s to assign category or maintenance plan"
             showPrimaryButton={true}
-            primaryButtonVariant={'outlined'}
-            primaryButtonColor={'primary'}
-            primaryButtonTextLabel={'Add Item'}
+            primaryButtonVariant="outlined"
+            primaryButtonColor="primary"
+            primaryButtonTextLabel="Add Item"
             showPrimaryStartIcon={true}
             primaryStartIcon={<AddRounded />}
             showSecondaryButton={true}
-            secondaryButtonVariant={'outlined'}
-            secondaryButtonTextLabel={'Upload bulk'}
+            secondaryButtonVariant="outlined"
+            secondaryButtonTextLabel="Upload bulk"
             secondaryButtonColor="primary"
             showSecondaryStartIcon={true}
             secondaryStartIcon={<LibraryAddRounded />}
@@ -133,18 +133,18 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
           <HeaderWithButton
             title="Recently edited"
             showSecondaryTitle={true}
-            secondaryTitle={'View all your inventories'}
+            secondaryTitle="View all your inventories"
             showRedirectLink={true}
-            redirectTo={'/inventories/list'}
+            redirectTo="/inventories/list"
             showPrimaryButton={true}
-            primaryButtonVariant={'outlined'}
-            primaryButtonColor={'primary'}
-            primaryButtonTextLabel={'Add Item'}
+            primaryButtonVariant="outlined"
+            primaryButtonColor="primary"
+            primaryButtonTextLabel="Add Item"
             showPrimaryStartIcon={true}
             primaryStartIcon={<AddRounded />}
             showSecondaryButton={true}
-            secondaryButtonVariant={'outlined'}
-            secondaryButtonTextLabel={'Upload bulk'}
+            secondaryButtonVariant="outlined"
+            secondaryButtonTextLabel="Upload bulk"
             secondaryButtonColor="primary"
             showSecondaryStartIcon={true}
             secondaryStartIcon={<LibraryAddRounded />}
@@ -154,13 +154,13 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
         )}
 
         {displayAllInventories && rowSelected.length > 0 ? (
-          <Stack direction={'row'} spacing={2} justifyContent={'flex-end'}>
-            <Button color={'primary'} variant={'outlined'} onClick={handleAddCategory} startIcon={<CategoryRounded />}>
+          <Stack direction="row" spacing={2} justifyContent="flex-end">
+            <Button color="primary" variant="outlined" onClick={handleAddCategory} startIcon={<CategoryRounded />}>
               Assign category
             </Button>
             <Button
-              color={'primary'}
-              variant={'outlined'}
+              color="primary"
+              variant="outlined"
               onClick={handleAddInventory}
               startIcon={<SettingsSuggestRounded />}
             >
@@ -186,12 +186,12 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
         </Box>
       </Container>
       {modalState === MODAL_STATE.ADD_ITEM && (
-        <SimpleModal title={'Add New Item'} handleClose={handleCloseModal}>
+        <SimpleModal title="Add New Item" handleClose={handleCloseModal}>
           <AddInventory handleClose={handleCloseModal} />
         </SimpleModal>
       )}
       {modalState === MODAL_STATE.BULK_ITEM && (
-        <SimpleModal title={'Add Bulk Item'} handleClose={handleCloseModal} maxSize={'md'}>
+        <SimpleModal title="Add Bulk Item" handleClose={handleCloseModal} maxSize="md">
           <AddBulkUploadInventory handleClose={handleCloseModal} />
         </SimpleModal>
       )}
@@ -210,7 +210,7 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
           }}
         >
           <DialogTitle>
-            <Stack direction="row" justifyContent={'space-between'} alignItems={'center'}>
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
               View item details
               <IconButton aria-label="close" onClick={resetSelection} color="error">
                 <CloseRounded />
@@ -222,19 +222,19 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
       )}
       {/* assign category to selected inventory */}
       {modalState === MODAL_STATE.ASSIGN_CATEGORY && (
-        <SimpleModal title={'Assign category'} handleClose={handleCloseModal} maxSize={'md'}>
+        <SimpleModal title="Assign category" handleClose={handleCloseModal} maxSize="md">
           <AssignCategory rowSelected={rowSelected} handleCloseAssignFn={handleCloseModal} />
         </SimpleModal>
       )}
       {/* assign maintenance plan to selected inventory */}
       {modalState === MODAL_STATE.ASSIGN_MAINTENANCE_PLAN && (
         <SimpleModal
-          title={'Assign maintenance plan'}
-          subtitle={'Create or add new maintenance plans'}
+          title="Assign maintenance plan"
+          subtitle="Create or add new maintenance plans"
           redirectSubtitle={true}
-          subtitleLinkTo={'/maintenance'}
+          subtitleLinkTo="/maintenance"
           handleClose={handleCloseModal}
-          maxSize={'md'}
+          maxSize="md"
         >
           <AssignPlan rowSelected={rowSelected} handleCloseAssignFn={handleCloseModal} />
         </SimpleModal>
@@ -245,7 +245,7 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
         text="Confirm deletion of selected item(s) ? Deletion is permanent and cannot be undone."
         textVariant="body2"
         handleClose={reset}
-        maxSize={'sm'}
+        maxSize="sm"
         deleteID={idToDelete}
         confirmDelete={confirmDelete}
       />

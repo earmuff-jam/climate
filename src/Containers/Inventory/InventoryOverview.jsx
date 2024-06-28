@@ -94,12 +94,12 @@ const InventoryOverview = () => {
                       <RowItem label="All maintenance plans" color="text.secondary" dataValue={maintenancePlanCount} />
                       <RowItem label="All inventory items" color="text.secondary" dataValue={inventoriesCount} />
                     </Stack>
-                    <Stack direction={'row'} spacing="2rem">
+                    <Stack direction="row" spacing="2rem">
                       <Divider orientation="vertical" />
                       <PieBarChart
                         chartType="pie"
                         height="10rem"
-                        legendLabel={'Need attention'}
+                        legendLabel="Need attention"
                         data={[
                           categoryItemCounts,
                           maintenancePlanItemCounts,
@@ -109,8 +109,8 @@ const InventoryOverview = () => {
                           count: v,
                           color: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(211, 211, 211)'][index],
                         }))}
-                        backgroundColor={`rgba(75, 192, 192, 0.4)`}
-                        borderColor={`rgba(75, 192, 192, 1)`}
+                        backgroundColor="rgba(75, 192, 192, 0.4)"
+                        borderColor="rgba(75, 192, 192, 1)"
                       />
                     </Stack>
                   </Stack>
@@ -143,14 +143,14 @@ const ColumnItem = ({ label, dataLabel, icon, color, loading }) => {
   if (loading) return <Skeleton width="100%" height="1rem" />;
   return (
     <Stack>
-      <Typography textAlign={'center'} variant="h4" color={color}>
+      <Typography textAlign="center" variant="h4" color={color}>
         {dataLabel}
       </Typography>
-      <Stack direction="row" alignItems="center" justifyContent={'center'}>
+      <Stack direction="row" alignItems="center" justifyContent="center">
         <IconButton disabled size="small">
           {icon}
         </IconButton>
-        <Typography variant="caption" textAlign={'center'}>
+        <Typography variant="caption" textAlign="center">
           item(s)
         </Typography>
       </Stack>

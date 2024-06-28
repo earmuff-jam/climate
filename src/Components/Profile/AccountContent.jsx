@@ -1,5 +1,4 @@
-import React from 'react';
-import { Typography, Button, Box, Stack, Divider, Card, CardContent, IconButton } from '@mui/material';
+import { Box, Button, Card, CardContent, Divider, IconButton, Stack, Typography } from '@mui/material';
 import { WarningRounded } from '@mui/icons-material';
 
 const AccountContent = () => {
@@ -19,7 +18,7 @@ const AccountContent = () => {
       <Stack sx={{ margin: '0 auto' }}>
         <Card>
           <CardContent>
-            <Stack alignItems={'center'}>
+            <Stack alignItems="center">
               <IconButton>
                 <WarningRounded color="warning" />
               </IconButton>

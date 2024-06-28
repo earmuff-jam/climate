@@ -1,21 +1,21 @@
 import { useState } from 'react';
 import {
-  TextField,
-  Box,
-  Stack,
-  Typography,
-  Stepper,
-  Step,
-  StepLabel,
-  Button,
   Autocomplete,
-  FormControlLabel,
-  Checkbox,
-  createFilterOptions,
+  Box,
+  Button,
   Card,
   CardContent,
+  Checkbox,
+  FormControlLabel,
   IconButton,
   Skeleton,
+  Stack,
+  Step,
+  StepLabel,
+  Stepper,
+  TextField,
+  Typography,
+  createFilterOptions,
 } from '@mui/material';
 import { BookmarkRounded, CheckRounded, RestartAltRounded, SwapHorizRounded } from '@mui/icons-material';
 import { BLANK_INVENTORY_FORM } from './constants';
@@ -154,7 +154,7 @@ export default function AddInventory({ handleClose }) {
   const isDisabled =
     containsErr || isRequiredFieldsEmpty || storageLocation === null || Object.keys(storageLocation).length <= 0;
 
-  if (isLoading) return <Skeleton variant="rounded" animation="wave" height={'30vh'} width={'50vw'} />;
+  if (isLoading) return <Skeleton variant="rounded" animation="wave" height="30vh" width="50vw" />;
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -215,7 +215,7 @@ export const loadInstructionsBasedOnStepNumber = (stepNumber) => {
   switch (stepNumber) {
     case 1:
       return (
-        <Stack paddingBottom={'2rem'}>
+        <Stack paddingBottom="2rem">
           <Typography> Fill in the necessary details.</Typography>
           <Typography variant="caption">
             These details will help us quickly search for the items that you are looking for later on.
@@ -224,7 +224,7 @@ export const loadInstructionsBasedOnStepNumber = (stepNumber) => {
       );
     case 2:
       return (
-        <Stack paddingBottom={'2rem'}>
+        <Stack paddingBottom="2rem">
           <Typography> Fill in the optional details.</Typography>
           <Typography variant="caption">
             Extra details helps you understand your product limitations, expiry dates and much more.
@@ -252,10 +252,10 @@ export const loadAddFormBasedOnStepNumber = (
   switch (stepNumber) {
     case 1:
       return (
-        <Stack alignItems={'center'}>
+        <Stack alignItems="center">
           <Box component="form" sx={{ maxWidth: 600, width: '100%' }}>
             <Stack spacing={2} useFlexGap>
-              <Stack direction={'row'} spacing={2} useFlexGap>
+              <Stack direction="row" spacing={2} useFlexGap>
                 <TextField
                   id="name"
                   label="Item name"
@@ -276,7 +276,7 @@ export const loadAddFormBasedOnStepNumber = (
                     />
                   }
                   label={
-                    <Stack direction={'row'} alignItems={'center'}>
+                    <Stack direction="row" alignItems="center">
                       <BookmarkRounded color={formData.is_bookmarked.value ? 'primary' : 'secondary'} />
                       <Typography variant="caption">Bookmark</Typography>
                     </Stack>
@@ -295,7 +295,7 @@ export const loadAddFormBasedOnStepNumber = (
                 helperText={formData.description['errorMsg']}
               />
             </Stack>
-            <Stack direction={'row'} sx={{ py: 2 }} useFlexGap spacing={2}>
+            <Stack direction="row" sx={{ py: 2 }} useFlexGap spacing={2}>
               <TextField
                 id="quantity"
                 label="Item quantity"
@@ -378,7 +378,7 @@ export const loadAddFormBasedOnStepNumber = (
       );
     case 2:
       return (
-        <Stack alignItems={'center'}>
+        <Stack alignItems="center">
           <Box component="form" sx={{ maxWidth: 600, width: '100%' }}>
             <Stack spacing={2} useFlexGap>
               <TextField
@@ -392,7 +392,7 @@ export const loadAddFormBasedOnStepNumber = (
                 error={Boolean(formData.price['errorMsg'].length)}
                 helperText={formData.price['errorMsg']}
               />
-              <Stack direction={'row'} useFlexGap spacing={2}>
+              <Stack direction="row" useFlexGap spacing={2}>
                 <TextField
                   id="barcode"
                   label="Item Barcode"
@@ -417,7 +417,7 @@ export const loadAddFormBasedOnStepNumber = (
                 />
               </Stack>
 
-              <Stack direction={'row'} useFlexGap spacing={2}>
+              <Stack direction="row" useFlexGap spacing={2}>
                 <TextField
                   id="bought_at"
                   label="Place of purchase"
@@ -438,7 +438,7 @@ export const loadAddFormBasedOnStepNumber = (
                     />
                   }
                   label={
-                    <Stack direction={'row'} alignItems={'center'}>
+                    <Stack direction="row" alignItems="center">
                       <SwapHorizRounded color={formData.is_returnable.value ? 'primary' : 'secondary'} />
                       <Typography variant="caption">Returnable</Typography>
                     </Stack>
@@ -446,7 +446,7 @@ export const loadAddFormBasedOnStepNumber = (
                 />
               </Stack>
               {formData.is_returnable.value ? (
-                <Stack direction={'row'} useFlexGap spacing={2}>
+                <Stack direction="row" useFlexGap spacing={2}>
                   <TextField
                     id="return_location"
                     label="Item return location"
@@ -476,7 +476,7 @@ export const loadAddFormBasedOnStepNumber = (
               ) : null}
             </Stack>
 
-            <Stack direction={'row'} useFlexGap spacing={2} sx={{ py: 2 }}>
+            <Stack direction="row" useFlexGap spacing={2} sx={{ py: 2 }}>
               <TextField
                 id="max_weight"
                 label="Max weight in kg"
@@ -500,7 +500,7 @@ export const loadAddFormBasedOnStepNumber = (
                 helperText={formData.min_weight['errorMsg']}
               />
             </Stack>
-            <Stack direction={'row'} useFlexGap spacing={2}>
+            <Stack direction="row" useFlexGap spacing={2}>
               <TextField
                 id="max_height"
                 label="Max height in inches"
@@ -530,7 +530,7 @@ export const loadAddFormBasedOnStepNumber = (
     case 3:
       return (
         <>
-          <Stack alignItems={'center'}>
+          <Stack alignItems="center">
             <Card sx={{ display: 'flex', width: '100%', maxWidth: '600px' }}>
               <CardContent>
                 <Stack direction="row">
@@ -540,8 +540,8 @@ export const loadAddFormBasedOnStepNumber = (
                   <Stack>
                     <Typography>Item name: {formData.name.value}</Typography>
                     <Typography variant="caption">{formData.description.value}</Typography>
-                    <Stack direction={'row'} spacing={1}>
-                      <Typography fontWeight={'bold'}>Quantity: </Typography>
+                    <Stack direction="row" spacing={1}>
+                      <Typography fontWeight="bold">Quantity: </Typography>
                       <Typography>{formData.quantity.value}</Typography>
                     </Stack>
                   </Stack>

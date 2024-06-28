@@ -11,11 +11,11 @@ const Layout = () => {
   const user = useUser();
   const { data, isLoading } = useFetchProfileConfigDetails();
 
-  if (isLoading) return <Skeleton variant="rounded" animation="wave" height={'100%'} width={'100%'} />;
+  if (isLoading) return <Skeleton variant="rounded" animation="wave" height="100%" width="100%" />;
   return (
     <ThemeProvider theme={data.display_mode ? darkTheme : lightTheme}>
       <CssBaseline />
-      <Box height={'100%'} bgcolor={'background.default'}>
+      <Box height="100%" bgcolor="background.default">
         <PrimaryAppBar isUserLoggedIn={validate(user?.id)} />
         <Outlet />
       </Box>

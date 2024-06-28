@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, DialogContent, IconButton, Stack, Typography } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, IconButton, Stack, Typography } from '@mui/material';
 import { CloseRounded } from '@mui/icons-material';
 
 const SimpleModal = (props) => {
@@ -7,7 +7,7 @@ const SimpleModal = (props) => {
   return (
     <Dialog open={true} onClose={handleClose} maxWidth={maxSize ?? 'xl'} fullWidth>
       <DialogTitle>
-        <Stack direction="row" justifyContent={'space-between'} alignItems={'center'}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Stack>
             {title}
             {subtitle ? <Typography variant="caption">{subtitle}</Typography> : null}

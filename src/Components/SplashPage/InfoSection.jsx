@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, IconButton, Stack, Typography } from '@mui/material';
 import {
   BookmarksRounded,

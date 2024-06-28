@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 
 // static query options for tanstack query
