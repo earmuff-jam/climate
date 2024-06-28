@@ -1,5 +1,5 @@
 import { Box, Container, Stack, Tab, Tabs } from '@mui/material';
-// import HeaderWithButton from '../../util/HeaderWithButton';
+import HeaderWithButton from '../../util/HeaderWithButton';
 import Categories from '../../Components/CategoryDetails/Categories';
 import { useState } from 'react';
 import CategoryFrequency from '../../Components/ForecastTabs/CategoryFrequency';
