@@ -40,7 +40,6 @@ export default function PromoSection() {
           title={`Welcome. Glad to see you. 👋`}
           subtitle={'Complete the activity below so we know who you are.'}
           handleClose={() => setOpenModal(false)}
-          showSubmit={false}
           maxSize={'sm'}
         >
           <Login />

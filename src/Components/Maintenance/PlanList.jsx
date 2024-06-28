@@ -131,7 +131,6 @@ const PlanList = () => {
         <SimpleModal
           title={`Item(s) under ${selectedMaintenancePlan?.plan}`}
           handleClose={handleClose}
-          showSubmit={false}
           maxSize={'md'}
         >
           <InventoryTable

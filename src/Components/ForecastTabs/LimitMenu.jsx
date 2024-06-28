@@ -75,7 +75,7 @@ const LimitMenu = ({ category }) => {
     []
   );
 
-  const handleClick = (ev, value, categoryID) => {
+  const handleClick = (value, categoryID) => {
     setInputVal('');
     const updatedOptions = options.map((option) => ({
       ...option,
@@ -117,7 +117,7 @@ const LimitMenu = ({ category }) => {
           {options.map((option, index) => (
             <Box key={option.id}>
               {index !== 4 ? (
-                <MenuItem onClick={(ev) => handleClick(ev, option.value, category.id)}>
+                <MenuItem onClick={() => handleClick(option.value, category.id)}>
                   <ListItemText>{option.label}</ListItemText>
                   {option.isSelected && (
                     <ListItemIcon>

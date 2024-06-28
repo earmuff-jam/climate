@@ -64,19 +64,17 @@ const CategoryDetails = () => {
   };
 
   if (isLoading) return <Skeleton variant="rounded" animation="wave" height={'100%'} width={'100%'} />;
-
   if (data.length <= 0) return <DisplayNoMatchingRecordsComponent />;
 
   return (
     <>
       <Stack spacing={'2rem'}>
-        <Stack spacing={{ xs: 1, sm: 2 }} direction="row" useFlexGap flexWrap="wrap">
+        <Stack spacing={{ xs: 1 }} direction="row" useFlexGap flexWrap="wrap">
           {data.map((item, index) => (
             <Stack key={index} flexGrow={1}>
               <Tooltip title={item.description}>
                 <Card
                   sx={{
-                    height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                   }}
@@ -88,24 +86,19 @@ const CategoryDetails = () => {
                           {item.category_name}
                         </Typography>
                         <Typography variant="caption">{item.category_description}</Typography>
-
-                        <Box sx={{ px: 1, py: 0, borderRadius: 2 }}>
-                          <Stack
-                            direction={'row'}
-                            alignItems={'center'}
-                            useFlexGap
-                            spacing={1}
-                            sx={{ cursor: 'pointer' }}
-                            onClick={() => handleSelection(item)}
-                          >
-                            <TrendingUpRounded color={index % 2 == 0 ? 'success' : 'error'} />
-                            <Stack>
-                              <Typography variant="caption">
-                                Total items {item.totalAssignedItems.length ?? 0}
-                              </Typography>
-                            </Stack>
+                        <Stack
+                          direction={'row'}
+                          alignItems={'center'}
+                          useFlexGap
+                          spacing={1}
+                          sx={{ cursor: 'pointer' }}
+                          onClick={() => handleSelection(item)}
+                        >
+                          <TrendingUpRounded color={index % 2 == 0 ? 'success' : 'error'} />
+                          <Stack>
+                            <Typography variant="caption">Total items {item.totalAssignedItems.length ?? 0}</Typography>
                           </Stack>
-                        </Box>
+                        </Stack>
                       </Stack>
                       <IconButton
                         size="small"
@@ -132,7 +125,6 @@ const CategoryDetails = () => {
         <SimpleModal
           title={`Item(s) under ${selectedCategory?.category_name}`}
           handleClose={handleClose}
-          showSubmit={false}
           maxSize={'md'}
         >
           <InventoryTable

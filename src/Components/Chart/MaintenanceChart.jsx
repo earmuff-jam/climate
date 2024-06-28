@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import HeaderWithButton from '../../util/HeaderWithButton';
 import PieBarChart from './PieBarChart';
 import { useState } from 'react';
@@ -9,7 +9,7 @@ const MaintenanceChart = ({ data }) => {
   const handleDisplaySelection = () => setDisplayOverflow(!displayOverflow);
 
   return (
-    <Box>
+    <>
       <HeaderWithButton
         title="More details"
         showPrimaryButton={true}
@@ -27,7 +27,6 @@ const MaintenanceChart = ({ data }) => {
           )
         }
         handleClickPrimaryButton={handleDisplaySelection}
-        showSecondaryButton={false}
       />
       <PieBarChart
         legendLabel={!displayOverflow ? 'Plan vs total item(s)' : 'Overdue vs total items(s)'}
@@ -39,7 +38,7 @@ const MaintenanceChart = ({ data }) => {
         backgroundColor={`rgba(75, 192, 192, 0.4)`}
         borderColor={`rgba(75, 192, 192, 1)`}
       />
-    </Box>
+    </>
   );
 };
 

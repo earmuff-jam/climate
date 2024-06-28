@@ -29,7 +29,7 @@ const CategoriesList = () => {
         />
         <CategoryDetails />
         {displayModal && (
-          <SimpleModal title={'Add New Category'} handleClose={() => setDisplayModal(false)} showSubmit={false}>
+          <SimpleModal title={'Add New Category'} handleClose={() => setDisplayModal(false)}>
             <AddCategory handleCloseAddCategory={() => setDisplayModal(false)} />
           </SimpleModal>
         )}

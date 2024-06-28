@@ -39,7 +39,6 @@ const Plan = () => {
         <SimpleModal
           title={'Add new maintenance plan'}
           handleClose={handleCloseAddNewPlan}
-          showSubmit={false}
           maxSize={'md'}
         >
           <AddPlan handleCloseAddNewPlan={handleCloseAddNewPlan} />

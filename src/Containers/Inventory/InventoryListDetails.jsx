@@ -50,7 +50,7 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
   const handleDisplayAddSingleInventoryModal = () => setModalState(MODAL_STATE.ADD_ITEM);
   const handleDisplayAddBulkInventoryModal = () => setModalState(MODAL_STATE.BULK_ITEM);
 
-  // handleRowSelection for checkbox actions
+  // checkbox actions
   const handleRowSelection = (_, id) => {
     if (id === 'all') {
       if (rowSelected.length === 0) {
@@ -96,7 +96,6 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
 
   const confirmDelete = (id) => {
     if (id === -1) {
-      // unknown id to delete. protect from confirmation box
       return;
     }
     deleteSelectedInventoryMutation.mutate(rowSelected);
@@ -187,12 +186,12 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
         </Box>
       </Container>
       {modalState === MODAL_STATE.ADD_ITEM && (
-        <SimpleModal title={'Add New Item'} handleClose={handleCloseModal} showSubmit={false}>
+        <SimpleModal title={'Add New Item'} handleClose={handleCloseModal}>
           <AddInventory handleClose={handleCloseModal} />
         </SimpleModal>
       )}
       {modalState === MODAL_STATE.BULK_ITEM && (
-        <SimpleModal title={'Add Bulk Item'} handleClose={handleCloseModal} showSubmit={false} maxSize={'md'}>
+        <SimpleModal title={'Add Bulk Item'} handleClose={handleCloseModal} maxSize={'md'}>
           <AddBulkUploadInventory handleClose={handleCloseModal} />
         </SimpleModal>
       )}
@@ -223,7 +222,7 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
       )}
       {/* assign category to selected inventory */}
       {modalState === MODAL_STATE.ASSIGN_CATEGORY && (
-        <SimpleModal title={'Assign category'} handleClose={handleCloseModal} showSubmit={false} maxSize={'md'}>
+        <SimpleModal title={'Assign category'} handleClose={handleCloseModal} maxSize={'md'}>
           <AssignCategory rowSelected={rowSelected} handleCloseAssignFn={handleCloseModal} />
         </SimpleModal>
       )}
@@ -235,7 +234,6 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
           redirectSubtitle={true}
           subtitleLinkTo={'/maintenance'}
           handleClose={handleCloseModal}
-          showSubmit={false}
           maxSize={'md'}
         >
           <AssignPlan rowSelected={rowSelected} handleCloseAssignFn={handleCloseModal} />
@@ -247,7 +245,6 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
         text="Confirm deletion of selected item(s) ? Deletion is permanent and cannot be undone."
         textVariant="body2"
         handleClose={reset}
-        showSubmit={false}
         maxSize={'sm'}
         deleteID={idToDelete}
         confirmDelete={confirmDelete}

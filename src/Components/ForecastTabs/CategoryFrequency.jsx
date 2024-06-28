@@ -1,4 +1,4 @@
-import { Card, Stack, Typography } from '@mui/material';
+import { Card, Skeleton, Stack, Typography } from '@mui/material';
 import HeaderWithButton from '../../util/HeaderWithButton';
 import { useFetchCategoryList } from '../../features/categories';
 import dayjs from 'dayjs';
@@ -8,7 +8,7 @@ import LimitMenu from './LimitMenu';
 const CategoryFrequency = () => {
   const { data, isLoading } = useFetchCategoryList();
 
-
+  if (isLoading) return <Skeleton height={100} width={'100%'} /> 
   return (
     <Stack>
       <HeaderWithButton

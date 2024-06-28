@@ -11,12 +11,11 @@ import {
 import { useFetchInventoriesCount, useFetchInventoryItemsCost } from '../../features/inventories';
 
 const InventoryOverview = () => {
-  const { data: inventoryItemsWithAssociatedCost, isLoading: inventoryItemsWithAssociatedCostLoading } =
-    useFetchInventoryItemsCost();
+  const { data: inventoryItemsWithAssociatedCost } = useFetchInventoryItemsCost();
+  const { data: categoriesCount } = useFetchCategoriesCount();
+  const { data: inventoriesCount } = useFetchInventoriesCount();
+  const { data: maintenancePlanCount } = useFetchMaintenancePlansCount();
   const { data: categoryItemCounts, isLoading: categoryItemCountsLoading } = useFetchCategoryItemsCount();
-  const { data: categoriesCount, isLoading: categoriesCountLoading } = useFetchCategoriesCount();
-  const { data: inventoriesCount, isLoading: inventoriesCountLoading } = useFetchInventoriesCount();
-  const { data: maintenancePlanCount, isLoading: maintenancePlanCountLoading } = useFetchMaintenancePlansCount();
   const { data: maintenancePlanItemCounts, isLoading: maintenancePlanItemCountsLoading } =
     useFetchMaintenancePlanItemsCount();
   const { data: maintenancePlanItemOverdueCounts, isLoading: maintenancePlanItemOverdueCountsLoading } =
@@ -28,7 +27,7 @@ const InventoryOverview = () => {
   }, 0);
 
   return (
-    <Box sx={{ py: 8 }}>
+    <Box sx={{ py: 4 }}>
       <Container maxWidth="lg">
         <HeaderWithButton title="Overview" />
         <Stack spacing="2rem">
@@ -36,40 +35,31 @@ const InventoryOverview = () => {
             <CardContent>
               <Stack>
                 <HeaderWithButton title="Inventory Summary" />
-                <Stack direction="row" spacing="2rem" useFlexGap flexWrap="wrap">
+                <Stack direction="row" spacing={{ xs: 1 }} useFlexGap flexWrap="wrap">
                   <CardItem>
                     <ColumnItem
                       label="under assigned maintenance plan"
-                      align="center"
                       icon={<EngineeringRounded />}
                       color="primary"
                       dataLabel={maintenancePlanItemCounts || 0}
-                      secondaryLabel="item(s)"
-                      secondaryLabelAlign="center"
                       loading={maintenancePlanItemCountsLoading}
                     />
                   </CardItem>
                   <CardItem>
                     <ColumnItem
                       label="under assigned categories"
-                      align="center"
                       icon={<CategoryRounded />}
                       color="primary"
                       dataLabel={categoryItemCounts || 0}
-                      secondaryLabel="item(s)"
-                      secondaryLabelAlign="center"
                       loading={categoryItemCountsLoading}
                     />
                   </CardItem>
                   <CardItem>
                     <ColumnItem
                       label="require attention"
-                      align="center"
                       icon={<WarningRounded />}
                       color="error"
-                      dataLabel={maintenancePlanItemOverdueCounts}
-                      secondaryLabel="item(s)"
-                      secondaryLabelAlign="center"
+                      dataLabel={maintenancePlanItemOverdueCounts || 0}
                       loading={maintenancePlanItemOverdueCountsLoading}
                     />
                   </CardItem>
@@ -149,19 +139,19 @@ const RowItem = ({ label, color, dataValue }) => {
   );
 };
 
-const ColumnItem = ({ align, label, dataLabel, icon, color, secondaryLabel, secondaryLabelAlign, loading }) => {
+const ColumnItem = ({ label, dataLabel, icon, color, loading }) => {
   if (loading) return <Skeleton width="100%" height="1rem" />;
   return (
     <Stack>
-      <Typography textAlign={align} variant="h4" color={color}>
+      <Typography textAlign={'center'} variant="h4" color={color}>
         {dataLabel}
       </Typography>
-      <Stack direction="row" alignItems="center" justifyContent={align}>
+      <Stack direction="row" alignItems="center" justifyContent={'center'}>
         <IconButton disabled size="small">
           {icon}
         </IconButton>
-        <Typography variant="caption" textAlign={secondaryLabelAlign}>
-          {secondaryLabel}
+        <Typography variant="caption" textAlign={'center'}>
+          item(s)
         </Typography>
       </Stack>
       <Typography>{label}</Typography>

@@ -7,7 +7,6 @@ const Inventories = ({ displayAllInventories, plainView }) => {
   return (
     <>
       {displayAllInventories ? <CategoryListDetails /> : <InventoryOverview />}
-
       <InventoryListDetails displayAllInventories={displayAllInventories} plainView={plainView} />
       {!displayAllInventories ? <Collection title={'Learn more'} /> : null}
     </>

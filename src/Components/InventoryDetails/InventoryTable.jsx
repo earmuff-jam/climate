@@ -39,8 +39,18 @@ const InventoryTable = ({
   handleRowSelection,
   handleEdit,
 }) => {
-  const columnHeaderFormatter = (column) => {
-    return column.label;
+
+  const generateTitleColor = (row, isCategory) => {
+    let title = null;
+    let color = null;
+    if (isCategory) {
+      title = row?.category_item.length > 0 && `Assigned ${row?.category_item[0].category_name} Category`;
+      color = row?.category_item.length > 0 && row?.category_item[0].associated_color;
+    } else {
+      title = row?.maintenance_item.length > 0 && `Assigned ${row?.maintenance_item[0].maintenance_plan_name} Maintenance Plan`;
+      color = row?.maintenance_item.length > 0 && row?.maintenance_item[0].associated_color;
+    }
+    return { title, color };
   };
 
   const rowFormatter = (row, column, color) => {
@@ -57,7 +67,6 @@ const InventoryTable = ({
       return row[column] ? <CheckRounded color="primary" /> : <CloseRounded color="error" />;
     }
     if (['name'].includes(column)) {
-      // support for assigned maintenance item
       return (
         <Stack direction="row" alignItems="center" justifyContent="flex-start" spacing={2}>
           <CircleRounded sx={{ height: '0.75rem', width: '0.75rem', color: color ? `${color}` : 'transparent' }} />
@@ -68,9 +77,7 @@ const InventoryTable = ({
     return row[column] ?? '-';
   };
 
-  if (isLoading) {
-    return <Skeleton variant="rounded" animation="wave" height={'100%'} width={'100%'} />;
-  }
+  if (isLoading) return <Skeleton variant="rounded" animation="wave" height={'100%'} width={'100%'} />;
 
   if (!data || data.length === 0) {
     return <DisplayNoMatchingRecordsComponent />;
@@ -95,7 +102,7 @@ const InventoryTable = ({
               const column = columns[colKey];
               return (
                 <TableCell key={column.id} align="center">
-                  <Typography fontWeight={'bold'}>{columnHeaderFormatter(column)}</Typography>
+                  <Typography fontWeight={'bold'}>{column.label}</Typography>
                 </TableCell>
               );
             })}
@@ -106,19 +113,7 @@ const InventoryTable = ({
             const isSelected = (id) => rowSelected.indexOf(id) !== -1;
             const selectedID = row.id;
             const isItemSelected = isSelected(selectedID);
-            let title = '';
-            let color = null;
-            if (row?.category_item?.length <= 0 || row?.maintenance_item?.length <= 0) {
-              title = null;
-              color = null;
-            } else if (isCategory) {
-              title = row?.category_item.length > 0 && `Assigned ${row?.category_item[0].category_name}`;
-              color = row?.category_item.length > 0 && row?.category_item[0].associated_color;
-            } else {
-              title = row?.maintenance_item.length > 0 && `Assigned ${row?.maintenance_item[0].maintenance_plan_name}`;
-              color = row?.maintenance_item.length > 0 && row?.maintenance_item[0].associated_color;
-            }
-
+            const { title, color } = generateTitleColor(row, isCategory);
             return (
               <Tooltip key={rowIndex} title={title}>
                 <TableRow hover>

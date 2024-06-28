@@ -21,41 +21,30 @@ const PrimaryAppBar = ({ isUserLoggedIn }) => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <>
       <AppBar position="static">
         <Toolbar>
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <Typography variant="h6" component="div" onClick={() => navigate("/")} sx={{cursor: 'pointer'}}>
+            <Typography variant="h6" component="div" onClick={() => navigate('/')} sx={{ cursor: 'pointer' }}>
               Climate
             </Typography>
           </Box>
           <Stack direction="row">
-            {!isUserLoggedIn ? (
+            <Stack direction={'row'}>
+              <Button color="inherit" onClick={() => navigate('/inventories/list')}>
+                Inventories
+              </Button>
               <Button color="inherit" onClick={() => navigate('/profile')}>
-                Login
+                Profile
               </Button>
-            ) : (
-              <Stack direction={'row'}>
-                <Button color="inherit" onClick={() => navigate('/inventories/list')}>
-                  Inventories
-                </Button>
-                <Button color="inherit" onClick={() => navigate('/profile')}>
-                  Profile
-                </Button>
-              </Stack>
-            )}
-            <Button color="inherit" onClick={() => handleClick(isUserLoggedIn)}>
-              {isUserLoggedIn ? 'Sign out' : 'Contact'}
+            </Stack>
+            <Button color="inherit" onClick={handleClick}>
+              Sign out
             </Button>
-            {!isUserLoggedIn ? (
-              <Button variant="outlined" color="inherit" onClick={() => navigate('/profile')}>
-                Try for free
-              </Button>
-            ) : null}
           </Stack>
         </Toolbar>
       </AppBar>
-    </Box>
+    </>
   );
 };
 

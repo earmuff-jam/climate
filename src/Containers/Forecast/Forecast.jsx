@@ -10,7 +10,7 @@ const Forecast = () => {
   const handleChange = (_, newVal) => setTabVal(newVal);
 
   return (
-    <Box sx={{ py: 8 }}>
+    <Box sx={{ py: 4 }}>
       <Container maxWidth="lg">
         <Stack spacing="1rem">
           <HeaderWithButton
@@ -35,8 +35,8 @@ const Forecast = () => {
 };
 
 /**
- * fn to render the content based on what the tab value is served
- * @param {string} tabVal - the tab value to render items under
+ * fn to render the content
+ * @param {string} tabVal - the tab value
  */
 const getContentFromTabs = (tabVal) => {
   switch (tabVal) {

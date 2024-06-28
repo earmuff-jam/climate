@@ -20,7 +20,6 @@ export const ConfirmationBoxModal = ({
   openDialog,
   title,
   handleClose,
-  showSubmit,
   maxSize,
   textVariant,
   text,
@@ -28,7 +27,7 @@ export const ConfirmationBoxModal = ({
   confirmDelete,
 }) => {
   return openDialog ? (
-    <SimpleModal title={title} handleClose={handleClose} showSubmit={showSubmit} maxSize={maxSize}>
+    <SimpleModal title={title} handleClose={handleClose} maxSize={maxSize}>
       <Typography variant={textVariant}>{text}</Typography>
       <Stack direction={'row'} justifyContent={'flex-end'}>
         <Button onClick={handleClose}>Go back</Button>
