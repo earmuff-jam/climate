@@ -3,7 +3,7 @@ import { Card, CardContent, IconButton, Skeleton, Stack, Tooltip, Typography } f
 import { HighlightOffRounded, TrendingUpRounded } from '@mui/icons-material';
 import { ConfirmationBoxModal, DisplayNoMatchingRecordsComponent } from '../../util/util';
 import SimpleModal from '../../util/SimpleModal';
-import InventoryTable from '../InventoryDetails/InventoryTable';
+import TableComponent from '../InventoryDetails/TableComponent';
 import { VIEW_INVENTORY_LIST_HEADERS } from '../InventoryDetails/constants';
 import { useQuery } from 'react-query';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
@@ -123,7 +123,7 @@ const CategoryDetails = () => {
       {/* display list of inventories associated with the selected maintenance plan when selected */}
       {modalState === MODAL_STATE.ITEM_SELECTION && (
         <SimpleModal title={`Item(s) under ${selectedCategory?.category_name}`} handleClose={handleClose} maxSize="md">
-          <InventoryTable
+          <TableComponent
             plainView={true}
             isCategory={true}
             isLoading={inventoryLoading}

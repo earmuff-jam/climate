@@ -61,19 +61,16 @@ const AddBulkUploadInventory = ({ handleClose }) => {
       <Stack paddingBottom="2rem">
         <Typography fontWeight="bold">Upload inventory items in bulk</Typography>
         <Stack direction="column">
-          <Typography variant="caption" component={Box}>
-            Please use the provided template so that all fields are added in the system.
-            <Stack
-              direction="row"
-              sx={{ cursor: 'pointer', alignItems: 'flex-end' }}
-              onClick={downloadBulkUploadTemplate}
-            >
-              <DownloadRounded color="primary" />
-              <Typography variant="caption" color="text.secondary">
-                Download template
-              </Typography>
-            </Stack>
-          </Typography>
+          <Stack
+            direction="row"
+            sx={{ cursor: 'pointer', alignItems: 'flex-end' }}
+            onClick={downloadBulkUploadTemplate}
+          >
+            <DownloadRounded color="primary" />
+            <Typography variant="caption" color="text.secondary">
+              Download template for inventory items.
+            </Typography>
+          </Stack>
         </Stack>
       </Stack>
       <Stack alignItems="center">
@@ -88,10 +85,12 @@ const AddBulkUploadInventory = ({ handleClose }) => {
           }}
         >
           <Input type="file" onChange={handleFileChange} />
-          <Typography variant="caption">Uploading excel data must contain required headers</Typography>
+          <Typography variant="caption">
+            Use existing template from above to ensure all required headers are filled.
+          </Typography>
         </Box>
-        <Stack direction="row" spacing={2} useFlexGap sx={{ py: 4 }}>
-          <Button endIcon={<SaveRounded />} onClick={submit}>
+        <Stack direction="row" spacing={2} alignSelf="flex-start">
+          <Button variant="outlined" startIcon={<SaveRounded />} onClick={submit}>
             Save
           </Button>
         </Stack>

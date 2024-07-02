@@ -11,19 +11,13 @@ const CategoriesList = () => {
   const handleAddCategory = () => setDisplayModal(!displayModal);
 
   return (
-    <Box sx={{ py: 8 }}>
-      <Container maxWidth="lg">
+    <Box sx={{ py: 2 }}>
+      <Container maxWidth="xl">
         <HeaderWithButton
           title="Categories"
-          showPrimaryButton={true}
-          primaryButtonVariant="outlined"
-          primaryButtonColor="primary"
           primaryButtonTextLabel="Add Category"
-          showPrimaryStartIcon={true}
           primaryStartIcon={<AddRounded />}
-          showSecondaryButton={false}
           handleClickPrimaryButton={handleAddCategory}
-          showSecondaryTitle={true}
           showRedirectLink={false}
           secondaryTitle="Select total items in each category(s) to view all associated items"
         />

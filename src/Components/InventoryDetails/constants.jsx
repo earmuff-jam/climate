@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import QrCodeGen from './QrCodeGen';
 
 dayjs.extend(relativeTime);
 
@@ -45,7 +46,11 @@ export const BUILD_TABLE_CONSTANTS = (columnLabels) => (eventObj) => {
   const tableRows = columnLabels.map(({ id, colName, label, modifier }) => {
     let value = eventObj[colName];
     if (modifier) {
-      value = modifier(value, { colName, label });
+      if (colName === 'qr_code') {
+        value = modifier(eventObj['name']);
+      } else {
+        value = modifier(value, { colName, label });
+      }
     } else {
       value = value || 'N/A';
     }
@@ -104,6 +109,7 @@ export const VIEW_INVENTORY_LIST_HEADERS = {
     id: 7,
     colName: 'quantity',
     label: 'Quantity',
+    displayConcise: true,
     modifier: (value) => `${value || '-'}`,
   },
   location: {
@@ -149,6 +155,18 @@ export const VIEW_INVENTORY_LIST_HEADERS = {
     label: 'Min Height',
     modifier: (value) => `${value || '-'}`,
   },
+  bought_at: {
+    id: 18,
+    colName: 'bought_at',
+    label: 'Purchase Location',
+    modifier: (value) => `${value || '-'}`,
+  },
+  qr_code: {
+    id: 14,
+    colName: 'qr_code',
+    label: 'QR Code',
+    modifier: (value) => <QrCodeGen value={value} />,
+  },
   updated_at: {
     id: 15,
     colName: 'updated_on',
@@ -162,11 +180,5 @@ export const VIEW_INVENTORY_LIST_HEADERS = {
     label: 'Updated By',
     displayConcise: true,
     modifier: (value) => `${value?.username || '-'}`,
-  },
-  bought_at: {
-    id: 18,
-    colName: 'bought_at',
-    label: 'Purchase Location',
-    modifier: (value) => `${value || '-'}`,
   },
 };
