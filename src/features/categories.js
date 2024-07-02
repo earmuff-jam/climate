@@ -28,7 +28,8 @@ const fetchCategoriesList = (client, userID) => {
         sharable_groups,
         thresholdlimit,
         totalAssignedItems:category_item!id(
-          id
+          id,
+          item_id
         ),
         creator_name:profiles!created_by(
           username

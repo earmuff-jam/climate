@@ -169,6 +169,9 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
             rowSelected={rowSelected}
             handleEdit={handleEdit}
             handleRowSelection={handleRowSelection}
+            handleAddCategory={handleAddCategory}
+            handleAddInventory={handleAddInventory}
+            handleDeleteInventory={handleDeleteInventory}
           />
         ) : (
           <TableComponent

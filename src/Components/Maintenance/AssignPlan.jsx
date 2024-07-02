@@ -1,9 +1,12 @@
-import { Box, Card, CardContent, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
+import { Alert, Box, Card, CardContent, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { useAssignInventoryItemToMaintenancePlan, useFetchMaintenanceList } from '../../features/maintenancePlan';
 import { DisplayNoMatchingRecordsComponent } from '../../util/util';
+import { WarningOutlined } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 const AssignPlan = ({ rowSelected, handleCloseAssignFn }) => {
+  const navigate = useNavigate();
   const { data, isLoading } = useFetchMaintenanceList();
   const assignInventoryItemToMaintenancePlanMutation = useAssignInventoryItemToMaintenancePlan();
   if (isLoading) return <Skeleton height="1" width="1" variant="rounded" />;
@@ -14,8 +17,30 @@ const AssignPlan = ({ rowSelected, handleCloseAssignFn }) => {
     handleCloseAssignFn();
   };
 
+  const existsInAnotherPlan = data.reduce((acc, el) => {
+    const itemsWithinSelectedPlan = el.maintenanceItems;
+    const itemExists = itemsWithinSelectedPlan.some((item) => rowSelected.includes(item.item_id));
+    if (itemExists) {
+      acc = true;
+    }
+    return acc;
+  }, false);
+
   return (
     <Box>
+      {existsInAnotherPlan ? (
+        <Alert severity="warning" icon={<WarningOutlined fontSize="inherit" color="warning" />} sx={{ mb: 1 }}>
+          One or more selected item(s) belongs to an existing maintenance plan. Adding to another maintenance plan will
+          not reassign selected item. Manage individual items from{' '}
+          <Typography
+            variant="subtitle"
+            sx={{ cursor: 'pointer' }}
+            onClick={() => navigate('/inventories/maintenance/list')}
+          >
+            maintenance plan section
+          </Typography>
+        </Alert>
+      ) : null}
       <Stack direction="row" spacing={2}>
         {data.map((v) => (
           <Card

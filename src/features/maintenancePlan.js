@@ -30,6 +30,7 @@ const fetchMaintenancePlanList = (client, userID) => {
       updated_by,
       maintenanceItems:maintenance_item!id(
         id,
+        item_id,
         overflow
       ),
       sharable_groups,

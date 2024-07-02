@@ -4,17 +4,25 @@ import {
   CardContent,
   CardMedia,
   Checkbox,
-  IconButton,
   Skeleton,
   Stack,
   Tooltip,
   Typography,
 } from '@mui/material';
 import { DisplayNoMatchingRecordsComponent } from '../../util/util';
-import { EditRounded } from '@mui/icons-material';
 import dayjs from 'dayjs';
+import MoreDetails from './MoreDetails';
 
-const GridComponent = ({ isLoading, data, rowSelected, handleEdit, handleRowSelection }) => {
+const GridComponent = ({
+  isLoading,
+  data,
+  rowSelected,
+  handleEdit,
+  handleRowSelection,
+  handleAddCategory,
+  handleAddInventory,
+  handleDeleteInventory,
+}) => {
   if (isLoading) return <Skeleton height="10vh" width="100%" />;
   if (data.length <= 0) return <DisplayNoMatchingRecordsComponent />;
 
@@ -55,9 +63,14 @@ const GridComponent = ({ isLoading, data, rowSelected, handleEdit, handleRowSele
                   onClick={(event) => handleRowSelection(event, selectedID)}
                   inputProps={{ 'aria-labelledby': 'labelId' }}
                 />
-                <IconButton size="small" color="primary" onClick={() => handleEdit(selectedID)}>
-                  <EditRounded fontSize="small" />
-                </IconButton>
+                <MoreDetails
+                  selectedID={selectedID}
+                  handleEdit={handleEdit}
+                  rowSelected={rowSelected}
+                  handleAddCategory={handleAddCategory}
+                  handleAddInventory={handleAddInventory}
+                  handleDeleteInventory={handleDeleteInventory}
+                />
               </CardActions>
             </Card>
           </Stack>
