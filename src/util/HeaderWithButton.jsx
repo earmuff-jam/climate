@@ -1,36 +1,26 @@
 import { Box, Button, Link, Stack, Typography } from '@mui/material';
 
-const HeaderWithButton = (props) => {
-  const {
-    title,
-    titleVariant = 'h4',
-    showSecondaryTitle,
-    secondaryTitle,
-    showRedirectLink,
-    redirectTo,
-    showPrimaryButton,
-    primaryButtonVariant,
-    primaryButtonColor,
-    primaryButtonTextLabel,
-    showPrimaryStartIcon,
-    primaryStartIcon,
-    showSecondaryButton,
-    secondaryButtonVariant,
-    secondaryButtonTextLabel,
-    secondaryButtonColor,
-    showSecondaryStartIcon,
-    secondaryStartIcon,
-    handleClickPrimaryButton,
-    handleClickSecondaryButton,
-  } = props;
+const HeaderWithButton = ({
+  title,
+  titleVariant = 'h4',
+  secondaryTitle,
+  showRedirectLink,
+  redirectTo,
+  primaryButtonTextLabel,
+  primaryStartIcon,
+  secondaryButtonTextLabel,
+  secondaryStartIcon,
+  handleClickPrimaryButton,
+  handleClickSecondaryButton,
+  children,
+}) => {
   return (
-    <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+    <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
       <Stack>
         <Typography variant={titleVariant} component="h2">
           {title}
         </Typography>
-        {showSecondaryTitle ? (
-          // if we do not want to show redirect link
+        {secondaryTitle ? (
           showRedirectLink ? (
             <Link href={redirectTo}>
               <Typography variant="caption">{secondaryTitle}</Typography>
@@ -41,26 +31,22 @@ const HeaderWithButton = (props) => {
         ) : null}
       </Stack>
       <Stack direction="row" spacing={2} useFlexGap>
-        {showPrimaryButton ? (
-          <Button
-            color={primaryButtonColor}
-            variant={primaryButtonVariant}
-            onClick={handleClickPrimaryButton}
-            startIcon={showPrimaryStartIcon ? primaryStartIcon : null}
-          >
+        {primaryButtonTextLabel ? (
+          <Button color="primary" variant="outlined" onClick={handleClickPrimaryButton} startIcon={primaryStartIcon}>
             {primaryButtonTextLabel}
           </Button>
         ) : null}
-        {showSecondaryButton ? (
+        {secondaryButtonTextLabel ? (
           <Button
-            color={secondaryButtonColor}
-            variant={secondaryButtonVariant}
+            color="primary"
+            variant="outlined"
             onClick={handleClickSecondaryButton}
-            startIcon={showSecondaryStartIcon ? secondaryStartIcon : null}
+            startIcon={secondaryStartIcon}
           >
             {secondaryButtonTextLabel}
           </Button>
         ) : null}
+        {children}
       </Stack>
     </Box>
   );

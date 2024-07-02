@@ -8,11 +8,12 @@ BEGIN;
 DROP TABLE IF EXISTS user_settings CASCADE ;
 CREATE TABLE user_settings
 (
-    id                          uuid references auth.users ON DELETE CASCADE ON UPDATE CASCADE NOT NULL PRIMARY KEY,
-    notify_bookmarked_items     BOOLEAN,
-    notify_due_items            BOOLEAN,
-    notify_settings_privacy     BOOLEAN,
-    display_mode                BOOLEAN,
+    id                          uuid references auth.users ON DELETE CASCADE ON UPDATE CASCADE                  NOT NULL PRIMARY KEY,
+    notify_bookmarked_items     BOOLEAN                                                         DEFAULT false,
+    notify_due_items            BOOLEAN                                                         DEFAULT false,
+    notify_settings_privacy     BOOLEAN                                                         DEFAULT false,
+    display_mode                BOOLEAN                                                         DEFAULT false,
+    inventory_layout            BOOLEAN                                                         DEFAULT false,
     created_by                  UUID,
     created_on                  TIMESTAMP WITH TIME ZONE,
     updated_by                  UUID,

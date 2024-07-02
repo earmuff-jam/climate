@@ -17,7 +17,7 @@ import { DisplayNoMatchingRecordsComponent } from '../../util/util';
 import { CheckRounded, CircleRounded, CloseRounded, EditRounded, FileOpenRounded } from '@mui/icons-material';
 
 /**
- * InventoryTable React Function - Displays the inventory table
+ * TableComponent React Function - Displays the inventory table
  * @param {boolean} plainView - determines if extra functionality should be present, like selection of rows, defaults: false
  * @param {boolean} isLoading - determines if the selected data is still in loading state
  * @param {boolean} isCategory - determines if the view mode is from the category side instead of maintenance plan side. default: false
@@ -28,10 +28,11 @@ import { CheckRounded, CircleRounded, CloseRounded, EditRounded, FileOpenRounded
  * @param {Function} handleRowSelection - the function that is used to handle selection of rows
  * @param {Function} handleEdit - the function that is used to handle editing capabilities
  */
-const InventoryTable = ({
+const TableComponent = ({
   plainView = false,
   isLoading,
   isCategory = false,
+  supportLowStock = false,
   columns,
   data,
   rowSelected,
@@ -39,15 +40,23 @@ const InventoryTable = ({
   handleRowSelection,
   handleEdit,
 }) => {
-
   const generateTitleColor = (row, isCategory) => {
     let title = null;
     let color = null;
+
+    if (supportLowStock) {
+      title = '';
+      color = '';
+      return { title, color };
+    }
+
     if (isCategory) {
       title = row?.category_item.length > 0 && `Assigned ${row?.category_item[0].category_name} Category`;
       color = row?.category_item.length > 0 && row?.category_item[0].associated_color;
     } else {
-      title = row?.maintenance_item.length > 0 && `Assigned ${row?.maintenance_item[0].maintenance_plan_name} Maintenance Plan`;
+      title =
+        row?.maintenance_item.length > 0 &&
+        `Assigned ${row?.maintenance_item[0].maintenance_plan_name} Maintenance Plan`;
       color = row?.maintenance_item.length > 0 && row?.maintenance_item[0].associated_color;
     }
     return { title, color };
@@ -68,16 +77,16 @@ const InventoryTable = ({
     }
     if (['name'].includes(column)) {
       return (
-        <Stack direction="row" alignItems="center" justifyContent="flex-start" spacing={2}>
+        <Stack direction="row" alignItems="center" justifyContent="flex-start" spacing={{ xs: 1 }}>
           <CircleRounded sx={{ height: '0.75rem', width: '0.75rem', color: color ? `${color}` : 'transparent' }} />
-          <Typography>{row[column] || '-'}</Typography>
+          <Typography variant="subtitle2">{row[column] || '-'}</Typography>
         </Stack>
       );
     }
     return row[column] ?? '-';
   };
 
-  if (isLoading) return <Skeleton variant="rounded" animation="wave" height="100%" width="100%" />;
+  if (isLoading) return <Skeleton variant="rounded" animation="wave" height="10vh" width="100%" />;
 
   if (!data || data.length === 0) {
     return <DisplayNoMatchingRecordsComponent />;
@@ -113,7 +122,7 @@ const InventoryTable = ({
             const isSelected = (id) => rowSelected.indexOf(id) !== -1;
             const selectedID = row.id;
             const isItemSelected = isSelected(selectedID);
-            const { title, color } = generateTitleColor(row, isCategory);
+            const { title, color } = generateTitleColor(row, isCategory, supportLowStock);
             return (
               <Tooltip key={rowIndex} title={title}>
                 <TableRow hover>
@@ -154,4 +163,4 @@ const InventoryTable = ({
   );
 };
 
-export default InventoryTable;
+export default TableComponent;

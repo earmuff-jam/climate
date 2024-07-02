@@ -11,7 +11,7 @@ const SelectedRowItem = ({ selectedRow, columns }) => {
     <Table>
       <TableBody>
         {BUILD_TABLE_CONSTANTS(columns)(selectedRow).map((row) => (
-          <TableRow key={row.id}>
+          <TableRow key={row.label}>
             <TableCell>{row.id}</TableCell>
             <TableCell>{row.label}</TableCell>
             <TableCell>{row.value}</TableCell>

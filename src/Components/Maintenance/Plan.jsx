@@ -16,20 +16,14 @@ const Plan = () => {
   };
 
   return (
-    <Box sx={{ py: 8 }}>
-      <Container maxWidth="lg">
+    <Box sx={{ py: 2 }}>
+      <Container maxWidth="xl">
         {/* Plan section */}
         <HeaderWithButton
           title="Maintenance Plans"
-          showPrimaryButton={true}
-          primaryButtonVariant="outlined"
-          primaryButtonColor="primary"
           primaryButtonTextLabel="Add Plan"
-          showPrimaryStartIcon={true}
           primaryStartIcon={<AddRounded />}
-          showSecondaryButton={false}
           handleClickPrimaryButton={handleAddNewPlan}
-          showSecondaryTitle={true}
           showRedirectLink={false}
           secondaryTitle="Select total items in each maintenance plan(s) to view all items associated that plan"
         />

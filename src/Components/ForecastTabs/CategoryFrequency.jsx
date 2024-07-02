@@ -14,7 +14,6 @@ const CategoryFrequency = () => {
       <HeaderWithButton
         title="Thresholds against categories"
         titleVariant="h6"
-        showSecondaryTitle="true"
         secondaryTitle="Adding threshold will setup alerts for items that fall below the provisioned limit"
       />
       {data?.length <= 0 ? (

@@ -27,8 +27,8 @@ const InventoryOverview = () => {
   }, 0);
 
   return (
-    <Box sx={{ py: 4 }}>
-      <Container maxWidth="lg">
+    <Box sx={{ py: 2 }}>
+      <Container maxWidth="xl">
         <HeaderWithButton title="Overview" />
         <Stack spacing="2rem">
           <Card elevation={0}>

@@ -8,7 +8,7 @@ import {
   useFetchMaintenanceList,
 } from '../../features/maintenancePlan';
 import SimpleModal from '../../util/SimpleModal';
-import InventoryTable from '../InventoryDetails/InventoryTable';
+import TableComponent from '../InventoryDetails/TableComponent';
 import { VIEW_INVENTORY_LIST_HEADERS } from '../InventoryDetails/constants';
 import { useQuery } from 'react-query';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
@@ -133,7 +133,7 @@ const PlanList = () => {
           handleClose={handleClose}
           maxSize="md"
         >
-          <InventoryTable
+          <TableComponent
             plainView={true}
             isLoading={inventoryLoading}
             data={inventoryData?.data || []}

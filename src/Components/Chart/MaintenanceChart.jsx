@@ -12,13 +12,8 @@ const MaintenanceChart = ({ data }) => {
     <>
       <HeaderWithButton
         title="More details"
-        showPrimaryButton={true}
-        primaryButtonVariant="outlined"
-        primaryButtonColor="primary"
         primaryButtonTextLabel="Display overdue"
-        showPrimaryStartIcon={true}
         primaryStartIcon={<ChangeCircleRounded color="warning" />}
-        showSecondaryTitle={true}
         secondaryTitle={
           !displayOverflow ? (
             <Typography variant="caption">Switch to overdue view to see items that require attention</Typography>

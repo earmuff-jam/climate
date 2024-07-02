@@ -7,18 +7,12 @@ import { ChangeCircleRounded } from '@mui/icons-material';
 const CategoryChart = ({ data }) => {
   const [chartVariant, setChartVariant] = useState(false);
   const handleDisplaySelection = () => setChartVariant(!chartVariant);
-
   return (
     <>
       <HeaderWithButton
         title="More details"
-        showPrimaryButton={true}
-        primaryButtonVariant="outlined"
-        primaryButtonColor="primary"
         primaryButtonTextLabel="Display threshold"
-        showPrimaryStartIcon={true}
         primaryStartIcon={<ChangeCircleRounded color="warning" />}
-        showSecondaryTitle={true}
         secondaryTitle={
           !chartVariant ? (
             <Typography variant="caption">Switch to threshold view to see items that require attention</Typography>

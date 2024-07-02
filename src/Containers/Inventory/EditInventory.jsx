@@ -130,7 +130,7 @@ const EditInventory = () => {
 
   return (
     <Container sx={{ marginTop: '1rem' }}>
-      <HeaderWithButton title="Editing inventory" showPrimaryButton={false} showSecondaryButton={false} />
+      <HeaderWithButton title="Editing inventory" />
       <Stack spacing={2}>
         <Stack direction="row" spacing={2}>
           {Object.values(formData)

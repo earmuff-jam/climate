@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react';
 import { Box, Button, Divider, Stack, TextField, Typography } from '@mui/material';
 import { BLANK_PROFILE_DETAILS } from './constants';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime.js';
 import { useQueryClient } from 'react-query';
 import { useUser } from '@supabase/auth-helpers-react';
 import { useNavigate } from 'react-router-dom';
 import { useFetchProfileDetails, useUpsertProfileDetails } from '../../features/profile';
+
+dayjs.extend(relativeTime);
 
 const ProfileContent = () => {
   const user = useUser();
@@ -74,7 +77,6 @@ const ProfileContent = () => {
       draftProfileDetails.updated_on = data.updated_on;
       setFormData(draftProfileDetails);
     }
-     
   }, [isLoading]);
 
   return (

@@ -1,11 +1,12 @@
 import { Outlet } from 'react-router-dom';
 import PrimaryAppBar from '../Containers/AppBar/PrimaryAppBar';
-import { Box, CssBaseline, Skeleton } from '@mui/material';
+import { Box, CircularProgress, CssBaseline, Skeleton } from '@mui/material';
 import { useUser } from '@supabase/auth-helpers-react';
 import { validate } from 'uuid';
 import { ThemeProvider } from '@emotion/react';
 import { useFetchProfileConfigDetails } from '../features/profile';
 import { darkTheme, lightTheme } from './theme';
+import { Suspense } from 'react';
 
 const Layout = () => {
   const user = useUser();
@@ -15,10 +16,18 @@ const Layout = () => {
   return (
     <ThemeProvider theme={data.display_mode ? darkTheme : lightTheme}>
       <CssBaseline />
-      <Box height="100%" bgcolor="background.default">
-        <PrimaryAppBar isUserLoggedIn={validate(user?.id)} />
-        <Outlet />
-      </Box>
+      <Suspense
+        fallback={
+          <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+            <CircularProgress color="inherit" />
+          </Box>
+        }
+      >
+        <Box height="100%" bgcolor="background.default">
+          <PrimaryAppBar isUserLoggedIn={validate(user?.id)} />
+          <Outlet />
+        </Box>
+      </Suspense>
     </ThemeProvider>
   );
 };

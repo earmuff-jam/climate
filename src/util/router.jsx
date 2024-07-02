@@ -1,12 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Inventories from '../Containers/Inventory/Inventories';
-import ProfileDetails from '../Containers/Profile/ProfileDetails';
-import Layout from './Layout';
-import Plan from '../Components/Maintenance/Plan';
-import EditInventory from '../Containers/Inventory/EditInventory';
-import CategoriesList from '../Components/CategoryDetails/CategoriesList';
-import Forecast from '../Containers/Forecast/Forecast';
+import { lazy } from 'react';
+import Layout from "./Layout";
 
+const Forecast = lazy(() => import('../Containers/Forecast/Forecast'));
+const CategoriesList = lazy(() => import('../Components/CategoryDetails/CategoriesList'));
+const EditInventory = lazy(() => import('../Containers/Inventory/EditInventory'));
+const Inventories = lazy(() => import('../Containers/Inventory/Inventories'));
+const ProfileDetails = lazy(() => import('../Containers/Profile/ProfileDetails'));
+const Plan = lazy(() => import('../Components/Maintenance/Plan'));
 /**
  * Authorized routes are available here. Due to the nature of the logged in state of authentication from supabase, after the user logs in, we redirect
  * them to the / page. This page is unfortunately blank, hence we have children route as / as well. This enables us to load children route in the

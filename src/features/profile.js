@@ -19,6 +19,7 @@ const fetchConfigDetails = (client, userID) => {
           id,
           notify_bookmarked_items,
           notify_due_items,
+          inventory_layout,
           notify_settings_privacy,
           display_mode,
           created_on,
