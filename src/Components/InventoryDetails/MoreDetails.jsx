@@ -1,6 +1,6 @@
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useState } from 'react';
-import { EditRounded, MoveUpRounded, MoreVertRounded, DeleteRounded } from '@mui/icons-material';
+import { DeleteRounded, EditRounded, MoreVertRounded, MoveUpRounded } from '@mui/icons-material';
 
 const MoreDetails = ({
   selectedID,

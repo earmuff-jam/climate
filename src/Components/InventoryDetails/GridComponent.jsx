@@ -46,9 +46,6 @@ const GridComponent = ({
               <CardContent>
                 <Stack>
                   <Typography variant="caption">{row.name}</Typography>
-                  <Typography variant="caption" color="text.secondary" textOverflow="auto">
-                    {row.description}
-                  </Typography>
                 </Stack>
               </CardContent>
               <CardActions>

@@ -4,10 +4,9 @@ import { ArrowDropDownCircleRounded } from '@mui/icons-material';
 
 /**
  * Utility function to combine button groups
- * @param {boolean} disabled - boolean to determine if the item is disabled
  * @param {Array<Object>} options - array of options for the selection to choose from
  */
-const AssignCategoryMaintenanceButton = ({ disabled, options }) => {
+const AssignCategoryMaintenanceButton = ({ options }) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(0);
   const anchorRef = useRef(null);
@@ -32,7 +31,7 @@ const AssignCategoryMaintenanceButton = ({ disabled, options }) => {
   return (
     <>
       <ButtonGroup variant="outlined" ref={anchorRef} aria-label="Assign selection to inventory item(s)">
-        <Button disabled={disabled} onClick={handleClick}>
+        <Button disabled={options[selected].disabled} onClick={handleClick}>
           {options[selected].label}
         </Button>
         <Button

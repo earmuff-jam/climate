@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import { Box, Card, CardContent, IconButton, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
-import { CircleRounded, HighlightOffRounded, RestoreRounded, TrendingUpRounded } from '@mui/icons-material';
+import {
+  CheckRounded,
+  CircleRounded,
+  CloseRounded,
+  HighlightOffRounded,
+  RestoreRounded,
+  TrendingUpRounded,
+} from '@mui/icons-material';
 import { ConfirmationBoxModal, DisplayNoMatchingRecordsComponent, generateTitleColor } from '../../util/util';
 import {
   fetchInventoryItemsAgainstSelectedMaintenancePlan,
@@ -43,7 +50,6 @@ const PlanList = () => {
     deleteSelectedItemFromMaintenancePlanMutation.mutate(id);
   };
 
-
   const rowFormatter = (row, column, color) => {
     if (['created_on', 'updated_on'].includes(column)) {
       return dayjs(row[column]).fromNow();
@@ -60,7 +66,7 @@ const PlanList = () => {
     if (['name'].includes(column)) {
       return (
         <Stack direction="row" alignItems="center" justifyContent="flex-start" spacing={{ xs: 1 }}>
-           {row?.maintenance_item.length > 0 ? (
+          {row?.maintenance_item.length > 0 ? (
             <IconButton onClick={() => resetSelection(row.id)}>
               <RestoreRounded color="primary" />
             </IconButton>

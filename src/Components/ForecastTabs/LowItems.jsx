@@ -4,9 +4,8 @@ import TableComponent from '../InventoryDetails/TableComponent';
 import { useFetchLowThresholdItemsWithCategory } from '../../features/categories';
 import { VIEW_INVENTORY_LIST_HEADERS } from '../InventoryDetails/constants';
 import { generateTitleColor } from '../../util/util';
-import { CircleRounded } from '@mui/icons-material';
+import { CheckRounded, CircleRounded, CloseRounded } from '@mui/icons-material';
 import dayjs from 'dayjs';
-
 
 const LowItems = () => {
   const { data } = useFetchLowThresholdItemsWithCategory();

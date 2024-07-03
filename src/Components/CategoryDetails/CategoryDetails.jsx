@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Card, CardContent, IconButton, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import {
+  CheckRounded,
   CircleRounded,
-  DeleteRounded,
+  CloseRounded,
   HighlightOffRounded,
   RestoreRounded,
   TrendingUpRounded,

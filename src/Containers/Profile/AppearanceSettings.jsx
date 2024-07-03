@@ -1,5 +1,5 @@
 import { Box, Button, Checkbox, Divider, FormControlLabel, Skeleton, Stack, Typography } from '@mui/material';
-import { DarkModeRounded, GridViewRounded, ViewListRounded } from '@mui/icons-material';
+import { DarkModeRounded, GridViewRounded } from '@mui/icons-material';
 import { useFetchProfileConfigDetails, useUpsertProfileConfigurationDetails } from '../../features/profile';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -69,10 +69,8 @@ const AppearanceSettings = () => {
           label={
             <Stack>
               <Stack direction="row" alignItems="center" spacing={1}>
-                {inventoryLayout ? <ViewListRounded color="primary" /> : <GridViewRounded color="primary" />}
-                <Typography variant="caption">
-                  Enable {inventoryLayout ? 'list mode' : 'grid mode'} for inventory items
-                </Typography>
+                <GridViewRounded color="primary" />
+                <Typography variant="caption">Enable grid mode for inventory items</Typography>
               </Stack>
               <Typography variant="caption" gutterBottom>
                 Switch between list view and grid view for all inventory items.

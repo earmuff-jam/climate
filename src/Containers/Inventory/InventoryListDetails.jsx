@@ -8,16 +8,15 @@ import {
   Slide,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import {
-  AddRounded,
-  CloseRounded,
-  GridViewRounded,
-  LibraryAddRounded,
-  ViewListRounded,
   CheckRounded,
   CircleRounded,
+  CloseRounded,
+  GridViewRounded,
+  ViewListRounded,
 } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
@@ -164,28 +163,37 @@ const InventoryListDetails = ({ displayAllInventories, hideActionMenu }) => {
           secondaryTitle={`${
             displayAllInventories ? 'Select item/s to assign category or maintenance plan' : 'View all your inventories'
           }`}
-          primaryButtonTextLabel="Add Item"
-          primaryStartIcon={<AddRounded />}
           showRedirectLink={!displayAllInventories}
           redirectTo="/inventories/list"
-          secondaryButtonTextLabel="Upload bulk"
-          secondaryStartIcon={<LibraryAddRounded />}
-          handleClickPrimaryButton={handleDisplayAddSingleInventoryModal}
-          handleClickSecondaryButton={handleDisplayAddBulkInventoryModal}
         >
           {displayAllInventories ? (
             <>
               <AssignCategoryMaintenanceButton
-                disabled={!rowSelected.length || !displayAllInventories}
                 options={[
-                  { label: 'Assign category', action: handleAddCategory },
-                  { label: 'Assign maintenance plan', action: handleAddInventory },
-                  { label: 'Delete inventory', action: handleDeleteInventory },
+                  { label: 'Add Item', action: handleDisplayAddSingleInventoryModal },
+                  { label: 'Upload bulk', action: handleDisplayAddBulkInventoryModal },
+                  {
+                    label: 'Assign category',
+                    action: handleAddCategory,
+                    disabled: !rowSelected.length || !displayAllInventories,
+                  },
+                  {
+                    label: 'Assign maintenance plan',
+                    action: handleAddInventory,
+                    disabled: !rowSelected.length || !displayAllInventories,
+                  },
+                  {
+                    label: 'Delete inventory',
+                    action: handleDeleteInventory,
+                    disabled: !rowSelected.length || !displayAllInventories,
+                  },
                 ]}
               />
-              <IconButton onClick={() => setGridMode(!gridMode)}>
-                {gridMode ? <ViewListRounded /> : <GridViewRounded />}
-              </IconButton>
+              <Tooltip title={gridMode ? 'view in list mode' : 'view in grid mode'}>
+                <IconButton onClick={() => setGridMode(!gridMode)}>
+                  {gridMode ? <ViewListRounded /> : <GridViewRounded />}
+                </IconButton>
+              </Tooltip>
             </>
           ) : null}
         </HeaderWithButton>
