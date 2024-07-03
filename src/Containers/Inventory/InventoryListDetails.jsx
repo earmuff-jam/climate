@@ -1,8 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { Autocomplete, Container, Dialog, DialogTitle, IconButton, Slide, Stack, TextField } from '@mui/material';
-import { AddRounded, CloseRounded, GridViewRounded, LibraryAddRounded, ViewListRounded } from '@mui/icons-material';
-import HeaderWithButton from '../../util/HeaderWithButton';
+import {
+  Autocomplete,
+  Container,
+  Dialog,
+  DialogTitle,
+  IconButton,
+  Slide,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import {
+  AddRounded,
+  CloseRounded,
+  GridViewRounded,
+  LibraryAddRounded,
+  ViewListRounded,
+  CheckRounded,
+  CircleRounded,
+} from '@mui/icons-material';
+import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 import SimpleModal from '../../util/SimpleModal';
+import HeaderWithButton from '../../util/HeaderWithButton';
 import { VIEW_INVENTORY_LIST_HEADERS } from '../../Components/InventoryDetails/constants';
 import SelectedRowItem from '../../Components/InventoryDetails/SelectedRowItem';
 import TableComponent from '../../Components/InventoryDetails/TableComponent';
@@ -11,10 +31,10 @@ import AddBulkUploadInventory from '../../Components/AddInventory/AddBulkUploadI
 import { useDeleteSelectedInventory, useFetchInventoriesList } from '../../features/inventories';
 import AssignCategory from '../../Components/CategoryDetails/AssignCategory';
 import AssignPlan from '../../Components/Maintenance/AssignPlan';
-import { useNavigate } from 'react-router-dom';
-import { AssignCategoryMaintenanceButton, ConfirmationBoxModal } from '../../util/util';
+import { ConfirmationBoxModal, generateTitleColor } from '../../util/util';
 import GridComponent from '../../Components/InventoryDetails/GridComponent';
 import { useFetchProfileConfigDetails } from '../../features/profile';
+import AssignCategoryMaintenanceButton from '../../util/AssignCategoryMaintenanceButton';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
@@ -29,7 +49,7 @@ const MODAL_STATE = {
   ASSIGN_MAINTENANCE_PLAN: 'assign_maintenance_plan',
 };
 
-const InventoryListDetails = ({ displayAllInventories, plainView }) => {
+const InventoryListDetails = ({ displayAllInventories, hideActionMenu }) => {
   const navigate = useNavigate();
   const { data, isLoading } = useFetchInventoriesList();
   const { data: userConfigDetails } = useFetchProfileConfigDetails();
@@ -72,6 +92,30 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
       }
       setRowSelected(draftSelected);
     }
+  };
+
+  const rowFormatter = (row, column, color) => {
+    if (['created_on', 'updated_on'].includes(column)) {
+      return dayjs(row[column]).fromNow();
+    }
+    if (['price', 'quantity'].includes(column)) {
+      return row[column] <= 0 ? '-' : row[column];
+    }
+    if (['updator_name', 'creator_name'].includes(column)) {
+      return row[column]?.username ?? '-';
+    }
+    if (['is_returnable'].includes(column)) {
+      return row[column] ? <CheckRounded color="primary" /> : <CloseRounded color="error" />;
+    }
+    if (['name'].includes(column)) {
+      return (
+        <Stack direction="row" alignItems="center" justifyContent="flex-start" spacing={{ xs: 1 }}>
+          <CircleRounded sx={{ height: '0.75rem', width: '0.75rem', color: color ? `${color}` : 'transparent' }} />
+          <Typography variant="subtitle2">{row[column] || '-'}</Typography>
+        </Stack>
+      );
+    }
+    return row[column] ?? '-';
   };
 
   const onRowSelect = (row) => {
@@ -176,9 +220,11 @@ const InventoryListDetails = ({ displayAllInventories, plainView }) => {
         ) : (
           <TableComponent
             isLoading={isLoading}
-            plainView={plainView}
+            hideActionMenu={hideActionMenu}
             data={displayAllInventories ? options : options?.filter((_, index) => index < 3)}
             columns={Object.values(VIEW_INVENTORY_LIST_HEADERS).filter((v) => v.displayConcise)}
+            rowFormatter={rowFormatter}
+            generateTitleColor={generateTitleColor}
             rowSelected={rowSelected}
             onRowSelect={onRowSelect}
             handleRowSelection={handleRowSelection}

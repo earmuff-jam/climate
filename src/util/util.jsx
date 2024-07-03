@@ -1,18 +1,5 @@
-import {
-  Button,
-  ButtonGroup,
-  ClickAwayListener,
-  Grow,
-  MenuItem,
-  MenuList,
-  Paper,
-  Popper,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 import SimpleModal from './SimpleModal';
-import { useRef, useState } from 'react';
-import { ArrowDropDownCircleRounded } from '@mui/icons-material';
 
 /**
  * display no matching records found component if there are no records
@@ -50,79 +37,29 @@ export const ConfirmationBoxModal = ({
   ) : null;
 };
 
-export const AssignCategoryMaintenanceButton = ({ disabled, options }) => {
-  const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(0);
-  const anchorRef = useRef(null);
+/**
+ * generate title color fn is used to build out the title and associated color with it.
+ * @param {Object} row - the currently selected row
+ * @param {Boolean} isCategory - if the selection is pertaining to category
+ * @param {Boolean} override - if the table does not need these values
+ */
+export const generateTitleColor = (row, isCategory, override) => {
+  let title = null;
+  let color = null;
 
-  const handleToggle = () => setOpen(!open);
-  const handleClick = () => {
-    return options[selected].action();
-  };
+  if (override) {
+    title = '';
+    color = '';
+    return { title, color };
+  }
 
-  const handleMenuItemClick = (event, index) => {
-    setSelected(index);
-    setOpen(false);
-  };
-
-  const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
-    setOpen(false);
-  };
-
-  return (
-    <>
-      <ButtonGroup variant="outlined" ref={anchorRef} aria-label="Assign selection to inventory item(s)">
-        <Button disabled={disabled} onClick={handleClick}>
-          {options[selected].label}
-        </Button>
-        <Button
-          size="small"
-          aria-controls={open ? 'assign-selection' : undefined}
-          aria-expanded={open ? 'true' : undefined}
-          aria-label="assign"
-          aria-haspopup="menu"
-          onClick={handleToggle}
-        >
-          <ArrowDropDownCircleRounded />
-        </Button>
-      </ButtonGroup>
-      <Popper
-        sx={{
-          zIndex: 1,
-        }}
-        open={open}
-        anchorEl={anchorRef.current}
-        transition
-        disablePortal
-      >
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-            }}
-          >
-            <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
-                <MenuList id="assign-selection" autoFocusItem>
-                  {options.map((option, index) => (
-                    <MenuItem
-                      key={option.label}
-                      selected={index === selected}
-                      onClick={(event) => handleMenuItemClick(event, index)}
-                    >
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
-    </>
-  );
+  if (isCategory) {
+    title = row?.category_item.length > 0 && `Assigned ${row?.category_item[0].category_name} Category`;
+    color = row?.category_item.length > 0 && row?.category_item[0].associated_color;
+  } else {
+    title =
+      row?.maintenance_item.length > 0 && `Assigned ${row?.maintenance_item[0].maintenance_plan_name} Maintenance Plan`;
+    color = row?.maintenance_item.length > 0 && row?.maintenance_item[0].associated_color;
+  }
+  return { title, color };
 };

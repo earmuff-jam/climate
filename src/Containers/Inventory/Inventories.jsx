@@ -3,11 +3,11 @@ import Collection from '../../Components/Collection/Collection';
 import InventoryListDetails from './InventoryListDetails';
 import InventoryOverview from './InventoryOverview';
 
-const Inventories = ({ displayAllInventories, plainView }) => {
+const Inventories = ({ displayAllInventories, hideActionMenu }) => {
   return (
     <>
       {displayAllInventories ? <CategoryListDetails /> : <InventoryOverview />}
-      <InventoryListDetails displayAllInventories={displayAllInventories} plainView={plainView} />
+      <InventoryListDetails displayAllInventories={displayAllInventories} hideActionMenu={hideActionMenu} />
       {!displayAllInventories ? <Collection title="Learn more" /> : null}
     </>
   );

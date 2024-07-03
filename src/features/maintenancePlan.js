@@ -228,6 +228,26 @@ export const useDeleteSelectedMaintenancePlan = () => {
 };
 
 /**
+ *
+ * @param {Object} supabaseClient
+ * @param {String} id - the inventory item ID to delete
+ */
+const deleteSeletedInventoryItemFromMaintenancePlan = (client, id) => {
+  return client.from('maintenance_item').delete().eq('item_id', id);
+};
+
+export const useDeleteSelectedItemFromMaintenancePlan = () => {
+  const queryClient = useQueryClient();
+  const supabaseClient = useSupabaseClient();
+  return useMutation((id) => deleteSeletedInventoryItemFromMaintenancePlan(supabaseClient, id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['maintenancePlanDetails']);
+    },
+  });
+};
+
+
+/**
  * Assign maintenance plan to selected inventory item
  * @param {Object} supabaseClient
  * @param {String} userID - the ID of the user making the request

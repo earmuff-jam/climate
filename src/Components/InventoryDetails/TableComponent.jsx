@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import {
   Checkbox,
   IconButton,
@@ -14,14 +13,17 @@ import {
   Typography,
 } from '@mui/material';
 import { DisplayNoMatchingRecordsComponent } from '../../util/util';
-import { CheckRounded, CircleRounded, CloseRounded, EditRounded, FileOpenRounded } from '@mui/icons-material';
+import { EditRounded, FileOpenRounded } from '@mui/icons-material';
 
 /**
  * TableComponent React Function - Displays the inventory table
- * @param {boolean} plainView - determines if extra functionality should be present, like selection of rows, defaults: false
+ * @param {boolean} hideActionMenu - determines if extra functionality should be present, like selection of rows, defaults: false
  * @param {boolean} isLoading - determines if the selected data is still in loading state
  * @param {boolean} isCategory - determines if the view mode is from the category side instead of maintenance plan side. default: false
+ * @param {boolean} override - determines if the category or maintenance plan should be ignored while setting up title. default: false
  * @param {Array<Object>} columns - the columns to display for the table
+ * @param {Function} rowFormatter - the row formatter to format each row
+ * @param {Function} generateTitleColor - the function used to build out the title and associated color with the title
  * @param {Array<Object>} data - the data to display for each row in the table
  * @param {Array<String>} rowSelected - the array of IDs that represent each item
  * @param {Array<Object>} onRowSelect - the array of inventory items that is selected
@@ -29,65 +31,21 @@ import { CheckRounded, CircleRounded, CloseRounded, EditRounded, FileOpenRounded
  * @param {Function} handleEdit - the function that is used to handle editing capabilities
  */
 const TableComponent = ({
-  plainView = false,
+  hideActionMenu = false,
   isLoading,
   isCategory = false,
-  supportLowStock = false,
+  override = false,
   columns,
   data,
+  rowFormatter,
+  generateTitleColor,
   rowSelected,
   onRowSelect,
   handleRowSelection,
   handleEdit,
 }) => {
-  const generateTitleColor = (row, isCategory) => {
-    let title = null;
-    let color = null;
-
-    if (supportLowStock) {
-      title = '';
-      color = '';
-      return { title, color };
-    }
-
-    if (isCategory) {
-      title = row?.category_item.length > 0 && `Assigned ${row?.category_item[0].category_name} Category`;
-      color = row?.category_item.length > 0 && row?.category_item[0].associated_color;
-    } else {
-      title =
-        row?.maintenance_item.length > 0 &&
-        `Assigned ${row?.maintenance_item[0].maintenance_plan_name} Maintenance Plan`;
-      color = row?.maintenance_item.length > 0 && row?.maintenance_item[0].associated_color;
-    }
-    return { title, color };
-  };
-
-  const rowFormatter = (row, column, color) => {
-    if (['created_on', 'updated_on'].includes(column)) {
-      return dayjs(row[column]).fromNow();
-    }
-    if (['price', 'quantity'].includes(column)) {
-      return row[column] <= 0 ? '-' : row[column];
-    }
-    if (['updator_name', 'creator_name'].includes(column)) {
-      return row[column]?.username ?? '-';
-    }
-    if (['is_returnable'].includes(column)) {
-      return row[column] ? <CheckRounded color="primary" /> : <CloseRounded color="error" />;
-    }
-    if (['name'].includes(column)) {
-      return (
-        <Stack direction="row" alignItems="center" justifyContent="flex-start" spacing={{ xs: 1 }}>
-          <CircleRounded sx={{ height: '0.75rem', width: '0.75rem', color: color ? `${color}` : 'transparent' }} />
-          <Typography variant="subtitle2">{row[column] || '-'}</Typography>
-        </Stack>
-      );
-    }
-    return row[column] ?? '-';
-  };
 
   if (isLoading) return <Skeleton variant="rounded" animation="wave" height="10vh" width="100%" />;
-
   if (!data || data.length === 0) {
     return <DisplayNoMatchingRecordsComponent />;
   }
@@ -97,7 +55,7 @@ const TableComponent = ({
       <Table>
         <TableHead>
           <TableRow>
-            {!plainView ? (
+            {!hideActionMenu ? (
               <TableCell padding="checkbox" align="center">
                 <Stack direction="row" alignItems="center">
                   <Checkbox size="small" onClick={(ev) => handleRowSelection(ev, 'all')} />
@@ -122,11 +80,11 @@ const TableComponent = ({
             const isSelected = (id) => rowSelected.indexOf(id) !== -1;
             const selectedID = row.id;
             const isItemSelected = isSelected(selectedID);
-            const { title, color } = generateTitleColor(row, isCategory, supportLowStock);
+            const { title, color } = generateTitleColor(row, isCategory, override);
             return (
               <Tooltip key={rowIndex} title={title}>
                 <TableRow hover>
-                  {!plainView ? (
+                  {!hideActionMenu ? (
                     <TableCell padding="checkbox" align="center">
                       <Stack direction="row" alignItems="center">
                         <Checkbox
