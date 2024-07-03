@@ -9,9 +9,9 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { DisplayNoMatchingRecordsComponent } from '../../util/util';
 import dayjs from 'dayjs';
 import MoreDetails from './MoreDetails';
+import { DisplayNoMatchingRecordsComponent } from '../../util/util';
 
 const GridComponent = ({
   isLoading,
@@ -41,7 +41,7 @@ const GridComponent = ({
               }}
             >
               <Tooltip title={row.description}>
-                <CardMedia sx={{ height: 200 }} image="/blank_canvas.svg" />
+                <CardMedia sx={{ height: '10rem' }} image="/blank_canvas.svg" />
               </Tooltip>
               <CardContent>
                 <Stack>
