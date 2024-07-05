@@ -13,10 +13,10 @@ import {
 import { debounce } from 'lodash';
 import { CheckRounded } from '@mui/icons-material';
 import { useCallback, useEffect, useState } from 'react';
-import { useUpsertCategoryThresholdsLimit } from '../../features/categories';
+import { useUpdateCategoryThreshold } from '../../features/categories';
 
 const LimitMenu = ({ category }) => {
-  const upsertCategoryThresholdsLimitMutation = useUpsertCategoryThresholdsLimit();
+  const updateCategoryTheshold = useUpdateCategoryThreshold();
 
   const [inputVal, setInputVal] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
@@ -66,7 +66,7 @@ const LimitMenu = ({ category }) => {
   const debouncedSave = useCallback(
     debounce((value, categoryID) => {
       if (categoryID !== -1 || inputVal != '') {
-        upsertCategoryThresholdsLimitMutation.mutate({
+        updateCategoryTheshold.mutate({
           thresholdLimit: value,
           categoryID: categoryID,
         });
@@ -82,7 +82,7 @@ const LimitMenu = ({ category }) => {
       isSelected: option.value === value,
     }));
     setOptions(updatedOptions);
-    upsertCategoryThresholdsLimitMutation.mutate({ thresholdLimit: value, categoryID: categoryID });
+    updateCategoryTheshold.mutate({ thresholdLimit: value, categoryID: categoryID });
   };
 
   useEffect(() => {

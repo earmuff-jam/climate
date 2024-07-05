@@ -1,19 +1,20 @@
 import { Alert, Box, Card, CardContent, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import { useAssignInventoryItemToMaintenancePlan, useFetchMaintenanceList } from '../../features/maintenancePlan';
+import { useAssignItemsToPlan, useFetchPlans } from '../../features/plan';
 import { DisplayNoMatchingRecordsComponent } from '../../util/util';
 import { WarningOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 const AssignPlan = ({ rowSelected, handleCloseAssignFn }) => {
   const navigate = useNavigate();
-  const { data, isLoading } = useFetchMaintenanceList();
-  const assignInventoryItemToMaintenancePlanMutation = useAssignInventoryItemToMaintenancePlan();
+  const { data, isLoading } = useFetchPlans();
+  const assignItemsToPlan = useAssignItemsToPlan();
+
   if (isLoading) return <Skeleton height="1" width="1" variant="rounded" />;
   if (data.length <= 0) return <DisplayNoMatchingRecordsComponent subtitle="Add maintenance plan to begin" />;
 
   const handleAssignMaintenancePlan = (planID, planName, rowSelected) => {
-    assignInventoryItemToMaintenancePlanMutation.mutate({ planID, planName, selectedIDs: rowSelected });
+    assignItemsToPlan.mutate({ planID, planName, selectedIDs: rowSelected });
     handleCloseAssignFn();
   };
 

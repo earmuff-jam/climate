@@ -3,12 +3,12 @@ import { Box, Button, Checkbox, Divider, FormControlLabel, Skeleton, Stack, Typo
 import { AssignmentLateRounded, BookmarkRounded, SettingsSuggestRounded } from '@mui/icons-material';
 import { BLANK_NOTIFICATION_DETAILS } from './constants';
 import { useNavigate } from 'react-router-dom';
-import { useFetchProfileConfigDetails, useUpsertProfileConfigurationDetails } from '../../features/profile';
+import { useFetchProfileConfig, useUpsertProfileConfig } from '../../features/profile';
 
 const NotificationsContent = () => {
   const navigate = useNavigate();
-  const { data, isLoading, isError } = useFetchProfileConfigDetails();
-  const upsertProfileConfigDetailsMutation = useUpsertProfileConfigurationDetails();
+  const { data = {}, isLoading, isError } = useFetchProfileConfig();
+  const upsertProfileConfigDetailsMutation = useUpsertProfileConfig();
   const [userProfileNotificationSettings, setUserProfileNotificationSettings] = useState({
     ...BLANK_NOTIFICATION_DETAILS,
   });
@@ -29,7 +29,6 @@ const NotificationsContent = () => {
     if (!isLoading && !isError) {
       setUserProfileNotificationSettings(data);
     }
-     
   }, [isLoading]);
 
   if (isLoading) return <Skeleton variant="rounded" animation="wave" height="100%" width="100%" />;
@@ -37,9 +36,7 @@ const NotificationsContent = () => {
   return (
     <>
       <Box sx={{ pb: 2 }}>
-        <Typography variant="h4">
-          Notification Center
-        </Typography>
+        <Typography variant="h4">Notification Center</Typography>
         <Typography variant="caption" gutterBottom>
           Setup notifications for alerts regarding your bookmarked inventories. Items that are past due in return are
           also highlighted here.

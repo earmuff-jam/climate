@@ -21,7 +21,7 @@ import { BookmarkRounded, CheckRounded, RestartAltRounded, SwapHorizRounded } fr
 import { BLANK_INVENTORY_FORM } from './constants';
 import { useUser } from '@supabase/auth-helpers-react';
 import { useFetchStorageLocationList } from '../../features/storageLocations';
-import { useUpsertInventoryDetails } from '../../features/inventories';
+import { useCreateInventoryItem } from '../../features/inventories';
 import dayjs from 'dayjs';
 
 const filter = createFilterOptions();
@@ -30,7 +30,7 @@ const steps = ['Add inventory', 'Add more details', 'Publish inventory'];
 export default function AddInventory({ handleClose }) {
   const user = useUser();
   const { data: options, isLoading } = useFetchStorageLocationList();
-  const upsertInventoryDetailsMutation = useUpsertInventoryDetails();
+  const createInventoryItem = useCreateInventoryItem();
 
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
@@ -96,7 +96,7 @@ export default function AddInventory({ handleClose }) {
       created_on: dayjs().toISOString(),
     };
 
-    upsertInventoryDetailsMutation.mutate(draftRequest);
+    createInventoryItem.mutate(draftRequest);
     handleClose(); // close the modal form
     setFormData({ ...BLANK_INVENTORY_FORM });
   };

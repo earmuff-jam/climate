@@ -44,7 +44,6 @@ const TableComponent = ({
   handleRowSelection,
   handleEdit,
 }) => {
-
   if (isLoading) return <Skeleton variant="rounded" animation="wave" height="10vh" width="100%" />;
   if (!data || data.length === 0) {
     return <DisplayNoMatchingRecordsComponent />;
@@ -56,19 +55,17 @@ const TableComponent = ({
         <TableHead>
           <TableRow>
             {!hideActionMenu ? (
-              <TableCell padding="checkbox" align="center">
+              <TableCell padding="checkbox">
                 <Stack direction="row" alignItems="center">
                   <Checkbox size="small" onClick={(ev) => handleRowSelection(ev, 'all')} />
-                  <Typography fontWeight="bold" align="center">
-                    Action
-                  </Typography>
+                  <Typography fontWeight="bold">Action</Typography>
                 </Stack>
               </TableCell>
             ) : null}
             {Object.keys(columns).map((colKey) => {
               const column = columns[colKey];
               return (
-                <TableCell key={column.id} align="center">
+                <TableCell key={column.id}>
                   <Typography fontWeight="bold">{column.label}</Typography>
                 </TableCell>
               );
@@ -85,8 +82,8 @@ const TableComponent = ({
               <Tooltip key={rowIndex} title={title}>
                 <TableRow hover>
                   {!hideActionMenu ? (
-                    <TableCell padding="checkbox" align="center">
-                      <Stack direction="row" alignItems="center">
+                    <TableCell padding="checkbox">
+                      <Stack direction="row">
                         <Checkbox
                           checked={isItemSelected}
                           color="primary"
@@ -106,7 +103,7 @@ const TableComponent = ({
                   {Object.keys(columns).map((colKey) => {
                     const column = columns[colKey];
                     return (
-                      <TableCell key={column.id} align="center" sx={{ width: '2rem' }}>
+                      <TableCell key={column.id}>
                         {rowFormatter(row, column.colName, color)}
                       </TableCell>
                     );

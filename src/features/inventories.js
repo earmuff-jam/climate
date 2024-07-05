@@ -3,63 +3,7 @@ import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 import dayjs from 'dayjs';
 import { validate } from 'uuid';
 
-// static query options for tanstack query
-const useQueryOptions = {
-  refetchOnWindowFocus: false,
-};
-
-/*************************************
- * FETCH FUNCTIONS INVENTORY DETAILS *
- *************************************/
-
-/**
- * fn to retrieve the count of inventories created by the user
- * @param {Object} supabaseClient
- * @param {String} userID - the userID of the user
- */
-const fetchInventoriesCount = (client, userID) => {
-  return client.from('inventories').select(`id`).eq('created_by', userID);
-};
-
-export const useFetchInventoriesCount = () => {
-  const user = useUser();
-  const supabaseClient = useSupabaseClient();
-  const queryFn = async () => {
-    return fetchInventoriesCount(supabaseClient, user.id).then((result) => result.data.length);
-  };
-
-  return useQuery({
-    queryFn: queryFn,
-    queryKey: ['item_count', user.id],
-    useQueryOptions,
-  });
-};
-
-/**
- * fn to retrieve the total estimated cost of items. returns count of items that has cost assigned created by the user
- * @param {Object} supabaseClient
- * @param {String} userID - the userID of the user
- */
-const fetchInventoryItemsCost = (client, userID) => {
-  return client.from('inventories').select(`id, price`).eq('created_by', userID);
-};
-
-export const useFetchInventoryItemsCost = () => {
-  const user = useUser();
-  const supabaseClient = useSupabaseClient();
-  const queryFn = async () => {
-    return fetchInventoryItemsCost(supabaseClient, user.id).then((result) => result.data);
-  };
-
-  return useQuery({
-    queryFn: queryFn,
-    queryKey: ['item_cost', user.id],
-    useQueryOptions,
-  });
-};
-
-// supabase fn to retrieve list of inventories for a selected user
-const fetchInventoriesList = (client, userID) => {
+const fetchInventories = (client, userID) => {
   return client
     .from('inventories')
     .select(
@@ -100,63 +44,59 @@ const fetchInventoriesList = (client, userID) => {
       )
         `
     )
-    .eq('created_by', userID);
+    .eq('created_by', userID)
+    .order('updated_on', { ascending: false });
 };
 
-// fn used to fetch all inventories for a selected user
-export const useFetchInventoriesList = () => {
+/**
+ * retrieves a list of inventory items created by the user
+ */
+export const useFetchInventories = () => {
   const user = useUser();
   const supabaseClient = useSupabaseClient();
 
   const queryFn = async () => {
-    const result = await fetchInventoriesList(supabaseClient, user.id);
+    const result = await fetchInventories(supabaseClient, user.id);
     return result.data;
   };
 
   return useQuery({
     queryFn: queryFn,
-    queryKey: ['inventoryList', user.id],
-    useQueryOptions,
+    queryKey: 'inventoryList',
   });
 };
 
-/****************************************
- * MUTATION FUNCTIONS INVENTORY DETAILS *
- ****************************************/
-
-const upsertInventoryDetailsInBulk = async (client, userID, data) => {
+const createInventories = async (client, userID, data) => {
   if (Array.isArray(data) && data.length > 0) {
     data.forEach((element) => {
-      upsertInventoryDetails(client, userID, {
+      createInventoryItem(client, userID, {
         ...element,
         location: {
           location: element.location,
         },
         created_by: userID,
-        created_on: dayjs(),
+        created_on: dayjs().toISOString(),
       });
     });
   }
 };
 
-export const useUpsertInventoryDetailsInBulk = () => {
+/**
+ * creates inventories in bulk. also creates torage location for each inventory item
+ * if they are not found
+ */
+export const useCreateInventories = () => {
   const user = useUser();
   const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
-  return useMutation((data) => upsertInventoryDetailsInBulk(supabaseClient, user.id, data), {
+  return useMutation((data) => createInventories(supabaseClient, user.id, data), {
     onSuccess: () => {
-      queryClient.invalidateQueries(['inventoryList']);
+      queryClient.invalidateQueries('inventoryList');
     },
   });
 };
 
-/**
- * upsert inventory data from the logged in user
- * @param {Object} supabaseClient
- * @param {Object} data - the inventory details to create
- * @returns
- */
-const upsertInventoryDetails = async (client, userID, data) => {
+const createInventoryItem = async (client, userID, data) => {
   // remove id, so the application can generate itself
   const { price, quantity, location, ...inventoryData } = data;
   const storageLocationID = upsertStorageLocationForSelectInventory(client, userID, location);
@@ -194,55 +134,53 @@ const upsertInventoryDetails = async (client, userID, data) => {
   return { data: inventoryDataResult, error: null };
 };
 
-export const useUpsertInventoryDetails = () => {
+/**
+ * create single inventory item for the selected user
+ * also creates a new storage location if the selected inventory item
+ * requires one
+ */
+export const useCreateInventoryItem = () => {
   const user = useUser();
   const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
-  return useMutation((data) => upsertInventoryDetails(supabaseClient, user.id, data), {
+  return useMutation((data) => createInventoryItem(supabaseClient, user.id, data), {
     onSuccess: () => {
-      queryClient.invalidateQueries(['inventoryList']);
+      queryClient.invalidateQueries('inventoryList');
     },
   });
 };
 
-/**
- * Method to update the selected inventory
- *
- * @param {Object} client - supabaseClient
- * @param {UUID} inventoryID - the inventory id of the selected item
- * @param {Object} data - the data to update
- */
-const updateSelectedInventory = (client, inventoryID, data) => {
-  return client.from('inventories').update(data).eq('id', inventoryID);
+const updateInventory = (client, inventoryID, userID, data) => {
+  return client.from('inventories').update(data).eq('id', inventoryID).eq('created_by', userID);
 };
 
-// update selected inventory from db
-export const useUpdateSelectedInventory = () => {
+/**
+ * updates a selected inventory that is created by the selected user
+ */
+export const useUpdateInventory = () => {
+  const user = useUser();
   const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
-  return useMutation((data) => updateSelectedInventory(supabaseClient, data.id, data), {
+  return useMutation((data) => updateInventory(supabaseClient, data.id, user.id, data), {
     onSuccess: () => {
-      queryClient.invalidateQueries(['inventoryList']);
+      queryClient.invalidateQueries('inventoryList');
     },
   });
 };
 
-/**
- * Method to delete the selected inventories
- * @param {Object} supabaseClient
- * @param {String} inventoryIDs - the inventory ID to delete
- */
-const deleteInventoryDetails = (client, inventoryIDs) => {
+const deleteInventories = (client, inventoryIDs) => {
   return client.from('inventories').delete().in('id', inventoryIDs);
 };
 
-// delete selected inventories from db
-export const useDeleteSelectedInventory = () => {
+/**
+ * deletes all selected inventories
+ */
+export const useDeleteInventories = () => {
   const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
-  return useMutation((ids) => deleteInventoryDetails(supabaseClient, ids), {
+  return useMutation((ids) => deleteInventories(supabaseClient, ids), {
     onSuccess: () => {
-      queryClient.invalidateQueries(['inventoryList']);
+      queryClient.invalidateQueries('inventoryList');
     },
   });
 };

@@ -1,14 +1,14 @@
 import { Box, Button, Snackbar, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { BLANK_CATEGORY_DETAILS, BLANK_CATEGORY_DETAILS_ERROR, BLANK_CATEGORY_DETAILS_TOUCHED } from './constants';
-import { useUpsertCategoryDetails } from '../../features/categories';
+import { useCreateCategory } from '../../features/categories';
 import { useUser } from '@supabase/auth-helpers-react';
 import dayjs from 'dayjs';
 import ColorPicker from '../../util/ColorPicker';
 
 const AddCategory = ({ handleCloseAddCategory }) => {
   const user = useUser();
-  const upsertCategoryDetailsMutation = useUpsertCategoryDetails();
+  const createCategory = useCreateCategory();
 
   const [planColor, setPlanColor] = useState('#fff');
   const [categoryDetails, setCategoryDetails] = useState({
@@ -77,7 +77,7 @@ const AddCategory = ({ handleCloseAddCategory }) => {
       sharable_groups: [user.id],
     };
 
-    upsertCategoryDetailsMutation.mutate(draftRequest);
+    createCategory.mutate(draftRequest);
     setCategoryDetails({ ...BLANK_CATEGORY_DETAILS });
     setCategoryDetailsTouched({ ...BLANK_CATEGORY_DETAILS_TOUCHED });
     setPlanColor('#fff');

@@ -1,20 +1,20 @@
 import dayjs from 'dayjs';
 import { Alert, Box, Card, CardContent, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { DisplayNoMatchingRecordsComponent } from '../../util/util';
-import { useAssignInventoryItemToCategory, useFetchCategoryList } from '../../features/categories';
+import { useAssignItemsToCategory, useFetchCategories } from '../../features/categories';
 import { WarningOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 const AssignCategory = ({ rowSelected, handleCloseAssignFn }) => {
   const navigate = useNavigate();
-  const { data, isLoading } = useFetchCategoryList();
-  const assignInventoryItemToCategory = useAssignInventoryItemToCategory();
+  const { data, isLoading } = useFetchCategories();
+  const asssignItemToCategory = useAssignItemsToCategory();
 
   if (isLoading) return <Skeleton height="1" width="1" variant="rounded" />;
   if (data.length <= 0) return <DisplayNoMatchingRecordsComponent subtitle="Add category to begin" />;
 
   const handleAssignCategory = (categoryID, categoryName, rowSelected) => {
-    assignInventoryItemToCategory.mutate({ categoryID, categoryName, selectedItemIDs: rowSelected });
+    asssignItemToCategory.mutate({ categoryID, categoryName, selectedItemIDs: rowSelected });
     handleCloseAssignFn();
   };
 

@@ -2,17 +2,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 import dayjs from 'dayjs';
 
-// static query options for tanstack query
-const useQueryOptions = {
-  refetchOnWindowFocus: false,
-};
-
-/**************************************
- * FETCH FUNCTIONS CATEGORIES DETAILS *
- **************************************/
-
-// supabase fn to retrieve list of categories for a selected user
-const fetchCategoriesList = (client, userID) => {
+const fetchCategories = (client, userID) => {
   return client
     .from('category')
     .select(
@@ -43,125 +33,100 @@ const fetchCategoriesList = (client, userID) => {
     .order('category_name', { ascending: true });
 };
 
-// fn used to fetch all categories for a selected user
-export const useFetchCategoryList = () => {
+/**
+ * retrieve a list of categories for the selected user in array format.
+ * includes total assigned items for categories as an array and creator name and
+ * updator name.
+ */
+export const useFetchCategories = () => {
   const user = useUser();
   const supabaseClient = useSupabaseClient();
 
   const queryFn = async () => {
-    return fetchCategoriesList(supabaseClient, user.id).then((result) => result.data);
+    return fetchCategories(supabaseClient, user.id).then((result) => result.data);
   };
 
   return useQuery({
     queryFn: queryFn,
-    queryKey: ['categoryList', user.id],
-    useQueryOptions,
+    queryKey: 'categories',
   });
 };
 
-/**
- * fn to retrieve the count of items associated with at least one category created by the user
- * @param {Object} supabaseClient
- * @param {String} userID - the userID of the user
- */
-const fetchItemCategoryCount = (client, userID) => {
+const fetchCategoryItems = (client, userID) => {
   return client.from('category_item').select(`id`).eq('created_by', userID);
 };
 
-export const useFetchCategoryItemsCount = () => {
-  const user = useUser();
-  const supabaseClient = useSupabaseClient();
-  const queryFn = async () => {
-    return fetchItemCategoryCount(supabaseClient, user.id).then((result) => result.data.length);
-  };
-
-  return useQuery({
-    queryFn: queryFn,
-    queryKey: ['category_item_count', user.id],
-    useQueryOptions,
-  });
-};
-
 /**
- * fn to retrieve the count of categories created by the user
- * @param {Object} supabaseClient
- * @param {String} userID - the userID of the user
+ * retrives a list of items that are belong to at least one category
+ * that are created by the selected user.
  */
-const fetchCategoriesCount = (client, userID) => {
-  return client.from('category').select(`id`).eq('created_by', userID);
-};
-
-export const useFetchCategoriesCount = () => {
+export const useFetchCategoryItems = () => {
   const user = useUser();
   const supabaseClient = useSupabaseClient();
   const queryFn = async () => {
-    return fetchCategoriesCount(supabaseClient, user.id).then((result) => result.data.length);
+    return fetchCategoryItems(supabaseClient, user.id).then((result) => result.data);
   };
 
   return useQuery({
     queryFn: queryFn,
-    queryKey: ['categories_count', user.id],
-    useQueryOptions,
+    queryKey: 'category_items',
   });
 };
 
-const fetchLowThresholdItemsWithCategory = (client, userID) => {
+const fetchItemWithCategoryDetails = (client, userID) => {
   return client
     .from('category_item')
     .select(
       `
-      id,
-      item_id,
-      comments,
-      category(
         id,
-        category_name,
-        color,
-        thresholdlimit
-      ),
-      inventories(
-        name,
-        description,
-        location,
-        price,
-        quantity,
-        updated_on,
-        updator_name:profiles!updated_by(
-          username
+        item_id,
+        comments,
+        category(
+          id,
+          category_name,
+          color,
+          thresholdlimit
+        ),
+        inventories(
+          name,
+          description,
+          location,
+          price,
+          quantity,
+          updated_on,
+          updator_name:profiles!updated_by(
+            username
+          )
         )
-      )
       `
     )
     .eq('created_by', userID);
 };
 
-export const useFetchLowThresholdItemsWithCategory = () => {
+/**
+ * retrieves a list of items that belong to at least one category and
+ * the category details and item details for that selected item that is
+ * created by the selected user.
+ */
+export const useFetchItemWithCategoryDetails = () => {
   const user = useUser();
   const supabaseClient = useSupabaseClient();
 
   const queryFn = async () => {
-    const { data } = await fetchLowThresholdItemsWithCategory(supabaseClient, user.id);
-    const aboveThresholdLimit = data.reduce((acc, el) => {
-      const thresholdLimit = el.category.thresholdlimit;
-      if (el.inventories.quantity >= thresholdLimit) {
-        acc.push(el);
-      }
-      return acc;
-    }, []);
-    return aboveThresholdLimit || [];
+    return fetchItemWithCategoryDetails(supabaseClient, user.id).then((result) => result.data);
   };
 
   return useQuery({
     queryFn: queryFn,
-    queryKey: ['low_threshold_items_with_categories', user.id],
-    useQueryOptions,
+    queryKey: 'low_threshold_items_with_categories',
   });
 };
 
 /**
- * fetch inventories relative to categories. Eg, items marked with bookmarked categories
+ * retrieves the list of inventory items for each category that is passed in
+ * also retrieves the category details for that selected category the item belongs in
+ * created by the selected user
  */
-
 export const fetchInvItemsForCategory = (client, userID, catID) => {
   return client
     .from('inventories')
@@ -207,103 +172,83 @@ export const fetchInvItemsForCategory = (client, userID, catID) => {
     .eq('created_by', userID);
 };
 
-/*****************************************
- * MUTATION FUNCTIONS CATEGORIES DETAILS *
- *****************************************/
-
-/**
- * upsert category data from the logged in user
- * @param {Object} supabaseClient
- * @param {Object} data - the category details to create
- * @returns
- */
-const upsertCategoryDetails = (client, data) => {
-  return client.from('category').upsert(data).select();
+const createCategory = (client, data) => {
+  return client.from('category').upsert(data);
 };
 
-// upsert category details mutation fn
-export const useUpsertCategoryDetails = () => {
+/**
+ * create category for a select user
+ */
+export const useCreateCategory = () => {
   const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
-  return useMutation((data) => upsertCategoryDetails(supabaseClient, data), {
+  return useMutation((data) => createCategory(supabaseClient, data), {
     onSuccess: () => {
-      queryClient.invalidateQueries(['categoryList']);
+      queryClient.invalidateQueries('categories');
     },
   });
 };
 
-/**
- * upsert the category threshold limit
- * @param {Object} supabaseClient
- * @param {string} thresholdLimit - the threshold limit for the selected category
- * @param {UUID} categoryID - the id of the selected category
- */
-const upsertCategoryThresholds = (client, thresholdLimit, categoryID) => {
+const updateCategoryThreshold = (client, thresholdLimit, categoryID) => {
   return client.from('category').update({ thresholdlimit: thresholdLimit }).eq('id', categoryID);
 };
 
-// fn to update the category threshold limit
-export const useUpsertCategoryThresholdsLimit = () => {
+/**
+ * updates category threshold limit for a selected category created by the user
+ */
+export const useUpdateCategoryThreshold = () => {
   const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
   return useMutation(
-    ({ thresholdLimit, categoryID }) => upsertCategoryThresholds(supabaseClient, thresholdLimit, categoryID),
+    ({ thresholdLimit, categoryID }) => updateCategoryThreshold(supabaseClient, thresholdLimit, categoryID),
     {
       onMutate: async ({ thresholdLimit, categoryID }) => {
-        await queryClient.cancelQueries(['categoryList']);
-        const previousCategoryData = queryClient.getQueryData(['categoryList']);
-        queryClient.setQueryData(['categoryList'], (oldData) => {
-          return oldData?.map((category) =>
+        await queryClient.cancelQueries(['categories']);
+        const prev = queryClient.getQueryData('categories');
+        queryClient.setQueryData('categories', (old) => {
+          return old.map((category) =>
             category.id === categoryID ? { ...category, thresholdlimit: thresholdLimit } : category
           );
         });
-        return { previousCategoryData };
-      },
-      onError: (context) => {
-        queryClient.setQueryData(['categoryList'], context.previousCategoryData);
-      },
-      onSettled: () => {
-        queryClient.invalidateQueries(['categoryList', 'low_threshold_items_with_categories']);
+        return { prev };
       },
     }
   );
 };
 
-/**
- *
- * @param {Object} supabaseClient
- * @param {String} categoryID - the category ID to delete
- * @returns
- */
-const deleteCategoryDetails = (client, categoryID) => {
+const deleteCategory = (client, categoryID) => {
   return client.from('category').delete().eq('id', categoryID);
 };
 
-export const useDeleteSelectedCategory = () => {
+/**
+ * delete selected category that is created by the selected user
+ */
+export const useDeleteCategory = () => {
   const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
-  return useMutation((id) => deleteCategoryDetails(supabaseClient, id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['categoryList']);
+  return useMutation((id) => deleteCategory(supabaseClient, id), {
+    onMutate: async (id) => {
+      await queryClient.cancelQueries('categories');
+      const prev = queryClient.getQueryData('categories');
+      queryClient.setQueryData('categories', (old) => old.filter((v) => v.id != id));
+      return { prev };
     },
   });
 };
 
-/**
- *
- * @param {Object} supabaseClient
- * @param {String} id - the inventory item ID to delete
- */
-const deleteSelectedItemFromCategory = (client, id) => {
+const removeItemFromCategory = (client, id) => {
   return client.from('category_item').delete().eq('item_id', id);
 };
 
-export const useDeleteSelectedItemFromCategory = () => {
+/**
+ * remove item from selected category created by the selected user
+ */
+export const useRemoveItemFromCategory = () => {
   const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
-  return useMutation((id) => deleteSelectedItemFromCategory(supabaseClient, id), {
+  return useMutation((id) => removeItemFromCategory(supabaseClient, id), {
     onSuccess: () => {
-      queryClient.invalidateQueries(['categoryList']);
+      queryClient.invalidateQueries('categories');
     },
   });
 };
@@ -317,7 +262,7 @@ export const useDeleteSelectedItemFromCategory = () => {
  * @param {Array<String>} selectedItemIDs - the IDs of the selected inventory items
  * @returns {Promise<Array>} - a promise that resolves when all upsert operations are complete
  */
-const assignInventoryItemToCategory = async (client, userID, categoryID, categoryName, selectedItemIDs) => {
+const assignItemsToCategory = async (client, userID, categoryID, categoryName, selectedItemIDs) => {
   const promises = selectedItemIDs.map((element) => {
     return client
       .from('category_item')
@@ -334,16 +279,19 @@ const assignInventoryItemToCategory = async (client, userID, categoryID, categor
   return Promise.all(promises);
 };
 
-export const useAssignInventoryItemToCategory = () => {
+/**
+ * assign items to selected category created by the selected user
+ */
+export const useAssignItemsToCategory = () => {
   const user = useUser();
   const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
   return useMutation(
     ({ categoryID, categoryName, selectedItemIDs }) =>
-      assignInventoryItemToCategory(supabaseClient, user?.id, categoryID, categoryName, selectedItemIDs),
+      assignItemsToCategory(supabaseClient, user?.id, categoryID, categoryName, selectedItemIDs),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(['categoryList', 'low_threshold_items_with_categories', 'inventoryList']);
+        queryClient.invalidateQueries(['categories', 'low_threshold_items_with_categories', 'inventoryList']);
       },
     }
   );

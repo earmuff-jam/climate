@@ -1,8 +1,7 @@
 import { Box, Container, Typography } from '@mui/material';
 import LearnMore from './LearnMore';
 
-export default function Collection(props) {
-  const { title } = props;
+const Collection = ({ title }) => {
   return (
     <Box sx={{ bgcolor: 'background.paper', py: 8 }}>
       <Container maxWidth="xl">
@@ -13,4 +12,6 @@ export default function Collection(props) {
       </Container>
     </Box>
   );
-}
+};
+
+export default Collection;

@@ -14,7 +14,12 @@ import TableComponent from '../InventoryDetails/TableComponent';
 import { VIEW_INVENTORY_LIST_HEADERS } from '../InventoryDetails/constants';
 import { useQuery } from 'react-query';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
-import { fetchInvItemsForCategory, useDeleteSelectedCategory, useDeleteSelectedItemFromCategory, useFetchCategoryList } from '../../features/categories';
+import {
+  fetchInvItemsForCategory,
+  useDeleteCategory,
+  useFetchCategories,
+  useRemoveItemFromCategory,
+} from '../../features/categories';
 import CategoryChart from '../Chart/CategoryChart';
 import dayjs from 'dayjs';
 
@@ -27,9 +32,9 @@ const MODAL_STATE = {
 const CategoryDetails = () => {
   const user = useUser();
   const supabaseClient = useSupabaseClient();
-  const { data, isLoading } = useFetchCategoryList();
-  const deleteSelectedCategory = useDeleteSelectedCategory();
-  const deleteSelectedItemFromCategoryMutation = useDeleteSelectedItemFromCategory();
+  const { data = [], isLoading } = useFetchCategories();
+  const deleteCategory = useDeleteCategory();
+  const removeItemFromCategory = useRemoveItemFromCategory();
 
   const [modalState, setModalState] = useState(MODAL_STATE.NONE);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -37,7 +42,7 @@ const CategoryDetails = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
-  const { data: inventoryData, isLoading: inventoryLoading } = useQuery(
+  const { data: inventoryData = [], isLoading: inventoryLoading } = useQuery(
     ['categoryList', selectedCategory?.id],
     () => fetchInvItemsForCategory(supabaseClient, user.id, selectedCategory.id),
     {
@@ -49,7 +54,7 @@ const CategoryDetails = () => {
     if (id === -1) {
       return;
     }
-    deleteSelectedItemFromCategoryMutation.mutate(id);
+    removeItemFromCategory.mutate(id);
   };
 
   const rowFormatter = (row, column, color) => {
@@ -130,7 +135,7 @@ const CategoryDetails = () => {
     if (id === -1) {
       return;
     }
-    deleteSelectedCategory.mutate(id);
+    deleteCategory.mutate(id);
     resetConfirmationBox();
   };
 
@@ -167,7 +172,9 @@ const CategoryDetails = () => {
                         >
                           <TrendingUpRounded color={index % 2 == 0 ? 'success' : 'error'} />
                           <Stack>
-                            <Typography variant="caption">Total items {item.totalAssignedItems.length ?? 0}</Typography>
+                            <Typography variant="caption">
+                              Total items {item.totalAssignedItems?.length ?? 0}
+                            </Typography>
                           </Stack>
                         </Stack>
                       </Stack>

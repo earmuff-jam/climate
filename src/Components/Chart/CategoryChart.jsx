@@ -26,7 +26,7 @@ const CategoryChart = ({ data }) => {
         legendLabel={!chartVariant ? 'Total item(s) vs categories' : 'Threshold vs categories'}
         data={
           !chartVariant
-            ? data.map((v) => ({ name: v.category_name, value: v.totalAssignedItems.length }))
+            ? data.map((v) => ({ name: v.category_name, value: v.totalAssignedItems?.length || 0 }))
             : data.map((v) => ({ name: v.category_name, value: v.thresholdlimit }))
         }
         backgroundColor="rgba(75, 192, 192, 0.4)"

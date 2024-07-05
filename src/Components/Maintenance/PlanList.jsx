@@ -10,11 +10,11 @@ import {
 } from '@mui/icons-material';
 import { ConfirmationBoxModal, DisplayNoMatchingRecordsComponent, generateTitleColor } from '../../util/util';
 import {
-  fetchInventoryItemsAgainstSelectedMaintenancePlan,
-  useDeleteSelectedItemFromMaintenancePlan,
-  useDeleteSelectedMaintenancePlan,
-  useFetchMaintenanceList,
-} from '../../features/maintenancePlan';
+  fetchInvItemsForPlan,
+  useDeleteItemFromPlan,
+  useDeletePlan,
+  useFetchPlans,
+} from '../../features/plan';
 import SimpleModal from '../../util/SimpleModal';
 import TableComponent from '../InventoryDetails/TableComponent';
 import { VIEW_INVENTORY_LIST_HEADERS } from '../InventoryDetails/constants';
@@ -26,9 +26,9 @@ import dayjs from 'dayjs';
 const PlanList = () => {
   const user = useUser();
   const supabaseClient = useSupabaseClient();
-  const { data, isLoading } = useFetchMaintenanceList();
-  const deleteMaintenancePlanMutation = useDeleteSelectedMaintenancePlan();
-  const deleteSelectedItemFromMaintenancePlanMutation = useDeleteSelectedItemFromMaintenancePlan();
+  const { data = [], isLoading } = useFetchPlans();
+  const deletePlan = useDeletePlan();
+  const deleteItemFromPlan = useDeleteItemFromPlan();
 
   const [displayModal, setDisplayModal] = useState(false);
   const [selectedMaintenancePlan, setSelectedMaintenancePlan] = useState(null);
@@ -37,7 +37,7 @@ const PlanList = () => {
 
   const { data: inventoryData, isLoading: inventoryLoading } = useQuery(
     ['maintenanceItems', selectedMaintenancePlan?.id],
-    () => fetchInventoryItemsAgainstSelectedMaintenancePlan(supabaseClient, user.id, selectedMaintenancePlan.id),
+    () => fetchInvItemsForPlan(supabaseClient, user.id, selectedMaintenancePlan.id),
     {
       enabled: !!selectedMaintenancePlan?.id,
     }
@@ -47,7 +47,7 @@ const PlanList = () => {
     if (id === -1) {
       return;
     }
-    deleteSelectedItemFromMaintenancePlanMutation.mutate(id);
+    deleteItemFromPlan.mutate(id);
   };
 
   const rowFormatter = (row, column, color) => {
@@ -103,7 +103,7 @@ const PlanList = () => {
       // unknown id to delete. protect from confirmation box
       return;
     }
-    deleteMaintenancePlanMutation.mutate(id);
+    deletePlan.mutate(id);
     resetConfirmationBox();
   };
 

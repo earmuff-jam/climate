@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useFetchInventoriesList, useUpdateSelectedInventory } from '../../features/inventories';
+import { useFetchInventories, useUpdateInventory } from '../../features/inventories';
 import { BLANK_INVENTORY_FORM } from '../../Components/AddInventory/constants';
 import HeaderWithButton from '../../util/HeaderWithButton';
 import { BookmarkAddedRounded, CheckRounded, SwapHorizRounded } from '@mui/icons-material';
@@ -28,9 +28,9 @@ dayjs.extend(relativeTime);
 const EditInventory = () => {
   const user = useUser();
   const { id } = useParams();
-  const { data, isLoading } = useFetchInventoriesList();
-  const { data: options, isLoading: isStorageLocationOptionsLoading } = useFetchStorageLocationList();
-  const updateInventoryDetailsMutation = useUpdateSelectedInventory();
+  const { data = [], isLoading } = useFetchInventories();
+  const { data: options = [], isLoading: isStorageLocationOptionsLoading } = useFetchStorageLocationList();
+  const updateInventory = useUpdateInventory();
   const [storageLocation, setStorageLocation] = useState('');
   const [formData, setFormData] = useState({ ...BLANK_INVENTORY_FORM });
 
@@ -93,7 +93,7 @@ const EditInventory = () => {
       updated_on: dayjs().toISOString(),
     };
 
-    updateInventoryDetailsMutation.mutate(draftRequest);
+    updateInventory.mutate(draftRequest);
     setFormData({ ...BLANK_INVENTORY_FORM });
   };
 

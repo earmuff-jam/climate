@@ -1,12 +1,12 @@
-import { useDeleteSelectedCategory, useFetchCategoryList } from '../../features/categories';
+import { useDeleteCategory, useFetchCategories } from '../../features/categories';
 import { Card, CardContent, IconButton, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { DeleteRounded, TrendingUpRounded } from '@mui/icons-material';
 import { ConfirmationBoxModal, DisplayNoMatchingRecordsComponent } from '../../util/util';
 import { useState } from 'react';
 
 const Categories = () => {
-  const { data, isLoading } = useFetchCategoryList();
-  const deleteCategoryMutation = useDeleteSelectedCategory();
+  const { data = [], isLoading } = useFetchCategories();
+  const deleteCategory = useDeleteCategory();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
@@ -29,7 +29,7 @@ const Categories = () => {
       // unknown id to delete. protect from confirmation box
       return;
     }
-    deleteCategoryMutation.mutate(id);
+    deleteCategory.mutate(id);
     reset();
   };
 
@@ -61,7 +61,7 @@ const Categories = () => {
                         </Typography>
                         <Stack direction="row" alignItems="center" useFlexGap spacing={1}>
                           <TrendingUpRounded color={index % 2 == 0 ? 'success' : 'error'} />
-                          <Typography variant="caption">Total {item?.totalAssignedItems.length ?? 0} items</Typography>
+                          <Typography variant="caption">Total {item?.totalAssignedItems?.length ?? 0} items</Typography>
                         </Stack>
                       </Stack>
                       <IconButton onClick={() => handleDelete(item)}>

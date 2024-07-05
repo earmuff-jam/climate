@@ -3,7 +3,6 @@ import { Box, Button, Divider, Stack, TextField, Typography } from '@mui/materia
 import { BLANK_PROFILE_DETAILS } from './constants';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
-import { useQueryClient } from 'react-query';
 import { useUser } from '@supabase/auth-helpers-react';
 import { useNavigate } from 'react-router-dom';
 import { useFetchProfileDetails, useUpsertProfileDetails } from '../../features/profile';
@@ -13,8 +12,7 @@ dayjs.extend(relativeTime);
 const ProfileContent = () => {
   const user = useUser();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const { data, isLoading, isError } = useFetchProfileDetails();
+  const { data = {}, isLoading, isError } = useFetchProfileDetails();
   const upsertProfileDetailsMutation = useUpsertProfileDetails();
 
   const [formData, setFormData] = useState(BLANK_PROFILE_DETAILS);
@@ -22,7 +20,6 @@ const ProfileContent = () => {
   const submit = (ev) => {
     ev.preventDefault();
     const draftFormattedData = Object.entries(formData).reduce((acc, [key, valueObj]) => {
-      // handle time differently
       if (['created_on', 'updated_on'].includes(key)) {
         acc[key] = valueObj;
       } else {
@@ -35,14 +32,8 @@ const ProfileContent = () => {
     draftFormattedData['updated_on'] = dayjs();
     draftFormattedData['updated_by'] = user.id;
 
-    upsertProfileDetailsMutation.mutate(draftFormattedData, {
-      onSuccess: (response) => {
-        const selectedProfile = response.data;
-        setFormData({ ...selectedProfile });
-        queryClient.invalidateQueries(['profileDetails', 'profileConfig']);
-        navigate('/');
-      },
-    });
+    upsertProfileDetailsMutation.mutate(draftFormattedData);
+    navigate('/');
   };
 
   const handleChange = (ev) => {

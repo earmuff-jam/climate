@@ -2,10 +2,10 @@ import { DownloadRounded, SaveRounded } from '@mui/icons-material';
 import * as XLSX from 'xlsx';
 import { useState } from 'react';
 import { Box, Button, Input, Stack, Typography } from '@mui/material';
-import { useUpsertInventoryDetailsInBulk } from '../../features/inventories';
+import { useCreateInventories } from '../../features/inventories';
 
 const AddBulkUploadInventory = ({ handleClose }) => {
-  const upsertInventoryDetailsInBulkMutation = useUpsertInventoryDetailsInBulk();
+  const createInventories = useCreateInventories();
   const [uploadedFileInJson, setUploadedFileInJson] = useState([]);
 
   const handleFileChange = (event) => {
@@ -51,7 +51,7 @@ const AddBulkUploadInventory = ({ handleClose }) => {
 
   const submit = () => {
     if (Array.isArray(uploadedFileInJson) && uploadedFileInJson.length > 0) {
-      upsertInventoryDetailsInBulkMutation.mutate(uploadedFileInJson);
+      createInventories.mutate(uploadedFileInJson);
     }
     resetData();
   };

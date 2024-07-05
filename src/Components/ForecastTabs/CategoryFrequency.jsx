@@ -1,12 +1,12 @@
 import { Card, Skeleton, Stack, Typography } from '@mui/material';
 import HeaderWithButton from '../../util/HeaderWithButton';
-import { useFetchCategoryList } from '../../features/categories';
+import { useFetchCategories } from '../../features/categories';
 import dayjs from 'dayjs';
 import { DisplayNoMatchingRecordsComponent } from '../../util/util';
 import LimitMenu from './LimitMenu';
 
 const CategoryFrequency = () => {
-  const { data, isLoading } = useFetchCategoryList();
+  const { data, isLoading } = useFetchCategories();
 
   if (isLoading) return <Skeleton height={100} width="100%" /> 
   return (
@@ -24,7 +24,7 @@ const CategoryFrequency = () => {
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Stack>
                 <Typography>{v.category_name}</Typography>
-                <Typography variant="caption">Total Items: {v.totalAssignedItems.length}</Typography>
+                <Typography variant="caption">Total Items: {v.totalAssignedItems?.length || 0}</Typography>
                 <Typography variant="caption">Created around {dayjs(v.created_on).fromNow()}</Typography>
               </Stack>
               <LimitMenu category={v} />

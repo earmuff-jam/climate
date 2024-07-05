@@ -2,26 +2,18 @@ import { Box, Card, CardContent, Container, Divider, IconButton, Skeleton, Stack
 import HeaderWithButton from '../../util/HeaderWithButton';
 import PieBarChart from '../../Components/Chart/PieBarChart';
 import { CategoryRounded, EngineeringRounded, WarningRounded } from '@mui/icons-material';
-import { useFetchCategoriesCount, useFetchCategoryItemsCount } from '../../features/categories';
-import {
-  useFetchItemMaintenancePlanOverdueCount,
-  useFetchMaintenancePlanItemsCount,
-  useFetchMaintenancePlansCount,
-} from '../../features/maintenancePlan';
-import { useFetchInventoriesCount, useFetchInventoryItemsCost } from '../../features/inventories';
+import { useFetchCategories, useFetchCategoryItems } from '../../features/categories';
+import { useFetchPlanItems, useFetchPlans } from '../../features/plan';
+import { useFetchInventories } from '../../features/inventories';
 
 const InventoryOverview = () => {
-  const { data: inventoryItemsWithAssociatedCost } = useFetchInventoryItemsCost();
-  const { data: categoriesCount } = useFetchCategoriesCount();
-  const { data: inventoriesCount } = useFetchInventoriesCount();
-  const { data: maintenancePlanCount } = useFetchMaintenancePlansCount();
-  const { data: categoryItemCounts, isLoading: categoryItemCountsLoading } = useFetchCategoryItemsCount();
-  const { data: maintenancePlanItemCounts, isLoading: maintenancePlanItemCountsLoading } =
-    useFetchMaintenancePlanItemsCount();
-  const { data: maintenancePlanItemOverdueCounts, isLoading: maintenancePlanItemOverdueCountsLoading } =
-    useFetchItemMaintenancePlanOverdueCount();
+  const { data: categories = [] } = useFetchCategories();
+  const { data: plans = [], loading: isPlansLoading } = useFetchPlans();
+  const { data: inventories = [] } = useFetchInventories();
+  const { data: categoryItems = [], isLoading: categoryItemsLoading } = useFetchCategoryItems();
+  const { data: planItems = [], isLoading: planItemsLoading } = useFetchPlanItems();
 
-  const itemsWithAssociatedCosts = inventoryItemsWithAssociatedCost?.reduce((acc, el) => {
+  const invItemsWithPrice = inventories?.reduce((acc, el) => {
     acc = acc + el.price;
     return acc;
   }, 0);
@@ -41,8 +33,8 @@ const InventoryOverview = () => {
                       label="under assigned maintenance plan"
                       icon={<EngineeringRounded />}
                       color="primary"
-                      dataLabel={maintenancePlanItemCounts || 0}
-                      loading={maintenancePlanItemCountsLoading}
+                      dataLabel={planItems.length || 0}
+                      loading={planItemsLoading}
                     />
                   </CardItem>
                   <CardItem>
@@ -50,8 +42,8 @@ const InventoryOverview = () => {
                       label="under assigned categories"
                       icon={<CategoryRounded />}
                       color="primary"
-                      dataLabel={categoryItemCounts || 0}
-                      loading={categoryItemCountsLoading}
+                      dataLabel={categoryItems.length || 0}
+                      loading={categoryItemsLoading}
                     />
                   </CardItem>
                   <CardItem>
@@ -59,8 +51,8 @@ const InventoryOverview = () => {
                       label="require attention"
                       icon={<WarningRounded />}
                       color="error"
-                      dataLabel={maintenancePlanItemOverdueCounts || 0}
-                      loading={maintenancePlanItemOverdueCountsLoading}
+                      dataLabel={plans.filter((v) => v.overflow).length || 0}
+                      loading={isPlansLoading}
                     />
                   </CardItem>
                 </Stack>
@@ -75,24 +67,26 @@ const InventoryOverview = () => {
                   <RowItem
                     label="Estimated valuation of items"
                     color="text.secondary"
-                    dataValue={itemsWithAssociatedCosts}
+                    dataValue={invItemsWithPrice.toFixed(2)}
                   />
                   <RowItem
                     label="Unestimated items"
                     color="text.secondary"
-                    dataValue={
-                      inventoriesCount - inventoryItemsWithAssociatedCost?.filter((v) => v.price > 0).length || 0
-                    }
+                    dataValue={inventories.length - inventories?.filter((v) => v.price > 0).length || 0}
                   />
                 </Stack>
                 <Stack>
                   <HeaderWithButton title="Product Details" />
                   <Stack direction="row" spacing="2rem">
                     <Stack spacing="2rem">
-                      <RowItem label="Overdue items" color="error.main" dataValue={maintenancePlanItemOverdueCounts} />
-                      <RowItem label="All categories" color="text.secondary" dataValue={categoriesCount} />
-                      <RowItem label="All maintenance plans" color="text.secondary" dataValue={maintenancePlanCount} />
-                      <RowItem label="All inventory items" color="text.secondary" dataValue={inventoriesCount} />
+                      <RowItem
+                        label="Overdue items"
+                        color="error.main"
+                        dataValue={plans.filter((v) => v.overflow).length || 0}
+                      />
+                      <RowItem label="All categories" color="text.secondary" dataValue={categories.length} />
+                      <RowItem label="All maintenance plans" color="text.secondary" dataValue={plans.length} />
+                      <RowItem label="All inventory items" color="text.secondary" dataValue={inventories.length} />
                     </Stack>
                     <Stack direction="row" spacing="2rem">
                       <Divider orientation="vertical" />
@@ -101,9 +95,9 @@ const InventoryOverview = () => {
                         height="10rem"
                         legendLabel="Need attention"
                         data={[
-                          categoryItemCounts,
-                          maintenancePlanItemCounts,
-                          inventoriesCount - (categoryItemCounts + maintenancePlanItemCounts),
+                          categoryItems.length,
+                          planItems.length,
+                          inventories.length - (categoryItems.length + planItems.length),
                         ].map((v, index) => ({
                           label: ['under categories', 'under maintenance', 'unassigned'][index],
                           count: v,
