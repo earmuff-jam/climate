@@ -19,9 +19,11 @@ import HeaderWithButton from '../../util/HeaderWithButton';
 import { BookmarkAddedRounded, CheckRounded, SwapHorizRounded } from '@mui/icons-material';
 import { useFetchStorageLocationList } from '../../features/storageLocations';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { useUser } from '@supabase/auth-helpers-react';
 
 const filter = createFilterOptions();
+dayjs.extend(relativeTime);
 
 const EditInventory = () => {
   const user = useUser();
@@ -96,8 +98,8 @@ const EditInventory = () => {
   };
 
   useEffect(() => {
-    if (!isLoading && Array.isArray(data?.result)) {
-      const selectedInventory = data?.result.filter((v) => v.id === id).find(() => true);
+    if (!isLoading && Array.isArray(data)) {
+      const selectedInventory = data?.filter((v) => v.id === id).find(() => true);
       const draftInventoryForm = { ...BLANK_INVENTORY_FORM };
       draftInventoryForm.name.value = selectedInventory.name || '';
       draftInventoryForm.description.value = selectedInventory.description || '';

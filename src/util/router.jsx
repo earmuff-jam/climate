@@ -21,7 +21,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Inventories displayAllInventories={false} plainView={true} />,
+        element: <Inventories displayAllInventories={false} hideActionMenu={true} />,
       },
       {
         path: '/inventories/list',

@@ -1,14 +1,22 @@
 import { useState } from 'react';
 import { Card, CardContent, IconButton, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
-import { HighlightOffRounded, TrendingUpRounded } from '@mui/icons-material';
-import { ConfirmationBoxModal, DisplayNoMatchingRecordsComponent } from '../../util/util';
+import {
+  CheckRounded,
+  CircleRounded,
+  CloseRounded,
+  HighlightOffRounded,
+  RestoreRounded,
+  TrendingUpRounded,
+} from '@mui/icons-material';
+import { ConfirmationBoxModal, DisplayNoMatchingRecordsComponent, generateTitleColor } from '../../util/util';
 import SimpleModal from '../../util/SimpleModal';
 import TableComponent from '../InventoryDetails/TableComponent';
 import { VIEW_INVENTORY_LIST_HEADERS } from '../InventoryDetails/constants';
 import { useQuery } from 'react-query';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
-import { fetchInvItemsForCategory, useDeleteSelectedCategory, useFetchCategoryList } from '../../features/categories';
+import { fetchInvItemsForCategory, useDeleteSelectedCategory, useDeleteSelectedItemFromCategory, useFetchCategoryList } from '../../features/categories';
 import CategoryChart from '../Chart/CategoryChart';
+import dayjs from 'dayjs';
 
 const MODAL_STATE = {
   NONE: 'none',
@@ -21,9 +29,11 @@ const CategoryDetails = () => {
   const supabaseClient = useSupabaseClient();
   const { data, isLoading } = useFetchCategoryList();
   const deleteSelectedCategory = useDeleteSelectedCategory();
+  const deleteSelectedItemFromCategoryMutation = useDeleteSelectedItemFromCategory();
 
   const [modalState, setModalState] = useState(MODAL_STATE.NONE);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [rowSelected, setRowSelected] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
@@ -35,6 +45,65 @@ const CategoryDetails = () => {
     }
   );
 
+  const resetSelection = (id) => {
+    if (id === -1) {
+      return;
+    }
+    deleteSelectedItemFromCategoryMutation.mutate(id);
+  };
+
+  const rowFormatter = (row, column, color) => {
+    if (['created_on', 'updated_on'].includes(column)) {
+      return dayjs(row[column]).fromNow();
+    }
+    if (['price', 'quantity'].includes(column)) {
+      return row[column] <= 0 ? '-' : row[column];
+    }
+    if (['updator_name', 'creator_name'].includes(column)) {
+      return row[column]?.username ?? '-';
+    }
+    if (['is_returnable'].includes(column)) {
+      return row[column] ? <CheckRounded color="primary" /> : <CloseRounded color="error" />;
+    }
+    if (['name'].includes(column)) {
+      return (
+        <Stack direction="row" alignItems="center" justifyContent="flex-start" spacing={{ xs: 1 }}>
+          {row?.category_item.length > 0 ? (
+            <IconButton onClick={() => resetSelection(row.id)}>
+              <RestoreRounded color="primary" />
+            </IconButton>
+          ) : null}
+          <CircleRounded sx={{ height: '0.75rem', width: '0.75rem', color: color ? `${color}` : 'transparent' }} />
+          <Typography variant="subtitle2">{row[column] || '-'}</Typography>
+        </Stack>
+      );
+    }
+    return row[column] ?? '-';
+  };
+
+  const handleRowSelection = (_, id) => {
+    if (id === 'all') {
+      if (rowSelected.length === 0) {
+        setRowSelected(data.map((v) => v.id));
+      } else {
+        setRowSelected([]);
+      }
+    } else {
+      const selectedIndex = rowSelected.indexOf(id);
+      let draftSelected = [];
+      if (selectedIndex === -1) {
+        draftSelected = draftSelected.concat(rowSelected, id);
+      } else if (selectedIndex === 0) {
+        draftSelected = draftSelected.concat(rowSelected.slice(1));
+      } else if (selectedIndex === rowSelected.length - 1) {
+        draftSelected = draftSelected.concat(rowSelected.slice(0, -1));
+      } else if (selectedIndex > 0) {
+        draftSelected = draftSelected.concat(rowSelected.slice(0, selectedIndex), rowSelected.slice(selectedIndex + 1));
+      }
+      setRowSelected(draftSelected);
+    }
+  };
+
   const handleSelection = (item) => {
     setModalState(MODAL_STATE.ITEM_SELECTION);
     setSelectedCategory(item);
@@ -43,6 +112,7 @@ const CategoryDetails = () => {
   const handleClose = () => {
     setModalState(MODAL_STATE.NONE);
     setSelectedCategory(null);
+    setRowSelected([]);
   };
 
   const handleDelete = () => {
@@ -52,6 +122,7 @@ const CategoryDetails = () => {
   const resetConfirmationBox = () => {
     setOpenDialog(false);
     setModalState(MODAL_STATE.NONE);
+    setRowSelected([]);
     setIdToDelete(-1);
   };
 
@@ -120,15 +191,17 @@ const CategoryDetails = () => {
         </Stack>
         <CategoryChart data={data} />
       </Stack>
-      {/* display list of inventories associated with the selected maintenance plan when selected */}
       {modalState === MODAL_STATE.ITEM_SELECTION && (
         <SimpleModal title={`Item(s) under ${selectedCategory?.category_name}`} handleClose={handleClose} maxSize="md">
           <TableComponent
-            plainView={true}
-            isCategory={true}
+            hideActionMenu
+            isCategory
             isLoading={inventoryLoading}
             data={inventoryData?.data || []}
-            rowSelected={[]}
+            rowSelected={rowSelected}
+            rowFormatter={rowFormatter}
+            generateTitleColor={generateTitleColor}
+            handleRowSelection={handleRowSelection}
             columns={Object.values(VIEW_INVENTORY_LIST_HEADERS).filter((v) => v.displayConcise)}
           />
         </SimpleModal>

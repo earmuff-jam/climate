@@ -28,7 +28,8 @@ const fetchCategoriesList = (client, userID) => {
         sharable_groups,
         thresholdlimit,
         totalAssignedItems:category_item!id(
-          id
+          id,
+          item_id
         ),
         creator_name:profiles!created_by(
           username
@@ -282,6 +283,25 @@ export const useDeleteSelectedCategory = () => {
   const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
   return useMutation((id) => deleteCategoryDetails(supabaseClient, id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['categoryList']);
+    },
+  });
+};
+
+/**
+ *
+ * @param {Object} supabaseClient
+ * @param {String} id - the inventory item ID to delete
+ */
+const deleteSelectedItemFromCategory = (client, id) => {
+  return client.from('category_item').delete().eq('item_id', id);
+};
+
+export const useDeleteSelectedItemFromCategory = () => {
+  const queryClient = useQueryClient();
+  const supabaseClient = useSupabaseClient();
+  return useMutation((id) => deleteSelectedItemFromCategory(supabaseClient, id), {
     onSuccess: () => {
       queryClient.invalidateQueries(['categoryList']);
     },

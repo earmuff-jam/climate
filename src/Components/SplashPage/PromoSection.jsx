@@ -1,5 +1,4 @@
 import InfoSection from './InfoSection';
-import bgImage from '../../assets/bg.svg';
 import { Button, Card, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import SimpleModal from '../../util/SimpleModal';
@@ -14,7 +13,7 @@ export default function PromoSection() {
         alignItems="center"
         height="100vh"
         spacing={3}
-        style={{ backgroundImage: `url(${bgImage})` }}
+        style={{ backgroundImage: `url(${'/bg.svg'})` }}
       >
         <Card sx={{ p: 4, boxShadow: 3 }}>
           <Stack alignItems="center" spacing={2}>
@@ -34,7 +33,6 @@ export default function PromoSection() {
         </Card>
         <InfoSection />
       </Stack>
-      {/* log in modal */}
       {openModal && (
         <SimpleModal
           title="Welcome. Glad to see you. 👋"

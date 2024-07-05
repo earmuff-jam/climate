@@ -4,17 +4,25 @@ import {
   CardContent,
   CardMedia,
   Checkbox,
-  IconButton,
   Skeleton,
   Stack,
   Tooltip,
   Typography,
 } from '@mui/material';
-import { DisplayNoMatchingRecordsComponent } from '../../util/util';
-import { EditRounded } from '@mui/icons-material';
 import dayjs from 'dayjs';
+import MoreDetails from './MoreDetails';
+import { DisplayNoMatchingRecordsComponent } from '../../util/util';
 
-const GridComponent = ({ isLoading, data, rowSelected, handleEdit, handleRowSelection }) => {
+const GridComponent = ({
+  isLoading,
+  data,
+  rowSelected,
+  handleEdit,
+  handleRowSelection,
+  handleAddCategory,
+  handleAddInventory,
+  handleDeleteInventory,
+}) => {
   if (isLoading) return <Skeleton height="10vh" width="100%" />;
   if (data.length <= 0) return <DisplayNoMatchingRecordsComponent />;
 
@@ -33,14 +41,11 @@ const GridComponent = ({ isLoading, data, rowSelected, handleEdit, handleRowSele
               }}
             >
               <Tooltip title={row.description}>
-                <CardMedia sx={{ height: 200 }} image="/blank_canvas.svg" />
+                <CardMedia sx={{ height: '10rem' }} image="/blank_canvas.svg" />
               </Tooltip>
               <CardContent>
                 <Stack>
                   <Typography variant="caption">{row.name}</Typography>
-                  <Typography variant="caption" color="text.secondary" textOverflow="auto">
-                    {row.description}
-                  </Typography>
                 </Stack>
               </CardContent>
               <CardActions>
@@ -55,9 +60,14 @@ const GridComponent = ({ isLoading, data, rowSelected, handleEdit, handleRowSele
                   onClick={(event) => handleRowSelection(event, selectedID)}
                   inputProps={{ 'aria-labelledby': 'labelId' }}
                 />
-                <IconButton size="small" color="primary" onClick={() => handleEdit(selectedID)}>
-                  <EditRounded fontSize="small" />
-                </IconButton>
+                <MoreDetails
+                  selectedID={selectedID}
+                  handleEdit={handleEdit}
+                  rowSelected={rowSelected}
+                  handleAddCategory={handleAddCategory}
+                  handleAddInventory={handleAddInventory}
+                  handleDeleteInventory={handleDeleteInventory}
+                />
               </CardActions>
             </Card>
           </Stack>

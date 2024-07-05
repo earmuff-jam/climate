@@ -1,9 +1,12 @@
 import dayjs from 'dayjs';
-import { Box, Card, CardContent, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
+import { Alert, Box, Card, CardContent, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { DisplayNoMatchingRecordsComponent } from '../../util/util';
 import { useAssignInventoryItemToCategory, useFetchCategoryList } from '../../features/categories';
+import { WarningOutlined } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 const AssignCategory = ({ rowSelected, handleCloseAssignFn }) => {
+  const navigate = useNavigate();
   const { data, isLoading } = useFetchCategoryList();
   const assignInventoryItemToCategory = useAssignInventoryItemToCategory();
 
@@ -15,8 +18,30 @@ const AssignCategory = ({ rowSelected, handleCloseAssignFn }) => {
     handleCloseAssignFn();
   };
 
+  const existsInAnotherCategory = data.reduce((acc, el) => {
+    const itemsWithinCategory = el.totalAssignedItems;
+    const itemExists = itemsWithinCategory.some((item) => rowSelected.includes(item.item_id));
+    if (itemExists) {
+      acc = true;
+    }
+    return acc;
+  }, false);
+
   return (
     <Box>
+      {existsInAnotherCategory ? (
+        <Alert severity="warning" icon={<WarningOutlined fontSize="inherit" color="warning" />} sx={{ mb: 1 }}>
+          One or more selected item(s) belongs to an existing category. Adding to another category will not reassign
+          selected item. Manage individual items from{' '}
+          <Typography
+            variant="subtitle"
+            sx={{ cursor: 'pointer' }}
+            onClick={() => navigate('/inventories/categories/list')}
+          >
+            categories section
+          </Typography>
+        </Alert>
+      ) : null}
       <Stack direction="row" spacing={2}>
         {data.map((v) => (
           <Card
