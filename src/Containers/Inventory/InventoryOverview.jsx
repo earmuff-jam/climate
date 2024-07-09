@@ -14,7 +14,7 @@ const InventoryOverview = () => {
   const { data: planItems = [], isLoading: planItemsLoading } = useFetchPlanItems();
 
   const invItemsWithPrice = inventories?.reduce((acc, el) => {
-    acc = acc + el.price;
+    acc = acc + parseFloat(el.price);
     return acc;
   }, 0);
 
@@ -67,7 +67,7 @@ const InventoryOverview = () => {
                   <RowItem
                     label="Estimated valuation of items"
                     color="text.secondary"
-                    dataValue={invItemsWithPrice.toFixed(2)}
+                    dataValue={invItemsWithPrice?.toFixed(2)}
                   />
                   <RowItem
                     label="Unestimated items"

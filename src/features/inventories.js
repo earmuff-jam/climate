@@ -62,7 +62,7 @@ export const useFetchInventories = () => {
 
   return useQuery({
     queryFn: queryFn,
-    queryKey: 'inventoryList',
+    queryKey: 'inventories',
   });
 };
 
@@ -91,7 +91,7 @@ export const useCreateInventories = () => {
   const supabaseClient = useSupabaseClient();
   return useMutation((data) => createInventories(supabaseClient, user.id, data), {
     onSuccess: () => {
-      queryClient.invalidateQueries('inventoryList');
+      queryClient.invalidateQueries('inventories');
     },
   });
 };
@@ -145,7 +145,7 @@ export const useCreateInventoryItem = () => {
   const supabaseClient = useSupabaseClient();
   return useMutation((data) => createInventoryItem(supabaseClient, user.id, data), {
     onSuccess: () => {
-      queryClient.invalidateQueries('inventoryList');
+      queryClient.invalidateQueries('inventories');
     },
   });
 };
@@ -162,8 +162,17 @@ export const useUpdateInventory = () => {
   const queryClient = useQueryClient();
   const supabaseClient = useSupabaseClient();
   return useMutation((data) => updateInventory(supabaseClient, data.id, user.id, data), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('inventoryList');
+    onMutate: async (data) => {
+      await queryClient.cancelQueries('inventories');
+      const prev = queryClient.getQueryData('inventories');
+      queryClient.setQueryData('inventories', (old) => {
+        const newer = old.map((item) => (item.id === data.id ? { ...item, ...data } : item));
+        return newer;
+      });
+      return { prev };
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries('inventories');
     },
   });
 };
@@ -180,7 +189,7 @@ export const useDeleteInventories = () => {
   const supabaseClient = useSupabaseClient();
   return useMutation((ids) => deleteInventories(supabaseClient, ids), {
     onSuccess: () => {
-      queryClient.invalidateQueries('inventoryList');
+      queryClient.invalidateQueries('inventories');
     },
   });
 };

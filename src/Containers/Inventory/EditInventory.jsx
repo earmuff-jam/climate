@@ -28,10 +28,10 @@ dayjs.extend(relativeTime);
 const EditInventory = () => {
   const user = useUser();
   const { id } = useParams();
-  const { data = [], isLoading } = useFetchInventories();
+  const { data = [], isFetching } = useFetchInventories();
   const { data: options = [], isLoading: isStorageLocationOptionsLoading } = useFetchStorageLocationList();
   const updateInventory = useUpdateInventory();
-  const [storageLocation, setStorageLocation] = useState('');
+  const [storageLocation, setStorageLocation] = useState({});
   const [formData, setFormData] = useState({ ...BLANK_INVENTORY_FORM });
 
   const handleInputChange = (event) => {
@@ -98,7 +98,7 @@ const EditInventory = () => {
   };
 
   useEffect(() => {
-    if (!isLoading && Array.isArray(data)) {
+    if (!isFetching && Array.isArray(data)) {
       const selectedInventory = data?.filter((v) => v.id === id).find(() => true);
       const draftInventoryForm = { ...BLANK_INVENTORY_FORM };
       draftInventoryForm.name.value = selectedInventory.name || '';
@@ -125,10 +125,10 @@ const EditInventory = () => {
       draftInventoryForm.creator_name = selectedInventory.creator_name;
       draftInventoryForm.updator_name = selectedInventory.updator_name;
 
-      setStorageLocation(selectedInventory.location);
+      setStorageLocation({ location: selectedInventory.location });
       setFormData(draftInventoryForm);
     }
-  }, [isLoading, isStorageLocationOptionsLoading]);
+  }, [isFetching, isStorageLocationOptionsLoading]);
 
   return (
     <Container sx={{ marginTop: '1rem' }}>
@@ -234,7 +234,7 @@ const EditInventory = () => {
             if (option.inputValue) {
               return option.inputValue;
             }
-            return option.location;
+            return option.location || '';
           }}
           renderOption={(props, option) => (
             <li {...props} key={option.location}>
