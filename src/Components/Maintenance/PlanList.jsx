@@ -1,3 +1,4 @@
+import * as XLSX from 'xlsx';
 import { useState } from 'react';
 import { Box, Card, CardContent, IconButton, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import {
@@ -9,12 +10,7 @@ import {
   TrendingUpRounded,
 } from '@mui/icons-material';
 import { ConfirmationBoxModal, DisplayNoMatchingRecordsComponent, generateTitleColor } from '../../util/util';
-import {
-  fetchInvItemsForPlan,
-  useDeleteItemFromPlan,
-  useDeletePlan,
-  useFetchPlans,
-} from '../../features/plan';
+import { fetchInvItemsForPlan, useDeleteItemFromPlan, useDeletePlan, useFetchPlans } from '../../features/plan';
 import SimpleModal from '../../util/SimpleModal';
 import TableComponent from '../InventoryDetails/TableComponent';
 import { VIEW_INVENTORY_LIST_HEADERS } from '../InventoryDetails/constants';
@@ -171,9 +167,23 @@ const PlanList = () => {
         </Stack>
         <MaintenanceChart data={data} />
       </Stack>
-      {/* display list of inventories associated with the selected maintenance plan when selected */}
       {displayModal && (
-        <SimpleModal title={`Item(s) under ${selectedMaintenancePlan?.plan}`} handleClose={handleClose} maxSize="md">
+        <SimpleModal
+          title={`Item(s) under ${selectedMaintenancePlan?.plan}`}
+          handleClose={handleClose}
+          maxSize="md"
+          showExport
+          handleExport={() => {
+            const formattedData = inventoryData?.data.map((v) => {
+              const { id, created_by, updated_by, sharable_groups, ...rest } = v;
+              return rest;
+            });
+            const worksheet = XLSX.utils.json_to_sheet(formattedData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, `Under ${selectedMaintenancePlan?.plan}`);
+            XLSX.writeFile(workbook, `Items.xlsx`, { compression: true });
+          }}
+        >
           <TableComponent
             hideActionMenu
             isLoading={inventoryLoading}

@@ -1,3 +1,4 @@
+import * as XLSX from 'xlsx';
 import { useState } from 'react';
 import { Card, CardContent, IconButton, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import {
@@ -199,7 +200,22 @@ const CategoryDetails = () => {
         <CategoryChart data={data} />
       </Stack>
       {modalState === MODAL_STATE.ITEM_SELECTION && (
-        <SimpleModal title={`Item(s) under ${selectedCategory?.category_name}`} handleClose={handleClose} maxSize="md">
+        <SimpleModal
+          title={`Item(s) under ${selectedCategory?.category_name}`}
+          handleClose={handleClose}
+          maxSize="md"
+          showExport
+          handleExport={() => {
+            const formattedData = inventoryData?.data.map((v) => {
+              const { id, created_by, updated_by, sharable_groups, ...rest } = v;
+              return rest;
+            });
+            const worksheet = XLSX.utils.json_to_sheet(formattedData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, `Under ${selectedCategory?.category_name}`);
+            XLSX.writeFile(workbook, `Items.xlsx`, { compression: true });
+          }}
+        >
           <TableComponent
             hideActionMenu
             isCategory

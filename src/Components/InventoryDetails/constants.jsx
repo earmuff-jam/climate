@@ -74,14 +74,14 @@ export const VIEW_INVENTORY_LIST_HEADERS = {
   name: {
     id: 1,
     colName: 'name',
-    label: 'Item name',
+    label: 'Name',
     displayConcise: true,
     modifier: (value) => `${value || '-'}`,
   },
   description: {
     id: 2,
     colName: 'description',
-    label: 'Item Description',
+    label: 'Description',
     displayName: 'Description',
     displayConcise: true,
     modifier: (value) => `${value || '-'}`,
