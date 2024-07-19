@@ -1,6 +1,6 @@
 import { Box, Button, Checkbox, Divider, FormControlLabel, Skeleton, Stack, Typography } from '@mui/material';
 import { DarkModeRounded, GridViewRounded } from '@mui/icons-material';
-import { useFetchProfileConfigDetails, useUpsertProfileConfigurationDetails } from '../../features/profile';
+import { useFetchProfileConfig, useUpsertProfileConfig } from '../../features/profile';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@supabase/auth-helpers-react';
@@ -9,8 +9,8 @@ import dayjs from 'dayjs';
 const AppearanceSettings = () => {
   const user = useUser();
   const navigate = useNavigate();
-  const { data, isLoading } = useFetchProfileConfigDetails();
-  const upsertProfileConfigDetailsMutation = useUpsertProfileConfigurationDetails();
+  const { data = {}, isLoading } = useFetchProfileConfig();
+  const upsertProfileConfigDetailsMutation = useUpsertProfileConfig();
   const [displayMode, setDisplayMode] = useState(false);
   const [inventoryLayout, setInventoryLayout] = useState(false); // false is list view
 

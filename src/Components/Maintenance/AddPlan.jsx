@@ -3,12 +3,12 @@ import { useUser } from '@supabase/auth-helpers-react';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { BLANK_MAINTENANCE_PLAN, ITEM_TYPE_MAPPER } from './constants';
-import { useUpsertMaintenancePlanDetails } from '../../features/maintenancePlan';
+import { useAddPlan } from '../../features/plan';
 import ColorPicker from '../../util/ColorPicker';
 
 const AddPlan = ({ handleCloseAddNewPlan }) => {
   const user = useUser();
-  const upsertMaintenancePlanDetailsMutation = useUpsertMaintenancePlanDetails();
+  const addPlan = useAddPlan();
 
   const [planColor, setPlanColor] = useState('#fff');
   const [planType, setPlanType] = useState('7'); // default annual maintenance plan
@@ -83,7 +83,7 @@ const AddPlan = ({ handleCloseAddNewPlan }) => {
       created_on: dayjs().toISOString(),
     };
 
-    upsertMaintenancePlanDetailsMutation.mutate(draftRequest);
+    addPlan.mutate(draftRequest);
     resetData();
   };
 

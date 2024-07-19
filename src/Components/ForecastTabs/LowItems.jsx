@@ -1,14 +1,22 @@
 import { Stack, Typography } from '@mui/material';
 import HeaderWithButton from '../../util/HeaderWithButton';
 import TableComponent from '../InventoryDetails/TableComponent';
-import { useFetchLowThresholdItemsWithCategory } from '../../features/categories';
+import { useFetchItemWithCategoryDetails } from '../../features/categories';
 import { VIEW_INVENTORY_LIST_HEADERS } from '../InventoryDetails/constants';
 import { generateTitleColor } from '../../util/util';
 import { CheckRounded, CircleRounded, CloseRounded } from '@mui/icons-material';
 import dayjs from 'dayjs';
 
 const LowItems = () => {
-  const { data } = useFetchLowThresholdItemsWithCategory();
+  const { data = [] } = useFetchItemWithCategoryDetails();
+
+  const itemsAboveThresholdLimit = data.reduce((acc, el) => {
+    const thresholdLimit = el.category.thresholdlimit;
+    if (el.inventories.quantity >= thresholdLimit) {
+      acc.push(el);
+    }
+    return acc;
+  }, []);
 
   const rowFormatter = (row, column, color) => {
     if (['created_on', 'updated_on'].includes(column)) {
@@ -49,7 +57,7 @@ const LowItems = () => {
         isLoading={false}
         rowFormatter={rowFormatter}
         generateTitleColor={generateTitleColor}
-        data={data?.map((v) => v.inventories) || []}
+        data={itemsAboveThresholdLimit?.map((v) => v.inventories)}
         rowSelected={[]}
         columns={Object.values(VIEW_INVENTORY_LIST_HEADERS).filter((v) => v.displayConcise)}
       />

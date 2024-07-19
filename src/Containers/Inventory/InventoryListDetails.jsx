@@ -15,6 +15,7 @@ import {
   CheckRounded,
   CircleRounded,
   CloseRounded,
+  EditRounded,
   GridViewRounded,
   ViewListRounded,
 } from '@mui/icons-material';
@@ -27,13 +28,18 @@ import SelectedRowItem from '../../Components/InventoryDetails/SelectedRowItem';
 import TableComponent from '../../Components/InventoryDetails/TableComponent';
 import AddInventory from '../../Components/AddInventory/AddInventory';
 import AddBulkUploadInventory from '../../Components/AddInventory/AddBulkUploadInventory';
-import { useDeleteSelectedInventory, useFetchInventoriesList } from '../../features/inventories';
+import {
+  useDeleteInventories,
+  useFetchInventories,
+  useUpdateInventory,
+} from '../../features/inventories';
 import AssignCategory from '../../Components/CategoryDetails/AssignCategory';
 import AssignPlan from '../../Components/Maintenance/AssignPlan';
 import { ConfirmationBoxModal, generateTitleColor } from '../../util/util';
 import GridComponent from '../../Components/InventoryDetails/GridComponent';
-import { useFetchProfileConfigDetails } from '../../features/profile';
+import { useFetchProfileConfig } from '../../features/profile';
 import AssignCategoryMaintenanceButton from '../../util/AssignCategoryMaintenanceButton';
+import { useUser } from '@supabase/auth-helpers-react';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
@@ -49,12 +55,15 @@ const MODAL_STATE = {
 };
 
 const InventoryListDetails = ({ displayAllInventories, hideActionMenu }) => {
+  const user = useUser();
   const navigate = useNavigate();
-  const { data, isLoading } = useFetchInventoriesList();
-  const { data: userConfigDetails } = useFetchProfileConfigDetails();
-  const deleteSelectedInventoryMutation = useDeleteSelectedInventory();
-
+  const { data = [], isFetching } = useFetchInventories();
+  const { data: userConfigDetails = {} } = useFetchProfileConfig();
+  const deleteInventories = useDeleteInventories();
+  const updateInventory = useUpdateInventory();
   const [options, setOptions] = useState([]);
+  const [inputColumn, setInputColumn] = useState('');
+  const [editLineItem, setEditLineItem] = useState({ editItem: false, rowID: -1, column: '' });
   const [selectedRow, setSelectedRow] = useState([]); // to display more details
   const [rowSelected, setRowSelected] = useState([]); // this is for checkbox and associated events
   const [gridMode, setGridMode] = useState(userConfigDetails.inventory_layout || false);
@@ -93,12 +102,66 @@ const InventoryListDetails = ({ displayAllInventories, hideActionMenu }) => {
     }
   };
 
+  const populateIcon = (editLineItem, row, column, inputColumn, setInputColumn) => {
+    if (editLineItem.editItem && editLineItem.rowID === row.id && editLineItem.column === column && inputColumn) {
+      return (
+        <CheckRounded
+          sx={{ height: '1rem', width: '1rem', marginLeft: '0.5rem', cursor: 'pointer' }}
+          color="primary"
+          onClick={() => {
+            const draftRequest = {
+              id: row.id,
+              price: editLineItem.column === 'price' ? inputColumn : row.price,
+              quantity: editLineItem.column === 'quantity' ? inputColumn : row.quantity,
+              updated_by: user.id,
+              updated_on: dayjs(),
+            };
+            updateInventory.mutate({ ...draftRequest });
+            setInputColumn('');
+            setEditLineItem({ editItem: false, rowID: -1, column: '' });
+          }}
+        />
+      );
+    } else if (editLineItem.editItem && editLineItem.rowID === row.id && editLineItem.column === column) {
+      return (
+        <CloseRounded
+          sx={{ height: '1rem', width: '1rem', marginLeft: '0.5rem', cursor: 'pointer' }}
+          onClick={() => setEditLineItem({ editItem: false, rowID: -1, column: '' })}
+        />
+      );
+    } else {
+      return (
+        <EditRounded
+          sx={{ height: '1rem', width: '1rem', marginLeft: '0.5rem', cursor: 'pointer' }}
+          onClick={() => setEditLineItem({ editItem: true, rowID: row.id, column: column })}
+        />
+      );
+    }
+  };
+
   const rowFormatter = (row, column, color) => {
     if (['created_on', 'updated_on'].includes(column)) {
       return dayjs(row[column]).fromNow();
     }
     if (['price', 'quantity'].includes(column)) {
-      return row[column] <= 0 ? '-' : row[column];
+      return (
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
+          {editLineItem.editItem && editLineItem.rowID === row.id && editLineItem.column === column ? (
+            <TextField
+              fullWidth
+              variant="standard"
+              label={`Editing ${column}`}
+              value={inputColumn}
+              onChange={(ev) => setInputColumn(ev.target.value)}
+            />
+          ) : row[column] <= 0 ? (
+            '-'
+          ) : (
+            row[column]
+          )}
+          {populateIcon(editLineItem, row, column, inputColumn, setInputColumn)}
+        </Stack>
+      );
     }
     if (['updator_name', 'creator_name'].includes(column)) {
       return row[column]?.username ?? '-';
@@ -108,8 +171,8 @@ const InventoryListDetails = ({ displayAllInventories, hideActionMenu }) => {
     }
     if (['name'].includes(column)) {
       return (
-        <Stack direction="row" alignItems="center" justifyContent="flex-start" spacing={{ xs: 1 }}>
-          <CircleRounded sx={{ height: '0.75rem', width: '0.75rem', color: color ? `${color}` : 'transparent' }} />
+        <Stack direction="row" alignItems="center" justifyContent="flex-start">
+          {color ? <CircleRounded sx={{ height: '0.75rem', width: '0.75rem', color: { color } }} /> : null}
           <Typography variant="subtitle2">{row[column] || '-'}</Typography>
         </Stack>
       );
@@ -141,7 +204,7 @@ const InventoryListDetails = ({ displayAllInventories, hideActionMenu }) => {
     if (id === -1) {
       return;
     }
-    deleteSelectedInventoryMutation.mutate(rowSelected);
+    deleteInventories.mutate(rowSelected);
     reset();
   };
 
@@ -153,7 +216,7 @@ const InventoryListDetails = ({ displayAllInventories, hideActionMenu }) => {
     if (Array.isArray(data)) {
       setOptions(data);
     }
-  }, [isLoading]);
+  }, [isFetching]);
 
   return (
     <>
@@ -204,7 +267,7 @@ const InventoryListDetails = ({ displayAllInventories, hideActionMenu }) => {
             options={options}
             autoHighlight
             getOptionLabel={(option) => option.name}
-            onChange={(event, newValue) => {
+            onChange={(_, newValue) => {
               if (newValue) {
                 setOptions(data.filter((option) => option.id === newValue.id));
               } else {
@@ -216,7 +279,7 @@ const InventoryListDetails = ({ displayAllInventories, hideActionMenu }) => {
         ) : null}
         {displayAllInventories && gridMode ? (
           <GridComponent
-            isLoading={isLoading}
+            isLoading={isFetching}
             data={options}
             rowSelected={rowSelected}
             handleEdit={handleEdit}
@@ -227,7 +290,7 @@ const InventoryListDetails = ({ displayAllInventories, hideActionMenu }) => {
           />
         ) : (
           <TableComponent
-            isLoading={isLoading}
+            isLoading={isFetching}
             hideActionMenu={hideActionMenu}
             data={displayAllInventories ? options : options?.filter((_, index) => index < 3)}
             columns={Object.values(VIEW_INVENTORY_LIST_HEADERS).filter((v) => v.displayConcise)}
